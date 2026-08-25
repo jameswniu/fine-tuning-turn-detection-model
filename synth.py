@@ -162,6 +162,12 @@ BANKS: list[tuple[str, str, str | None, list[str]]] = [
         "Oh wait, there's something else.",
         "Before I forget, one more question.",
         "Hold on, one other thing.",
+        "Oh actually, one more thing.",
+        "Wait, before you go, one more question.",
+        "Actually hold on, there's one more thing.",
+        "Hmm actually, hold that thought.",
+        "One sec, one more thing I wanted to ask.",
+        "Actually wait, I did have a question.",
     ]),
     # I: handoff hedges -> speak (policy: hedges are handoffs; settling hedges stay out of training)
     ("I", "speak", None, [

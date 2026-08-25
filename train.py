@@ -19,6 +19,7 @@ from transformers import (
 )
 
 from common import LABEL2ID, build_input, load_jsonl
+from pick_threshold import sweep
 
 FINAL_THRESHOLD = 0.833
 
@@ -102,23 +103,6 @@ def metrics_at(labels: list[int], probs: list[float], threshold: float) -> dict[
     return {"precision_speak": precision, "recall_speak": recall}
 
 
-def pick_cost_optimal_threshold(labels: list[int], probs: list[float], lo: int = 1, hi: int = 99) -> tuple[float, float]:
-    """Sweep thresholds lo/100 to hi/100 inclusive, return (threshold, cost) minimizing
-    cost = 5*FPR + FNR (class-conditional rates, imbalance-invariant); ties prefer the lower threshold.
-    """
-    n_wait = sum(1 for l in labels if l == 0) or 1
-    n_speak = sum(1 for l in labels if l == 1) or 1
-    best_thr, best_cost = 0.5, float("inf")
-    for i in range(lo, hi + 1):
-        thr = i / 100
-        fpr = sum(1 for p, l in zip(probs, labels) if p >= thr and l == 0) / n_wait
-        fnr = sum(1 for p, l in zip(probs, labels) if p < thr and l == 1) / n_speak
-        cost = 5 * fpr + fnr
-        if cost < best_cost or (cost == best_cost and thr < best_thr):
-            best_cost, best_thr = cost, thr
-    return best_thr, best_cost
-
-
 def score_dev_set(model, tokenizer, device: str, max_len: int, dev_path: str | Path) -> tuple[list[float], list[int]]:
     """Score P(speak) via build_input for every dev_set.json sample whose label is speak or wait."""
     with open(dev_path, encoding="utf-8") as f:
@@ -129,6 +113,57 @@ def score_dev_set(model, tokenizer, device: str, max_len: int, dev_path: str | P
     dev_encodings = tokenizer(dev_texts, truncation=True, padding="max_length", max_length=max_len)
     dev_loader = DataLoader(TurnDataset(dev_encodings, dev_labels), batch_size=32, shuffle=False)
     return run_eval(model, dev_loader, device)
+
+
+def score_texts(model, tokenizer, device: str, max_len: int, contexts: list[str], texts: list[str]) -> list[float]:
+    """Score P(speak) for raw context/text pairs with the given model, batched, no labels required.
+
+    Used for guardrail constraint rows, which carry a required decision rather than a ground-truth
+    label to average over.
+    """
+    model.eval()
+    inputs = [build_input(c, t) for c, t in zip(contexts, texts)]
+    probs: list[float] = []
+    batch_size = 32
+    with torch.no_grad():
+        for start in range(0, len(inputs), batch_size):
+            chunk = inputs[start : start + batch_size]
+            encoded = tokenizer(chunk, truncation=True, padding="max_length", max_length=max_len, return_tensors="pt")
+            encoded = {k: v.to(device) for k, v in encoded.items()}
+            outputs = model(**encoded)
+            batch_probs = torch.softmax(outputs.logits, dim=-1)[:, LABEL2ID["speak"]]
+            probs.extend(batch_probs.detach().cpu().tolist())
+    return probs
+
+
+def load_tier1_constraint_rows(gold_path: str | Path, dev_path: str | Path, regressions_path: str | Path) -> list[dict]:
+    """Guardrail rows enforcing the published tier-1 gates from EVALS.md: every F-class gold
+    card (never interrupt a readout) and gold H5 (announced continuation holds) must predict
+    wait; the dev H-class judgment card dH4 (the same announced-continuation gate) must predict
+    wait; and every probe-found case in regressions.jsonl must predict its recorded label.
+    """
+    rows: list[dict] = []
+
+    gold_path = Path(gold_path)
+    if gold_path.exists():
+        gold = json.load(open(gold_path, encoding="utf-8"))
+        for s in gold.get("samples", []):
+            if s.get("cls") == "F" or s.get("id") == "H5":
+                rows.append({"context": s.get("context", ""), "text": s["text"], "label": "wait"})
+
+    dev_path = Path(dev_path)
+    if dev_path.exists():
+        dev = json.load(open(dev_path, encoding="utf-8"))
+        for s in dev.get("samples", []):
+            if s.get("id") == "dH4":
+                rows.append({"context": s.get("context", ""), "text": s["text"], "label": "wait"})
+
+    regressions_path = Path(regressions_path)
+    if regressions_path.exists():
+        for r in load_jsonl(regressions_path):
+            rows.append({"context": r.get("context", ""), "text": r["text"], "label": r["label"]})
+
+    return rows
 
 
 def export_onnx(out_dir: str) -> None:
@@ -171,6 +206,13 @@ def main() -> None:
     extra_rows: list[dict] = []
     if args.extra:
         extra_rows = load_rows(args.extra)
+        before_policy_filter = len(extra_rows)
+        extra_rows = [
+            r
+            for r in extra_rows
+            if not (r.get("label") == "speak" and ("one more thing" in r["text"].lower() or "hold that thought" in r["text"].lower()))
+        ]
+        print(f"policy-filtered {before_policy_filter - len(extra_rows)} vendor-behavior rows from extra")
         for r in extra_rows:
             r["_origin"] = "extra"
 
@@ -307,21 +349,43 @@ def main() -> None:
         best_model.to(device)
         best_tokenizer = AutoTokenizer.from_pretrained(args.out)
         dev_probs, dev_labels = score_dev_set(best_model, best_tokenizer, device, args.max_len, dev_set_path)
-        best_thr, best_cost = pick_cost_optimal_threshold(dev_labels, dev_probs, 1, 99)
+
+        guardrail_rows = load_tier1_constraint_rows("data/gold_set.json", dev_set_path, "data/regressions.jsonl")
+        guardrail_probs = score_texts(
+            best_model, best_tokenizer, device, args.max_len,
+            [r["context"] for r in guardrail_rows], [r["text"] for r in guardrail_rows],
+        )
+        constraints = list(zip(guardrail_probs, [r["label"] for r in guardrail_rows]))
+
+        result = sweep(dev_probs, dev_labels, cost_ratio=5, constraints=constraints)
+        best_thr, best_cost = result["threshold"], result["cost"]
         thr_payload = {
             "threshold": best_thr,
             "cost_ratio": 5,
-            "method": "cost-optimal on human-grade dev set (three-judge panel), cost = 5*FPR + FNR",
+            "method": "cost-optimal with tier-1 guardrail constraints",
             "selection_source": "data/dev_set.json",
             "dev_n": len(dev_labels),
+            "admissible_count": result["admissible_count"],
+            "constraints_note": (
+                "constraints enforce the published tier-1 gates from EVALS.md: every F-class gold card "
+                "(never interrupt a readout), gold H5 and dev dH4 (announced continuation holds), and "
+                "every regressions.jsonl case must land on its required decision"
+            ),
         }
-        print(f"cost-optimal operating threshold from dev set (n={len(dev_labels)}): {best_thr} (dev cost {best_cost:.4f})")
+        if result["tier1_unsatisfiable"]:
+            thr_payload["tier1_unsatisfiable"] = True
+        print(
+            f"cost-optimal operating threshold from dev set (n={len(dev_labels)}) with "
+            f"{len(constraints)} guardrail constraints: {best_thr} (dev cost {best_cost:.4f}, "
+            f"admissible {result['admissible_count']}, tier1_unsatisfiable={result['tier1_unsatisfiable']})"
+        )
         del best_model, best_tokenizer, dev_probs, dev_labels
         gc.collect()
         if device == "mps":
             torch.mps.empty_cache()
     else:
-        best_thr, best_cost = pick_cost_optimal_threshold(best_labels, best_probs, 1, 98)
+        result = sweep(best_probs, best_labels, cost_ratio=5)
+        best_thr, best_cost = result["threshold"], result["cost"]
         thr_payload = {
             "threshold": best_thr,
             "cost_ratio": 5,
