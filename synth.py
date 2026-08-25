@@ -278,6 +278,12 @@ def main() -> None:
         if cut:
             rows.append({"context": r["context"], "text": cut, "label": "wait", "cls": "T", "variant": "clean"})
 
+    # Context-dropout augmentation: every contexted sample also emitted bare,
+    # so the model learns the utterance carries its own signal.
+    for r in list(rows):
+        if r["context"]:
+            rows.append({**r, "context": "", "variant": r["variant"] + "+noctx"})
+
     # ASR-style variant of everything: lowercase, no terminal punctuation.
     for r in list(rows):
         t = asr_variant(r["text"])
