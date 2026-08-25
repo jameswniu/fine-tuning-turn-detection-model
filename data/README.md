@@ -10,13 +10,17 @@ Everything in this directory was created for this project. Nothing downloaded, n
 
 Sixty cards labeled blind by the policy owner in the Turn Booth on 2026-08-24, shuffled so the taxonomy could not bias the labeler. Fifty-three hard labels plus seven boundary cards. FROZEN. This is the referee, never trained on, integrity-checked by content hash, and it carries the 1:5 cost ratio the operating threshold derives from.
 
-## dev_set.json (labels pending)
+## dev_set.json
 
-Thirty fresh cards, human-labeled, disjoint from the gold set. Its one job is operating-threshold selection and calibration, so the dial gets tuned on human judgment instead of synthetic validation data. The reason this file exists is the v3/v4 lesson in `../iterations.md`, where selection on synthetic val drifted high twice.
+Thirty fresh cards, disjoint from the gold set, labeled by a three-model judge panel (three different model families, blind, on a shuffled mixed batch) with 2-of-3 majority, after each judge was certified against the frozen gold set. The certification caveat is stated in the file's own provenance block: the judges could in principle see POLICY.md-quoted boundary examples, so certification was partially open-book. Its one job is operating-threshold selection and calibration, so the dial gets tuned on judged human policy instead of synthetic validation data. The reason this file exists is the v3/v4 lesson in `../iterations.md`, where selection on synthetic val drifted high twice.
 
 ## regressions.jsonl
 
 Probe-found failures, kept forever. Every miss discovered by live testing lands here and must pass at the operating threshold before any promotion. This slice tests memory of fixed failures rather than generalization, so overlap with training data is intended. First entry, "nah bye", found by a human poke at the live probe, scored 0.34 pre-fix and 0.978 post-fix.
+
+## ood_train.jsonl and ood_test.jsonl (real calls, gitignored)
+
+The real-call slices, and the one exception to "nothing external": 400 turns cut from production calls handled by the author's own deployed voice agent, pulled from the vendor's transcript API and cut at prefix boundaries the way a streaming ASR would surface them. Split BY CALL, never by row, into an augmentation half (ood_train.jsonl, 304 turns) and a held-out referee (ood_test.jsonl, 96 turns from 60 calls) so no call leaks across the boundary. Labeled by the author; where the vendor turn-taker's live behavior contradicted the written policy, the label was corrected to the policy and the row carries a policy_corrected flag, so the referee grades the policy rather than the incumbent vendor model. The residual bias is stated in EVALS.md: cut points still come from the vendor stack, which makes the OOD bands pessimistic bounds. Real caller content, so both files are gitignored; the repo ships the loaders, the reports, and this description, not the transcripts.
 
 ## Why created instead of found
 
