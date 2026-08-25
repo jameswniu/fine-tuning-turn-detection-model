@@ -1,6 +1,7 @@
 """Fine-tune a small encoder for end-of-turn detection (binary: wait vs speak)."""
 
 import argparse
+import gc
 import json
 import random
 import shutil
@@ -10,7 +11,6 @@ from pathlib import Path
 import numpy as np
 import torch
 from sklearn.metrics import average_precision_score, precision_score, recall_score
-from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, Dataset
 from transformers import (
     AutoModelForSequenceClassification,
@@ -26,6 +26,8 @@ FINAL_THRESHOLD = 0.833
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Train the end-of-turn detector.")
     parser.add_argument("--train", type=str, default="data/train.jsonl", required=True, help="Path to training jsonl file")
+    parser.add_argument("--extra", type=str, default="", help="Optional extra jsonl file folded into training (e.g. real-call OOD data); rows carry context/text/label like --train")
+    parser.add_argument("--extra-upsample", type=int, default=4, help="Train-side duplication factor for rows sourced from --extra, applied after the split, never on validation")
     parser.add_argument("--base", type=str, default="distilbert-base-uncased", help="Base encoder checkpoint")
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--lr", type=float, default=2e-5)
@@ -57,12 +59,15 @@ class TurnDataset(Dataset):
         return item
 
 
-def load_rows(path: str) -> tuple[list[str], list[int]]:
+def load_rows(path: str) -> list[dict]:
+    """Load a jsonl file's rows, filtered to those carrying a recognized label.
+
+    Rows keep every source field untouched (context/text/label at minimum; tpl, call, cls,
+    variant, lang pass through when present), so callers can build group keys and origin tags
+    from them before ever converting to model-input strings.
+    """
     rows = load_jsonl(path)
-    rows = [r for r in rows if r.get("label") in LABEL2ID]
-    texts = [build_input(r.get("context", ""), r["text"]) for r in rows]
-    labels = [LABEL2ID[r["label"]] for r in rows]
-    return texts, labels
+    return [r for r in rows if r.get("label") in LABEL2ID]
 
 
 def class_weights(labels: list[int], device: str) -> torch.Tensor:
@@ -95,6 +100,35 @@ def metrics_at(labels: list[int], probs: list[float], threshold: float) -> dict[
     precision = precision_score(labels, preds, pos_label=LABEL2ID["speak"], zero_division=0)
     recall = recall_score(labels, preds, pos_label=LABEL2ID["speak"], zero_division=0)
     return {"precision_speak": precision, "recall_speak": recall}
+
+
+def pick_cost_optimal_threshold(labels: list[int], probs: list[float], lo: int = 1, hi: int = 99) -> tuple[float, float]:
+    """Sweep thresholds lo/100 to hi/100 inclusive, return (threshold, cost) minimizing
+    cost = 5*FPR + FNR (class-conditional rates, imbalance-invariant); ties prefer the lower threshold.
+    """
+    n_wait = sum(1 for l in labels if l == 0) or 1
+    n_speak = sum(1 for l in labels if l == 1) or 1
+    best_thr, best_cost = 0.5, float("inf")
+    for i in range(lo, hi + 1):
+        thr = i / 100
+        fpr = sum(1 for p, l in zip(probs, labels) if p >= thr and l == 0) / n_wait
+        fnr = sum(1 for p, l in zip(probs, labels) if p < thr and l == 1) / n_speak
+        cost = 5 * fpr + fnr
+        if cost < best_cost or (cost == best_cost and thr < best_thr):
+            best_cost, best_thr = cost, thr
+    return best_thr, best_cost
+
+
+def score_dev_set(model, tokenizer, device: str, max_len: int, dev_path: str | Path) -> tuple[list[float], list[int]]:
+    """Score P(speak) via build_input for every dev_set.json sample whose label is speak or wait."""
+    with open(dev_path, encoding="utf-8") as f:
+        dev = json.load(f)
+    samples = [s for s in dev.get("samples", []) if s.get("label") in LABEL2ID]
+    dev_texts = [build_input(s.get("context", ""), s["text"]) for s in samples]
+    dev_labels = [LABEL2ID[s["label"]] for s in samples]
+    dev_encodings = tokenizer(dev_texts, truncation=True, padding="max_length", max_length=max_len)
+    dev_loader = DataLoader(TurnDataset(dev_encodings, dev_labels), batch_size=32, shuffle=False)
+    return run_eval(model, dev_loader, device)
 
 
 def export_onnx(out_dir: str) -> None:
@@ -130,9 +164,60 @@ def main() -> None:
     args = parse_args()
     set_seed(args.seed)
 
-    texts, labels = load_rows(args.train)
-    train_texts, val_texts, train_labels, val_labels = train_test_split(
-        texts, labels, test_size=args.val_frac, random_state=args.seed, stratify=labels
+    main_rows = load_rows(args.train)
+    for r in main_rows:
+        r["_origin"] = "main"
+
+    extra_rows: list[dict] = []
+    if args.extra:
+        extra_rows = load_rows(args.extra)
+        for r in extra_rows:
+            r["_origin"] = "extra"
+
+    all_rows = main_rows + extra_rows
+
+    # Group-aware split: a group never straddles train/val, so every rendering of one synthetic
+    # template ("tpl") or every turn from one real call ("call") lands on a single side. This
+    # replaces the old row-level stratified split; stratification is now approximate rather than
+    # exact, since a whole group carries whatever label mix it happens to have, not a 50/50 draw.
+    group_keys = [r.get("call") or r.get("tpl") or f"__row{i}" for i, r in enumerate(all_rows)]
+    group_sizes = Counter(group_keys)
+    unique_groups = list(dict.fromkeys(group_keys))
+    split_rng = random.Random(args.seed)
+    split_rng.shuffle(unique_groups)
+
+    target_val_n = args.val_frac * len(all_rows)
+    val_groups: set[str] = set()
+    val_n = 0
+    for g in unique_groups:
+        if val_n >= target_val_n:
+            break
+        val_groups.add(g)
+        val_n += group_sizes[g]
+
+    train_rows = [r for r, k in zip(all_rows, group_keys) if k not in val_groups]
+    val_rows = [r for r, k in zip(all_rows, group_keys) if k in val_groups]
+
+    # Upsample --extra rows on the train side only, so real-call OOD data pulls its weight in
+    # gradient updates without ever duplicating a row into the held-out validation split.
+    if args.extra:
+        upsampled: list[dict] = []
+        for r in train_rows:
+            if r.get("_origin") == "extra":
+                upsampled.extend([r] * args.extra_upsample)
+            else:
+                upsampled.append(r)
+        train_rows = upsampled
+
+    train_texts = [build_input(r.get("context", ""), r["text"]) for r in train_rows]
+    train_labels = [LABEL2ID[r["label"]] for r in train_rows]
+    val_texts = [build_input(r.get("context", ""), r["text"]) for r in val_rows]
+    val_labels = [LABEL2ID[r["label"]] for r in val_rows]
+
+    print(
+        f"loaded {len(main_rows)} rows from {args.train}"
+        + (f" + {len(extra_rows)} rows from {args.extra} (upsampled x{args.extra_upsample} on train side)" if args.extra else "")
+        + f"; groups: {len(unique_groups)}; train rows: {len(train_rows)}; val rows: {len(val_rows)}"
     )
 
     device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -216,20 +301,37 @@ def main() -> None:
         json.dump(report, f, indent=2)
     print(f"best checkpoint saved to {args.out} (val_pr_auc={best_pr_auc:.4f})")
 
-    n_wait = sum(1 for l in best_labels if l == 0) or 1
-    n_speak = sum(1 for l in best_labels if l == 1) or 1
-    best_thr, best_cost = 0.5, float("inf")
-    for i in range(1, 99):
-        thr = i / 100
-        fpr = sum(1 for p, l in zip(best_probs, best_labels) if p >= thr and l == 0) / n_wait
-        fnr = sum(1 for p, l in zip(best_probs, best_labels) if p < thr and l == 1) / n_speak
-        cost = 5 * fpr + fnr
-        if cost < best_cost or (cost == best_cost and thr < best_thr):
-            best_cost, best_thr = cost, thr
-    thr_payload = {"threshold": best_thr, "cost_ratio": 5, "method": "cost-optimal on validation curve, cost = 5*FPR + FNR (class-conditional rates, imbalance-invariant)", "expected_val_cost": best_cost}
+    dev_set_path = Path("data/dev_set.json")
+    if dev_set_path.exists():
+        best_model = AutoModelForSequenceClassification.from_pretrained(args.out)
+        best_model.to(device)
+        best_tokenizer = AutoTokenizer.from_pretrained(args.out)
+        dev_probs, dev_labels = score_dev_set(best_model, best_tokenizer, device, args.max_len, dev_set_path)
+        best_thr, best_cost = pick_cost_optimal_threshold(dev_labels, dev_probs, 1, 99)
+        thr_payload = {
+            "threshold": best_thr,
+            "cost_ratio": 5,
+            "method": "cost-optimal on human-grade dev set (three-judge panel), cost = 5*FPR + FNR",
+            "selection_source": "data/dev_set.json",
+            "dev_n": len(dev_labels),
+        }
+        print(f"cost-optimal operating threshold from dev set (n={len(dev_labels)}): {best_thr} (dev cost {best_cost:.4f})")
+        del best_model, best_tokenizer, dev_probs, dev_labels
+        gc.collect()
+        if device == "mps":
+            torch.mps.empty_cache()
+    else:
+        best_thr, best_cost = pick_cost_optimal_threshold(best_labels, best_probs, 1, 98)
+        thr_payload = {
+            "threshold": best_thr,
+            "cost_ratio": 5,
+            "method": "cost-optimal on validation curve, cost = 5*FPR + FNR (class-conditional rates, imbalance-invariant)",
+            "expected_val_cost": best_cost,
+            "selection_source": "validation split fallback (data/dev_set.json not found)",
+        }
+        print(f"cost-optimal operating threshold from validation fallback: {best_thr} (val cost {best_cost:.4f})")
     with open(Path(args.out) / "threshold.json", "w", encoding="utf-8") as f:
         json.dump(thr_payload, f, indent=2)
-    print(f"cost-optimal operating threshold: {best_thr} (val cost {best_cost})")
 
     op_metrics = metrics_at(best_labels, best_probs, best_thr)
     report["operating_threshold"] = best_thr

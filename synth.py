@@ -107,6 +107,13 @@ BANKS: list[tuple[str, str, str | None, list[str]]] = [
         "That's all, bye now.", "Yep, thanks, bye.", "Nope, that covers it.",
         "Nah bye.", "No that's everything, thanks.",
     ]),
+    # C: texting register -> speak (short typed-style acks and closers, v6 consolidation)
+    ("C", "speak", "info", [
+        "k", "kk thanks", "k cool", "yep thanks", "k sounds good",
+    ]),
+    ("C", "speak", "anything_else", [
+        "k thanks", "nope k bye", "k we're good",
+    ]),
     # D: mid-clause cutoffs -> wait
     ("D", "wait", None, [
         "I'm about twenty miles out but the traffic on {hwy} is",
@@ -275,18 +282,19 @@ def main() -> None:
     rows: list[dict] = []
 
     for cls, label, ctx_kind, templates in BANKS:
-        for t in templates:
+        for ti, t in enumerate(templates):
+            tpl_id = f"{cls}.{label}.{ctx_kind or 'none'}.{ti}"
             for _ in range(args.per_template):
                 text = fill(t, rng)
                 context = ctx(ctx_kind, rng)
-                rows.append({"context": context, "text": text, "label": label, "cls": cls, "variant": "clean"})
+                rows.append({"context": context, "text": text, "label": label, "cls": cls, "variant": "clean", "tpl": tpl_id})
 
     # Truncation augmentation: complete speak utterances re-emitted cut short, labeled wait.
     speak_rows = [r for r in rows if r["label"] == "speak" and r["cls"] in ("A", "B", "H")]
     for r in speak_rows:
         cut = truncate(r["text"], rng)
         if cut:
-            rows.append({"context": r["context"], "text": cut, "label": "wait", "cls": "T", "variant": "clean"})
+            rows.append({"context": r["context"], "text": cut, "label": "wait", "cls": "T", "variant": "clean", "tpl": r["tpl"] + ".trunc"})
 
     # Context-dropout augmentation: every contexted sample also emitted bare,
     # so the model learns the utterance carries its own signal.

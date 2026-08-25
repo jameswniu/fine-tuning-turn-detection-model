@@ -48,6 +48,7 @@ These are the absolute rules from POLICY.md turned into gates. One red blocks th
 | Calibration (ECE, 10 bins) | at or below 0.10 on gold hard set | to be measured (known under-confident) | measure in v2 |
 | Context dependence slice | recall delta with vs without agent context within 10 points | to be measured | measure in v2 |
 | Length slice | recall on 1-3 word utterances within 10 points of overall | to be measured | measure in v2 |
+| Real-call OOD holdout (data/ood_test.jsonl, 96 turns from 60 production calls, self-labeled, never trained on) | PR-AUC at or above 0.85 and false-speak at or below 10% at the operating threshold; bands read as pessimistic bounds since labels derive from the vendor turn-taker and prefix cuts, and the small n gives wide intervals | v5 fine-tune reads PR-AUC 0.65, false-speak 0.57, recall 0.84 at the 0.81 threshold; the full 400-row slice reads 0.61 after sentence-boundary label cleanup, so the register gap is the model, not the labels | ITERATE (the v6 target: real-register augmentation from ood_train) |
 
 A scoping note that is itself a finding: this eval suite needs no LLM-judge tier. Given fixed weights the model's output is a deterministic probability, so every check here is computable by code; the only non-determinism lives in training and is pinned by seeds. Judges are for outputs code cannot grade. At production scale the judge-shaped work reappears as human labeling of sampled live turns, not as an offline eval.
 

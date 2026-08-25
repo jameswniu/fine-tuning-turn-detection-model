@@ -9,3 +9,4 @@ One row per loop iteration; the bands live in EVALS.md.
 | v3 | 2026-08-24 | 1423 | 0.87 | 0.970 | 0.00 | 0.654 | 0.20 | 0.50 | 0.34 | 0.067 | context-dropout augmentation targeting the bare-utterance recall gap |
 | v4 | 2026-08-24 | 1423 | 0.86 | 0.969 | 0.00 | 0.654 | 0.20 | 0.50 | 0.34 | 0.070 | threshold objective from counts to class-conditional rates after v3 showed selection was tracking synthetic label balance, not the model |
 | v5 | 2026-08-24 | 1492 | 0.81 | 0.958 | 0.00 | 0.731 | 0.40 | 0.625 | 0.45 | 0.092 | casual-register templates + Agent-prefix context normalization, found by live probe; regression slice added |
+| v6 | 2026-08-25 | 1524 | 0.18 | 0.955 | 0.037 | 0.654 | 0.20 | 0.50 | 0.87 | 0.169 | dev-set threshold from judge panel; ood_train x4 grouped by call; tpl-grouped split; texting register; ood_test PR-AUC 0.905 false-speak 0.34 recall 0.98; regressions 6/6 |
