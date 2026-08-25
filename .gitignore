@@ -5,3 +5,10 @@ __pycache__/
 eval_report.json
 bench_report.json
 regression_report.json
+data/train_all.jsonl
+data/train_all_real.jsonl
+
+# real personal call content, local only (aggregates go in the doc)
+data/ood_aj.jsonl
+data/ood_train.jsonl
+data/ood_test.jsonl

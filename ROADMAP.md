@@ -30,8 +30,8 @@ Promotion up the ladder (dev, staging1, staging2, production) is gated by the sa
 
 ## Post-submission chapters (the public repo phase)
 
-Three chapters queued for after the process concludes, each answering a question the submission only argues:
+The original first two chapters moved into the submission itself: the from-scratch lane ran (own tokenizer, small encoder from random init, and the two lessons it bought, the WordPiece out-of-vocabulary blowup and the template-leak validation split), and Spanish shipped under the same policy. What remains queued for after the process concludes:
 
-1. From scratch, the harder road taken deliberately: train our own tokenizer on domain speech, scale synthesis past 100k samples, train a small transformer from random init, and publish the from-scratch versus fine-tuned curve at matched latency. Either result is the content; if scratch loses, the chapter proves with numbers why pretraining earns its keep.
-2. Multilingual for real: Spanish synthesized under the same policy, Mandarin with native human labels through the same booth, per-language scorecards in the style of the LiveKit and smart-turn model cards.
-3. The shadow lanes live: offline replay over the author's production voice-stack transcripts, then online shadow against the vendor turn model on a real phone number, disagreements published. The vendor-versus-open bake-off with receipts.
+1. Mandarin with native human labels through the same booth, and per-language scorecards in the style of the LiveKit and smart-turn model cards. Spanish shipped with a synthetic held-out referee; Mandarin is the language the author can native-label, so it carries the human-referee bar.
+2. The shadow lanes at full size. Offline replay ran in miniature inside the submission, real-call slices from the author's production voice stack, split by call into an augmentation half and a held-out referee. What remains is online shadow against the vendor turn model on a real phone number, disagreements published. The vendor-versus-open bake-off with receipts.
+3. The from-scratch frontier at scale: synthesis past 100k samples, the scratch-versus-fine-tuned curve at matched latency with per-register slices, extending the submission's first pass.
