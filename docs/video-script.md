@@ -6,7 +6,7 @@ Target length about 8 minutes spoken at natural pace, against the 10 minute cap.
 
 [Screen: repo README top]
 
-Hi, I'm James. This is my end-of-turn detection build. The one-line result: on a held-out, human-labeled test set, the model produces zero wrong interruptions at every operating threshold, it beats both a VAD-style baseline and a punctuation heuristic on the tradeoff curve, and it serves over FastAPI at [P95] milliseconds p95, int8 on CPU. You capped this at ten minutes; I'll use about eight, and the details live in the doc and the repo.
+Hi, I'm James. This is my end-of-turn detection build. The one-line result: on a held-out, human-labeled test set, the model produces zero wrong interruptions at every operating threshold, it beats both a VAD-style baseline and a punctuation heuristic on the tradeoff curve, and it serves over FastAPI at 32.8 milliseconds p95, int8 on CPU. You capped this at ten minutes; I'll use about eight, and the details live in the doc and the repo.
 
 [Screen: POLICY.md, the two-errors section]
 
@@ -34,7 +34,7 @@ And the eval surfaced my favorite finding of the build: the theoretical eighty-t
 
 [Screen: serve.py, then the bench output]
 
-Serving and performance. FastAPI, ONNX runtime, dynamic int8 quantization, Dockerfile included. Model inference [MODEL-MS] milliseconds; end to end over HTTP, [P50] median and [P95] p95 at concurrency [C], about [RPS] requests a second on my laptop, stress-tested with an async client hammering real payloads. Details and the full latency table are in the doc.
+Serving and performance. FastAPI, ONNX runtime, dynamic int8 quantization, Dockerfile included. Model inference 21.7 milliseconds; end to end over HTTP, 23.4 median and 32.8 p95 at concurrency 8, about 320 requests a second on my laptop, stress-tested with an async client hammering real payloads. Details and the full latency table are in the doc.
 
 [Screen: the monitoring section of the doc]
 
