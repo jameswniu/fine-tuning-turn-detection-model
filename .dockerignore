@@ -1,0 +1,4 @@
+.git
+# torch fp32 checkpoint dir only, this exact path does not match the onnx-int8 dir which the Dockerfile copies in
+models/eot-distilbert
+__pycache__
