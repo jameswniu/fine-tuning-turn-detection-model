@@ -44,6 +44,17 @@ def normalize(text: str) -> str:
     return t.replace("¿", "").replace("¡", "").strip()
 
 
+# Turns where the vendor's turn-taker responded but OUR written policy says wait
+# (announced continuation is a tier-1 guardrail class). Keeping these as "speak"
+# labels would import the vendor's behavior against the policy, in training and,
+# worse, in the referee. The correction RELABELS the full turn to wait rather than
+# dropping it, marked policy_corrected, so n is preserved and each corrected row
+# becomes a live probe of the exact place policy and vendor diverge. The rule is
+# content-anchored and pre-registered by the written policy, applied symmetrically
+# to every model. Counts are printed and reported wherever the slice is described.
+POLICY_COLLISIONS = ("one more thing", "hold that thought")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--agent", default=os.environ.get("ELEVENLABS_AGENT_ID", ""), help="ElevenLabs agent id")
@@ -84,6 +95,7 @@ def main() -> None:
     rows: list[dict] = []
     seen: set[tuple[str, str]] = set()
     calls_used = 0
+    relabeled_policy = 0
     for c in stubs:
         try:
             d = _get(f"https://api.elevenlabs.io/v1/convai/conversations/{c['conversation_id']}", key)
@@ -108,7 +120,11 @@ def main() -> None:
             context = normalize(prev_agent)
             if (context, text) not in seen:
                 seen.add((context, text))
-                rows.append({"context": context, "text": text, "label": "speak", "cls": "OOD", "variant": "real", "lang": "en", "call": call_id})
+                if any(phrase in text for phrase in POLICY_COLLISIONS):
+                    relabeled_policy += 1
+                    rows.append({"context": context, "text": text, "label": "wait", "cls": "OOD", "variant": "real", "lang": "en", "call": call_id, "policy_corrected": True})
+                else:
+                    rows.append({"context": context, "text": text, "label": "speak", "cls": "OOD", "variant": "real", "lang": "en", "call": call_id})
             words = text.split()
             if len(words) >= args.min_words_prefix:
                 # A cut right after a sentence-final mark leaves a grammatically complete
@@ -135,6 +151,7 @@ def main() -> None:
     from collections import Counter
     by_label = Counter(r["label"] for r in rows)
     print(f"scanned {len(stubs)} production calls, used {calls_used}")
+    print(f"relabeled {relabeled_policy} vendor-policy collision turns to wait, marked policy_corrected (phrases: {POLICY_COLLISIONS})")
     print(f"wrote {len(rows)} rows to {args.out} (labels: {dict(by_label)})")
     print("this file holds real personal call content; it stays local and out of git, aggregates only in the doc")
 

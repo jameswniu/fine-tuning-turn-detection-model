@@ -46,6 +46,7 @@ from sklearn.metrics import average_precision_score, precision_score, recall_sco
 from tokenizers import Tokenizer, decoders, models, normalizers, pre_tokenizers, processors, trainers
 from torch.utils.data import DataLoader, Dataset
 from transformers import (
+    AutoTokenizer,
     BertConfig,
     BertForSequenceClassification,
     PreTrainedTokenizerFast,
@@ -59,6 +60,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Train the end-of-turn detector from random init.")
     parser.add_argument("--train", type=str, default="data/train_scaled.jsonl,data/train_es.jsonl", help="Comma-separated jsonl paths (rows should carry tpl ids)")
     parser.add_argument("--real", type=str, default="", help="Optional jsonl of real-call rows (e.g. data/ood_train.jsonl) mixed into training")
+    parser.add_argument("--init-from", type=str, default="", help="Warm-start from our own MLM-pretrained base dir (models/eot-scratch-base); loads its tokenizer and encoder")
     parser.add_argument("--real-repeat", type=int, default=4, help="Upsample factor for real rows, applied to the TRAIN side only after the split")
     parser.add_argument("--vocab-size", type=int, default=8000)
     parser.add_argument("--hidden", type=int, default=256)
@@ -258,23 +260,37 @@ def main() -> None:
     val_langs = [langs[i] for i in val_idx]
     print(f"grouped split: {len(train_idx)} train rows, {len(val_idx)} val rows from held-out templates; val labels {dict(Counter(val_labels))}")
 
-    tokenizer = train_tokenizer(train_texts, args.vocab_size, args.max_len)
-    actual_vocab = tokenizer.backend_tokenizer.get_vocab_size()
-    print(f"tokenizer trained: vocab {actual_vocab}")
+    if args.init_from:
+        # Warm start from our own MLM-pretrained base: tokenizer and encoder come from
+        # the pretrain dir, the classification head is fresh. The vocabulary is inherited
+        # rather than retrained so the embedding table stays aligned with the tokenizer.
+        tokenizer = AutoTokenizer.from_pretrained(args.init_from)
+        actual_vocab = len(tokenizer)
+        print(f"tokenizer loaded from {args.init_from}: vocab {actual_vocab}")
+        model = BertForSequenceClassification.from_pretrained(
+            args.init_from,
+            num_labels=2,
+            hidden_dropout_prob=args.dropout,
+            attention_probs_dropout_prob=args.dropout,
+        )
+    else:
+        tokenizer = train_tokenizer(train_texts, args.vocab_size, args.max_len)
+        actual_vocab = tokenizer.backend_tokenizer.get_vocab_size()
+        print(f"tokenizer trained: vocab {actual_vocab}")
 
-    config = BertConfig(
-        vocab_size=actual_vocab,
-        hidden_size=args.hidden,
-        num_hidden_layers=args.layers,
-        num_attention_heads=args.heads,
-        intermediate_size=args.intermediate,
-        max_position_embeddings=args.max_len,
-        hidden_dropout_prob=args.dropout,
-        attention_probs_dropout_prob=args.dropout,
-        num_labels=2,
-        pad_token_id=tokenizer.pad_token_id,
-    )
-    model = BertForSequenceClassification(config)
+        config = BertConfig(
+            vocab_size=actual_vocab,
+            hidden_size=args.hidden,
+            num_hidden_layers=args.layers,
+            num_attention_heads=args.heads,
+            intermediate_size=args.intermediate,
+            max_position_embeddings=args.max_len,
+            hidden_dropout_prob=args.dropout,
+            attention_probs_dropout_prob=args.dropout,
+            num_labels=2,
+            pad_token_id=tokenizer.pad_token_id,
+        )
+        model = BertForSequenceClassification(config)
     n_params = sum(p.numel() for p in model.parameters())
     print(f"model built from random init: {n_params / 1e6:.2f}M parameters")
 
