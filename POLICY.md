@@ -21,9 +21,18 @@ Anchors came back clean: 26 of 28 exactly as the textbook expects, 2 boundary. T
 
 Seven cards were labeled unsure: A4, D1, H3, I4, I5, I8, J7. These are excluded from hard accuracy grading. A good model sits near the threshold on them rather than being confidently wrong in either direction.
 
-## Open question (one)
+## The hedge ruling (resolved 2026-08-24)
 
-I3 ("The broker said it was covered, supposedly...") was labeled speak while I7 ("The detention was approved, or something...") was labeled wait. The two shapes are nearly identical: a reported fact plus an uncertainty hedge. Pending the labeler's call on which reading is policy; until resolved, both are treated as boundary alongside the unsure set.
+I3 ("The broker said it was covered, supposedly...") was labeled speak while I7 ("The detention was approved, or something...") was labeled wait. Raised as a contradiction; the labeler ruled it is not one. The hedge token carries no turn signal. What matters is the speaker's underlying stance:
+
+- Genuinely unsure (the hedge reflects real doubt, typically second-hand information: "the broker said", "they told me", "apparently"): the utterance is a question in disguise, an invitation for the agent to confirm or correct. Speak.
+- Sure but hedging out of habit (a confident first-hand statement with a decorative softener: "or something", "or whatever"): the hedge is noise, the utterance is just a statement, and it follows the statement rules. Here it was mid-narrative, opening rather than resolving, so it gets a beat of grace. Wait.
+
+In the labeler's words: "It always depends on your default stance. The hedge doesn't really matter." Both original labels stand. Surface cues the model can learn: reported-speech markers signal the unsure stance; bare assertion plus a trailing softener signals the sure stance.
+
+The labeler's formal statement of the rule, which deliberately reuses the two-probe decomposition from his production eval suite (a structural probe judging the condition as written, a vibes probe judging how it lands): hedging lives on two layers. If the speaker is structurally sure and only hedging in the vibes layer, the hedge is decoration; let the statement stand. If the speaker is structurally unsure and also hedging, the agent probes the structure, that is, it speaks to confirm or correct. It is a matter of scarcity and abundance: when the caller's grounding is scarce, the agent's input has value now; when grounding is abundant, interjecting buys nothing. The frame, not the hedge word, decides.
+
+The third lens, ownership, is what makes the stance detectable from the words alone. A claim attributed to someone else ("the broker said", "they told me", "the market says") is a claim the speaker does not own; the hedge on it is real distance, and the listener cannot even tell what the speaker themselves wants, so the agent probes. A claim spoken from the speaker's own point of view ("the detention was approved", "my range is") is owned; a hedge on an owned claim is politeness on top of something settled. Attribution markers versus first-person assertion are surface features a text model can genuinely learn, which is why this ruling is trainable and not just philosophy.
 
 ## Production policy notes, in the labeler's words
 

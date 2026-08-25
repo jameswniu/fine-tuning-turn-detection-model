@@ -1,0 +1,914 @@
+{"context": "", "text": "Yeah so, I mean, the thing is, I mean", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "i'll call", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "so, uh, about the delivery, uh", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "What time does the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: What is your MC?", "text": "It's six two, eight eight, hold on", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "I wanted to ask about, um,", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: Best callback number?", "text": "my cell is six two, eight eight", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: Your check call is set for six pm.", "text": "perfect, thanks", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: Your check call is set for six pm.", "text": "alright", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: What is your MC?", "text": "It's four one five, five five, hold on", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: Can you make the six pm appointment?", "text": "That works for me.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "The trailer six two is running fine", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Best callback number?", "text": "it's seven one five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm loaded and rolling out of ontario now", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm calling to confirm the pickup for load four seven two six pm.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "my eta is- ugh, this gps just rerouted", "label": "wait", "cls": "J", "variant": "asr"}
+{"context": "Agent: Does the six pm slot work?", "text": "yeah, i can make it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm loaded and rolling out of", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm calling to confirm", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Your check call is set for Thursday morning.", "text": "Copy that.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i picked up the load from the shipper this morning", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: What is your current location?", "text": "About an", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm loaded and rolling out of Fontana now.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "can you tell the shipper that my eta is now", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "the the reefer is running fine and i'm", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i'm about twenty miles out but the traffic on the fifteen is", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "My truck is empty and I'm", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: The dock closes at eight am today.", "text": "alright", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm calling to confirm the pickup for load eight one five Thursday morning.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "The temperature on the flatbed", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: The dock closes at three thirty today.", "text": "Copy that.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm calling to confirm the pickup for load", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I just dropped trailer six two at the Fontana yard.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "Someone's at my window, give me a minute", "label": "speak", "cls": "K", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i just dropped the dry van at the barstow yard", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm loaded and rolling", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Rate is eighteen fifty all in.", "text": "deal, book it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "I'll take the Memphis load, I suppose.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "Sitting at", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "how far is the receiver from dallas", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "someone's at my window, give me a minute", "label": "speak", "cls": "K", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I picked up the load from the yard this morning.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "Can I pick up early if", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "i can pick up noon, but", "label": "wait", "cls": "G", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "My truck is empty and I'm looking for a load out", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "how far is the cross-dock from fresno", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "How far is", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "they told me the dock opens at thursday morning, apparently", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "Agent: Can you make the six pm appointment?", "text": "yeah, i can make it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "the the flatbed is running fine and i'm on schedule", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Your check call is set for Thursday morning.", "text": "perfect, thanks", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "can i pick up early if i get", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Can you make the tomorrow morning appointment?", "text": "That works for me.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "dispatch said the rate got bumped to eighteen fifty, supposedly", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "Agent: Can you make the noon appointment?", "text": "yes, no problem", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "I'll take the Laredo load, I suppose.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "about an hour out of ontario", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: The dock closes at noon today.", "text": "Okay, understood.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "", "text": "Can you send me the rate con again?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "uh, let me look at my calendar", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "my truck is empty and i'm looking for a load out of laredo", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Does the six pm slot work?", "text": "yeah, i", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "About an hour out of Phoenix.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "so after i deliver in fresno i was planning to", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: What is your MC?", "text": "it's three three zero, two, hold on", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: The dock closes at Thursday morning today.", "text": "Okay, understood.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "", "text": "I can be there by six pm, so", "label": "wait", "cls": "G", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm loaded and rolling out of", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "I delivered to the warehouse about an", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "We can do the drop trailer, and", "label": "wait", "cls": "G", "variant": "clean"}
+{"context": "Agent: Best I can do is two thousand two hundred.", "text": "okay, i'll take it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: The dock closes at Thursday morning today.", "text": "okay, understood", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I picked up the load from", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "the receiver signed everything and i'm out", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: The dock closes at eight am today.", "text": "Okay, understood.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: Rate is twenty one fifty all in.", "text": "That rate works", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i picked up the load from the cross-dock this morning", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: The dock closes at noon today.", "text": "okay, understood", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "i'd normally take that load, except", "label": "wait", "cls": "G", "variant": "asr"}
+{"context": "Agent: Anything else I can help with?", "text": "oh wait, there's something else", "label": "wait", "cls": "H", "variant": "asr"}
+{"context": "", "text": "I delivered the load", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: What number can I reach you at?", "text": "You can reach me at three three zero, two", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "send the paperwork", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "well, you know, it's kind of, like", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "The receiver signed everything and I'm out of there.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: The dock closes at three thirty today.", "text": "Great, thank you.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "", "text": "can you send me the rate", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "The trailer six two is", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "okay so basically, uh, i", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: What number can I reach you at?", "text": "It's three three zero, two", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "The the flatbed is running fine and I'm on schedule.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "I delivered to the shipper about an hour ago.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "wait, let me read the confirmation email", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm loaded and", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "okay, i'll", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i just dropped the dry van", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "What time", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "So, you know, about the delivery, you know", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "can you tell the yard that my eta is now", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: Best I can do is nineteen hundred.", "text": "that rate works for me", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "do i need a lumper", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "so after i deliver in ontario i was planning to", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: What is your MC?", "text": "Yeah, it's six two, eight eight", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "the rate works for me, although", "label": "wait", "cls": "G", "variant": "asr"}
+{"context": "Agent: I will email you the updated BOL.", "text": "Copy that.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: What number can I reach you at?", "text": "it's four one five, five five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: Does the three thirty slot work?", "text": "yeah, i can", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "what's the rate", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "is detention covered after two hours at the dock", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i picked up the load from the cross-dock this morning", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "Can you tell the yard that my ETA is now", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "", "text": "the detention was approved, or something", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "", "text": "the trailer got swapped at the cross-dock, or whatever it was", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "", "text": "I'll call the yard myself.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm calling to confirm the pickup for load two", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: The dock closes at Thursday morning today.", "text": "alright", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "if the dock is backed up i might have to", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm calling to confirm the pickup for load four seven two six pm", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: What is your MC?", "text": "it's six two, eight eight, hold on", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "Can you send me the lumper receipt again?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: Your check call is set for Thursday morning.", "text": "yeah, that works", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: Rate is eighteen fifty all in.", "text": "okay, i'll take it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "okay so basically, you know, i", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: Best callback number?", "text": "my cell is four one five, five five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: Best I can do is nineteen hundred.", "text": "that rate", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Can I get your MC number?", "text": "Yeah, it's three three zero, two", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "Let me find the BOL real quick", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "Agent: The dock closes at eight am today.", "text": "great, thank you", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: Best callback number?", "text": "you can reach me at four one five, five five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: What is your current location?", "text": "about an hour out", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "can i pick up early if i get there before thursday morning", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm calling to confirm the pickup for load four", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "can you tell the receiver that my eta is now", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: Best I can do is twenty one fifty.", "text": "okay, i'll take it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "My truck is empty and I'm looking for a load out of Stockton.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I just dropped the dry van at the Fresno yard.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Best callback number?", "text": "it's six two, eight eight", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "I already sent the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Best callback number?", "text": "my cell is three three zero, two", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: Best callback number?", "text": "You can reach me at seven one five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "my truck is empty and i'm", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "the pickup is at- sorry, i'm reading the wrong load", "label": "wait", "cls": "J", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "About an hour out", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Can you make the six pm appointment?", "text": "that works for me", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: What number can I reach you at?", "text": "My cell is three three zero, two", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "What time does the warehouse close?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm calling to confirm the pickup for load four seven two noon.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "the temperature on the reefer is", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Does the three thirty slot work?", "text": "That works for me.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Rate is twenty one fifty all in.", "text": "deal, book it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Can you make the Thursday morning appointment?", "text": "that works for me", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "Well, I mean, it's kind of, like", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: Does the six pm slot work?", "text": "yeah, i can", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "my truck is empty and", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i'll call the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: What is your current location?", "text": "about an", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Your check call is set for three thirty.", "text": "perfect, thanks", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: What is your MC?", "text": "Sure, MC seven one five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: Rate is two thousand two hundred all in.", "text": "that rate", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "is detention covered after two", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm calling to confirm", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "the temperature on the flatbed is holding steady", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm calling to confirm the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "can i pick up", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Dispatch said the rate got bumped to twenty one fifty, supposedly.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "", "text": "i'll take the denver load, i suppose", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "", "text": "I'll take the Barstow load, I suppose.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: Can you make the tomorrow morning appointment?", "text": "that works for me", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "About an", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "well, i mean, it's kind of, uh", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: Rate is two thousand two hundred all in.", "text": "That rate", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Dispatch said the rate got bumped to two thousand two hundred, supposedly.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "", "text": "i can pick up six pm, but", "label": "wait", "cls": "G", "variant": "asr"}
+{"context": "Agent: Your check call is set for three thirty.", "text": "okay, understood", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: The dock closes at noon today.", "text": "Copy that.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "", "text": "the trailer got swapped at dock four, or whatever it was", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "my truck is empty and i'm looking for a load out of barstow", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "I'm about twenty miles out but the traffic on the five is", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "", "text": "Give me a second to pull up the load", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "", "text": "How far is the cross-dock from Phoenix?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "we can do the drop trailer, and", "label": "wait", "cls": "G", "variant": "asr"}
+{"context": "Agent: I will email you the updated BOL.", "text": "yeah, that works", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "The rate came out to eighteen fifty, or something like that", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "Agent: What number can I reach you at?", "text": "it's six two, eight eight", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "What time does the cross-dock close?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "Okay so basically, I mean, I", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "my truck is empty and i'm looking for a load out of fresno", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Your check call is set for Thursday morning.", "text": "Yeah, that works.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: Does the six pm slot work?", "text": "Yes, no problem.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "so, i mean, about the delivery, i mean", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "So, uh, about the delivery, uh", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "One sec, let me check the rate con", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "", "text": "the temperature on the reefer is holding steady", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Is there anything else?", "text": "before i forget, one more question", "label": "wait", "cls": "H", "variant": "asr"}
+{"context": "", "text": "I can be there by noon, so", "label": "wait", "cls": "G", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "the trailer six two is running fine", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Do I need a lumper receipt for", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "just passed reno", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "i'll call the receiver myself", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "who do i call when i get", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "the receiver signed everything and i'm out of there", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "Let me ask my dispatcher and get back to you", "label": "speak", "cls": "K", "variant": "clean"}
+{"context": "Agent: Best callback number?", "text": "It's seven one five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i picked up the load", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm calling to confirm the pickup for load eight one five three thirty.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "the trailer six two", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Does the Thursday morning slot work?", "text": "That works for me.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "My truck is empty and I'm looking for a load out of Barstow.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "the temperature on the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Wait, let me read the confirmation email", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "", "text": "book me on the- wait, hold on", "label": "wait", "cls": "J", "variant": "asr"}
+{"context": "", "text": "can you send me the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Can you make the three thirty appointment?", "text": "yes, no problem", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "The receiver signed everything and I'm", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: What number can I reach you at?", "text": "My cell is six two, eight eight", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm calling to confirm the pickup for load two", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "is detention covered after", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i'll call the warehouse myself", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Rate is twenty one fifty all in.", "text": "okay, i'll take it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "what time does the warehouse close", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "Can I pick up early if I get there before eight am?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm loaded and rolling out of barstow now", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "the temperature on the dry", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Can I get your MC number?", "text": "it's seven one five, hold on", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "How far is the yard from Reno?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: What number can I reach you at?", "text": "you can reach me at three three zero, two", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "Yeah so, uh, the thing is, um", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: Best I can do is nineteen hundred.", "text": "Deal, book it.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Your check call is set for eight am.", "text": "alright", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "My truck is empty and I'm", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Is detention covered after two hours at", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "i delivered to dock four about an hour ago", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: What number can I reach you at?", "text": "You can reach me at four one five, five five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "I'll call dock four myself.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "can you check the- no, scratch that", "label": "speak", "cls": "J", "variant": "asr"}
+{"context": "", "text": "so, like, about the delivery, i mean", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "i can be there by three thirty, so", "label": "wait", "cls": "G", "variant": "asr"}
+{"context": "Agent: What is your MC?", "text": "Sure, MC six two, eight eight", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "What's the rate on that load out", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Your check call is set for noon.", "text": "Copy that.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "", "text": "so after i deliver in fontana i was planning to", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: Does the three thirty slot work?", "text": "that works for me", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "They told me the dock opens at tomorrow morning, apparently.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i picked up the load from dock four this morning", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "How far is the yard from Fresno?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "the trailer six two is running fine and i'm on schedule", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: The dock closes at eight am today.", "text": "okay, understood", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "The appointment moved to six pm, or whatever", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "Agent: The dock closes at Thursday morning today.", "text": "great, thank you", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: Does the noon slot work?", "text": "yeah, i can make it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "what's the rate on that", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i delivered to the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "the trailer got swapped at the receiver, or whatever it was", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "", "text": "who do i call when i get to", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i'm about twenty miles out but the traffic on the five is", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "Sitting at dock four right now.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "How far is the cross-dock from Fresno?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "let me find the po number real quick", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "Agent: Your check call is set for six pm.", "text": "Yeah, that works.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "", "text": "what's the rate on that load out of fontana", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "let me find the rate con real quick", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm loaded and rolling out of Stockton now.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "how far is the yard from fresno", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "can i pick up early if i get there before three thirty", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: Does the eight am slot work?", "text": "Yeah, I can", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i just dropped the dry van at the fresno yard", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "about an", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "they told me the dock opens at three thirty, apparently", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "Sitting at dock four", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Can I pick up early if I get there before", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "how far is the yard from reno", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I picked up the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Can you send me the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "what's the rate on that load out", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "I already sent the lumper receipt to your email.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "My truck is empty and I'm looking for a load out of Laredo.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "can i pick up early if i get there before", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "how far is the cross-dock from phoenix", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "one sec, let me check the po number", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "", "text": "well, i mean, it's kind of, i mean", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "i already sent the lumper receipt to your email", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "so after i deliver in dallas i was planning to", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "", "text": "I'll take the Stockton load, I suppose.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "", "text": "i already sent the po number to", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Your check call is set for tomorrow morning.", "text": "okay, got it", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: Best I can do is nineteen hundred.", "text": "That rate", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i picked up the load from the yard this morning", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm calling to confirm the pickup for load two two nine Thursday morning.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I picked up the load from the cross-dock", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "the temperature on the flatbed", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Can I pick up early if I get", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "I already sent the rate con", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "so, um, about the delivery, like", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm calling to confirm the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "my truck is empty and i'm looking for a load out of memphis", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "i wanted to ask about, uh,", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: Is there anything else?", "text": "Hold on, one other thing.", "label": "wait", "cls": "H", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I picked up the load from dock four this morning.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "the broker on that load said the", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "", "text": "Tell them I'll be- hmm, let me rethink this", "label": "wait", "cls": "J", "variant": "clean"}
+{"context": "", "text": "They told me the dock opens at Thursday morning, apparently.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "", "text": "how far is the receiver", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "About an hour out of Reno.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "What's the rate on that load out of Phoenix?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: Does the noon slot work?", "text": "that works for me", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "About an hour", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Let me find the PO number real quick", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "", "text": "what time does the cross-dock close", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: I will email you the updated BOL.", "text": "Great, thank you.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: I will email you the updated BOL.", "text": "Yeah, that works.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "The the dry van", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "can i pick up early if i get there before noon", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: What number can I reach you at?", "text": "my cell is six two, eight eight", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "can you send me the lumper", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Send the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "the the reefer is running fine and i'm on schedule", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I just dropped", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "just passed dallas", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "I'll call the warehouse myself.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Best callback number?", "text": "My cell is six two, eight eight", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: Does the Thursday morning slot work?", "text": "Yes, no problem.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "what's the rate on that load out of denver", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "Who do I call when", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "well, uh, it's kind of, uh", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "My truck is empty and", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Can you tell the shipper that my ETA is now", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "Agent: Best I can do is two thousand two hundred.", "text": "Okay, I'll take it.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "What time does dock four close?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "The rate came out to nineteen hundred, or something like that", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "", "text": "I can pick up eight am, but", "label": "wait", "cls": "G", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "Just passed Denver.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "That covers everything, I think.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: The dock closes at three thirty today.", "text": "great, thank you", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "I'd normally take that load, except", "label": "wait", "cls": "G", "variant": "clean"}
+{"context": "", "text": "The broker on that load said the", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "", "text": "the temperature on the dry van is holding steady", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "The shipper told me it's a drop trailer, I think.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "", "text": "Well, I mean, it's kind of, um", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: The dock closes at six pm today.", "text": "yeah, that works", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "Okay so basically, um, I", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "i delivered to the warehouse about an hour ago", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Does the three thirty slot work?", "text": "yeah, i can make it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm loaded and rolling out of laredo now", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "The temperature on the reefer is holding steady.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Your check call is set for six pm.", "text": "yeah, that works", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "Well, like, it's kind of, um", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "I can pick up noon, but", "label": "wait", "cls": "G", "variant": "clean"}
+{"context": "Agent: Rate is twenty one fifty all in.", "text": "Deal, book it.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Can I get your MC number?", "text": "sure, mc seven one five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "Is detention covered after two", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Rate is nineteen hundred all in.", "text": "deal, book it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "I already sent the rate con to your email.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "send the paperwork to my email", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Rate is eighteen fifty all in.", "text": "Okay, I'll take it.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Your check call is set for tomorrow morning.", "text": "great, thank you", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "that's all i need, i guess", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I just dropped the flatbed at the Dallas yard.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "We should be all set then, I guess.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i picked up the load from the receiver this morning", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "my truck is empty and i'm looking for a load out of dallas", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: What is your MC?", "text": "Yeah, it's four one five, five five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "One sec, the receiver is waving at me", "label": "speak", "cls": "K", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "just passed denver", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "do i need a lumper receipt for this one", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "the temperature on the reefer", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "The temperature on trailer six two is holding steady.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "Who do I call when I get to the yard?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: Best I can do is two thousand two hundred.", "text": "that rate works", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "The appointment moved to tomorrow morning, or whatever", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "Agent: Where are you now?", "text": "sitting at dock four right now", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "Can I pick up", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Where are you now?", "text": "Sitting at the receiver right now.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "I delivered the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: What number can I reach you at?", "text": "it's three three zero, two", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "I'll take the Dallas load, I suppose.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "My truck is empty and I'm looking for a load out of Fresno.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm calling to confirm the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "I delivered to the cross-dock about an hour ago.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "I wanted to ask about, I mean,", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "Can you send me", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "How far is the receiver from Dallas?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: Where are you now?", "text": "Just passed Reno.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Best I can do is two thousand two hundred.", "text": "That rate works", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "I can pick up six pm, but", "label": "wait", "cls": "G", "variant": "clean"}
+{"context": "", "text": "Is detention covered after two hours at the dock?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "i already sent the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "I wanted to ask about, you know,", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm loaded and rolling out of Reno now.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "If the dock is backed up I might have to", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "the the dry van", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I just dropped the flatbed at", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Does the six pm slot work?", "text": "Yeah, I can", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I just dropped the reefer at the Denver yard.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "So, um, about the delivery, um", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: What is your MC?", "text": "yeah, it's six two, eight eight", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: Can you make the noon appointment?", "text": "Yeah, I can", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm loaded and rolling out of Barstow now.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "one sec, let me check the rate con", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "", "text": "that covers everything, i think", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "", "text": "I'll take the Denver load, I suppose.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm calling to confirm the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Your check call is set for tomorrow morning.", "text": "perfect, thanks", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "How far is the receiver", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Okay, I'll", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm loaded and rolling out of Ontario now.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "the the dry van is running fine", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Yeah so, I mean, the thing is, um", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "Can you send", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i just dropped the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "they told me the dock opens at tomorrow morning, apparently", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "", "text": "so, you know, about the delivery, you know", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: Rate is twenty one fifty all in.", "text": "that rate works", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: The dock closes at noon today.", "text": "copy that", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "Can I pick up early if I get there before tomorrow morning?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "Okay, I'll head", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "i already sent the rate con to your email", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Does the noon slot work?", "text": "yeah, i", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "I already sent", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Is there anything else?", "text": "hold on, one other thing", "label": "wait", "cls": "H", "variant": "asr"}
+{"context": "Agent: Does the noon slot work?", "text": "Yeah, I", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "the appointment moved to noon, or whatever", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "Agent: What number can I reach you at?", "text": "you can reach me at four one five, five five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i just dropped the reefer at the denver yard", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: What number can I reach you at?", "text": "My cell is four one five, five five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: Your check call is set for six pm.", "text": "Great, thank you.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: Does the noon slot work?", "text": "yes, no problem", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "what time does", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "The the dry van is running fine", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I picked up the load from the receiver this morning.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "The trailer got swapped at the cross-dock, or whatever it was", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "my truck is empty and i'm", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Do I need a lumper receipt", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "what's the rate on that load out of phoenix", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: Best I can do is two thousand two hundred.", "text": "deal, book it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "yeah so, i mean, the thing is, like", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "i delivered the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "dispatch said the rate got bumped to two thousand two hundred, supposedly", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "sitting at the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: What is your current location?", "text": "About an hour out", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "i'll call dock four myself", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "The receiver signed everything and I'm out", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I just dropped the flatbed at the Fontana yard.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "The appointment moved to three thirty, or whatever", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "", "text": "Hold on, I'm pulling over so I can read it", "label": "speak", "cls": "K", "variant": "clean"}
+{"context": "", "text": "How far is the yard from Atlanta?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: What is your MC?", "text": "It's three three zero, two, hold on", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "I've got another call coming in, hang on", "label": "speak", "cls": "K", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm calling to confirm the pickup for load four", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "What time does the receiver close?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "my truck is empty and i'm looking for a", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Who do I call when I get", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: The dock closes at noon today.", "text": "Great, thank you.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "", "text": "The detention was approved, or something", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "sitting at the warehouse right now", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i just dropped the flatbed at the fresno yard", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "they told me the dock opens at six pm, apparently", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "", "text": "Can you tell the cross-dock that my ETA is now", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "", "text": "i delivered to the shipper about an hour ago", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: What is your MC?", "text": "sure, mc six two, eight eight", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: Can I get your MC number?", "text": "Yeah, it's seven one five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "The trailer six two is running fine and I'm on schedule.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "tell them i'll be- hmm, let me rethink this", "label": "wait", "cls": "J", "variant": "asr"}
+{"context": "", "text": "okay, i'll head there now", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: What is your MC?", "text": "sure, mc three three zero, two", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "yeah so, um, the thing is, you know", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "What time does", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "one sec, let me check the lumper receipt", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "", "text": "i already sent the po number to your email", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "The the dry van is running fine and I'm on schedule.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "the the dry van is running fine and i'm on schedule", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "my truck is empty and i'm looking for a load out of reno", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "Just passed Laredo.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Does the noon slot work?", "text": "That works for me.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Can you make the three thirty appointment?", "text": "Yes, no problem.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Where are you now?", "text": "Sitting at the yard", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Your check call is set for tomorrow morning.", "text": "okay, understood", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: The dock closes at tomorrow morning today.", "text": "sounds good", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: Can I get your MC number?", "text": "Sure, MC six two, eight eight", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I picked up the load from the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Yeah so, like, the thing is, uh", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: What is your MC?", "text": "Sure, MC three three zero, two", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "What's the rate on that load", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "The trailer got swapped at the shipper, or whatever it was", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "", "text": "the temperature on", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "About an hour out of Fontana.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "Who do I call when I get to", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i picked up the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "yeah so, uh, the thing is, um", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: Does the tomorrow morning slot work?", "text": "yes, no problem", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "I'll take the Atlanta load, I suppose.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: Can you make the noon appointment?", "text": "yeah, i can make it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "Well, you know, it's kind of, like", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I just dropped the reefer at the Memphis yard.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "who do i call when", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "My truck is empty and I'm looking for", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Where are you now?", "text": "About an hour out of Atlanta.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "okay, i'll head", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "dispatch said the rate got bumped to twenty one fifty, supposedly", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "", "text": "yeah so, i mean, the thing is, i mean", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: What is your current location?", "text": "Sitting at the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "I'll call dock", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Rate is twenty one fifty all in.", "text": "that rate works for me", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "hold on, i'm pulling over so i can read it", "label": "speak", "cls": "K", "variant": "asr"}
+{"context": "", "text": "What's the rate", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "How far is the shipper from Stockton?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "the trailer got swapped at the shipper, or whatever it was", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "", "text": "well, like, it's kind of, um", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "I delivered to the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Best callback number?", "text": "You can reach me at three three zero, two", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "What time does the shipper close?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "The trailer six two", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: What number can I reach you at?", "text": "my cell is three three zero, two", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "my truck is empty and i'm looking for a load out of stockton", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "just passed reno", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "send me the- never mind, i found it", "label": "speak", "cls": "J", "variant": "asr"}
+{"context": "", "text": "I delivered the load about an", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "That's all I need, I guess.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "", "text": "how far is", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm loaded and rolling out of reno now", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "I'll call", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Best callback number?", "text": "you can reach me at three three zero, two", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "do i need", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Can you make the six pm appointment?", "text": "Yes, no problem.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Can I get your MC number?", "text": "yeah, it's seven one five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i picked up the load from", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i already sent the bol to your email", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "I already sent the PO number to", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Can I pick up early if I get there", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "can you send me the rate con again", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: Your check call is set for noon.", "text": "copy that", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "One sec, let me check the PO number", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "Agent: Can I get your MC number?", "text": "sure, mc six two, eight eight", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "Uh, let me look at my calendar", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "Agent: Anything else I can help with?", "text": "hold on, one other thing", "label": "wait", "cls": "H", "variant": "asr"}
+{"context": "", "text": "the rate came out to eighteen fifty, or something like that", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "", "text": "The temperature on the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "can i pick up early if i get there", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Do I need", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i picked up the load from the cross-dock", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Is there anything else?", "text": "actually yeah, one more thing", "label": "wait", "cls": "H", "variant": "asr"}
+{"context": "", "text": "i'm about twenty miles out but the traffic on the ten is", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: Does the tomorrow morning slot work?", "text": "that works for me", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: What is your current location?", "text": "Sitting at the cross-dock right now.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "can you send me the po number again", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "How far is the shipper from Atlanta?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm calling to confirm the pickup for load eight one five thursday morning", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm calling to confirm the pickup for load nine one three noon.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Does the tomorrow morning slot work?", "text": "That works for me.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: I will email you the updated BOL.", "text": "okay, got it", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: Your check call is set for three thirty.", "text": "Yeah, that works.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "Just passed Dallas.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "Yeah so, um, the thing is, you know", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "what time", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "how far is the shipper from atlanta", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "I can pick up tomorrow morning, but", "label": "wait", "cls": "G", "variant": "clean"}
+{"context": "", "text": "what time does the receiver close", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "i've got another call coming in, hang on", "label": "speak", "cls": "K", "variant": "asr"}
+{"context": "", "text": "i delivered the load about an hour ago", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "Dispatch said the rate got bumped to eighteen fifty, supposedly.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: Where are you now?", "text": "Just passed Atlanta.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Does the tomorrow morning slot work?", "text": "Yes, no problem.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "How far", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "yeah so, i mean, the thing is, um", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: Anything else I can help with?", "text": "Hold on, one other thing.", "label": "wait", "cls": "H", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I just dropped the flatbed at the Fresno yard.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "My truck is empty and I'm looking for a load out of Memphis.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "The rate works for me, although", "label": "wait", "cls": "G", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I just dropped the flatbed", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "the trailer six two is running fine and i'm", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Your check call is set for tomorrow morning.", "text": "Great, thank you.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm calling to confirm the pickup for load nine one three noon", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Can you make the noon appointment?", "text": "yeah, i can", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "hang on, let me grab the load number", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "Agent: Does the Thursday morning slot work?", "text": "that works for me", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "can i pick up early if i get there before eight am", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "the trailer six two is", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i delivered the load about", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i already sent", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "can i pick up early if", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Can I get your MC number?", "text": "Yeah, it's six two, eight eight", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "the receiver signed everything and i'm", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "What's the rate on that load out of Dallas?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: Does the noon slot work?", "text": "Yes, no problem.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm loaded and rolling", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Best I can do is nineteen hundred.", "text": "okay, i'll take it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "So after I deliver in Dallas I was planning to", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "", "text": "the rate came out to two thousand two hundred, or something like that", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "", "text": "Okay so basically, uh, I", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: The dock closes at six pm today.", "text": "Yeah, that works.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: Anything else I can help with?", "text": "actually yeah, one more thing", "label": "wait", "cls": "H", "variant": "asr"}
+{"context": "", "text": "i can be there by noon, so", "label": "wait", "cls": "G", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm calling to confirm the pickup for load two two nine thursday morning", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "i wanted to ask about, you know,", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "So after I deliver in Fontana I was planning to", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "", "text": "I'm about twenty miles out but the traffic on the fifteen is", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "", "text": "Let me find the rate con real quick", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "", "text": "the rate came out to twenty one fifty, or something like that", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "", "text": "i'll call the yard myself", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Your check call is set for three thirty.", "text": "sounds good", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "book the- forget it, i'll do it online", "label": "speak", "cls": "J", "variant": "asr"}
+{"context": "", "text": "i can pick up eight am, but", "label": "wait", "cls": "G", "variant": "asr"}
+{"context": "", "text": "is detention covered", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Book me on the- wait, hold on", "label": "wait", "cls": "J", "variant": "clean"}
+{"context": "", "text": "how far", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Rate is two thousand two hundred all in.", "text": "that rate works", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "my truck is empty and i'm looking for a load out", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "can you send me the lumper receipt again", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm calling to confirm the pickup for load eight one five Thursday morning.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "i delivered the load", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "the shipper told me it's a drop trailer, i think", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "Agent: The dock closes at three thirty today.", "text": "copy that", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "My truck is empty and I'm looking for a load out of Dallas.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I picked up the load from the cross-dock this morning.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Best callback number?", "text": "You can reach me at six two, eight eight", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "i can pick up tomorrow morning, but", "label": "wait", "cls": "G", "variant": "asr"}
+{"context": "Agent: The dock closes at noon today.", "text": "great, thank you", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: What is your current location?", "text": "About an hour out of Dallas.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Your check call is set for three thirty.", "text": "Okay, understood.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "", "text": "Well, I mean, it's kind of, uh", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "The trailer got swapped at the warehouse, or whatever it was", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "Agent: Where are you now?", "text": "just passed atlanta", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "my truck is empty and i'm looking for a load", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "they told me the dock opens at eight am, apparently", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "about an hour", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Send me the- never mind, I found it.", "label": "speak", "cls": "J", "variant": "clean"}
+{"context": "Agent: Best callback number?", "text": "You can reach me at four one five, five five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i just dropped", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "about an hour out of reno", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "what time does the shipper close", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "The rate came out to two thousand two hundred, or something like that", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "", "text": "Can you check the- no, scratch that.", "label": "speak", "cls": "J", "variant": "clean"}
+{"context": "", "text": "can you send me", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Can I get your MC number?", "text": "It's seven one five, hold on", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "The pickup is at- sorry, I'm reading the wrong load", "label": "wait", "cls": "J", "variant": "clean"}
+{"context": "", "text": "I delivered to", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Your check call is set for Thursday morning.", "text": "Okay, understood.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "", "text": "we should be all set then, i guess", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "Agent: Can I get your MC number?", "text": "it's six two, eight eight, hold on", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i just dropped trailer six two at", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "The trailer got swapped at dock four, or whatever it was", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "Agent: Your check call is set for tomorrow morning.", "text": "sounds good", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm calling to confirm the pickup for load four seven two noon", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "Sitting at the yard right now.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "sitting at the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "what time does the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: What number can I reach you at?", "text": "It's four one five, five five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I just dropped the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "What's the rate on that", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm loaded and rolling out of", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Set my check call for- actually", "label": "wait", "cls": "J", "variant": "clean"}
+{"context": "", "text": "is detention covered after two hours at", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Does the eight am slot work?", "text": "yeah, i can", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "sitting at the yard", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "let me ask my dispatcher and get back to you", "label": "speak", "cls": "K", "variant": "asr"}
+{"context": "Agent: The dock closes at tomorrow morning today.", "text": "okay, got it", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "the main problem with that lane is the", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "", "text": "The temperature on the dry van is holding steady.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "the broker said the lumper was covered, supposedly", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "", "text": "how far is the shipper from stockton", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "Let me find the lumper receipt real quick", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "Agent: Rate is eighteen fifty all in.", "text": "Deal, book it.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Your check call is set for tomorrow morning.", "text": "Okay, understood.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "", "text": "The trailer got swapped at the receiver, or whatever it was", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "", "text": "okay so basically, um, i", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i picked up the load from", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Best callback number?", "text": "It's six two, eight eight", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i just dropped trailer six two at the fontana yard", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I just dropped", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "How far is the cross-dock", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Anything else I can help with?", "text": "before i forget, one more question", "label": "wait", "cls": "H", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm loaded and rolling out of", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Can you send me the rate", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "sitting at the cross-dock right now", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "well, i mean, it's kind of, like", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I just dropped the dry van at the Barstow yard.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "So, like, about the delivery, I mean", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "Can I pick up early if I get there before noon?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "who do i call when i get to the receiver", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "okay so basically, i mean, i", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: What number can I reach you at?", "text": "My cell is seven one five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "", "text": "I wanted to ask about, uh,", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "the temperature on trailer six two is holding steady", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "Book the- forget it, I'll do it online.", "label": "speak", "cls": "J", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm calling to confirm the pickup for load eight one five thursday morning", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm loaded and rolling out of fontana now", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i just dropped the flatbed at", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i'll take the atlanta load, i suppose", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "", "text": "the appointment moved to six pm, or whatever", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "", "text": "I already sent the PO", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "What's the rate on that load out of Fontana?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "The temperature on the flatbed is holding steady.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "I'm about twenty miles out but the traffic on the forty is", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "Agent: What is your MC?", "text": "it's four one five, five five, hold on", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "my truck is empty and i'm looking for", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i delivered to the warehouse about an", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Does the six pm slot work?", "text": "yes, no problem", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I picked up the load from", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "So after I deliver in Fresno I was planning to", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "", "text": "let me find the lumper receipt real quick", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "Agent: Anything else I can help with?", "text": "Oh wait, there's something else.", "label": "wait", "cls": "H", "variant": "clean"}
+{"context": "", "text": "i'm about twenty miles out but the traffic on the forty is", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "Sitting at the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "send the paperwork to", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "The temperature on the reefer", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Send the paperwork to", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Who do I call", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: I will email you the updated BOL.", "text": "alright", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: The dock closes at three thirty today.", "text": "okay, got it", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "I wanted to ask about, like,", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "What's the rate on that load out of Laredo?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: Is there anything else?", "text": "oh wait, there's something else", "label": "wait", "cls": "H", "variant": "asr"}
+{"context": "Agent: Rate is two thousand two hundred all in.", "text": "deal, book it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "The the dry van is running fine and I'm on schedule.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm calling to confirm the pickup for load eight one five three thirty", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "My truck is empty and I'm looking for a load out of Laredo.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "Yeah so, like, the thing is, you know", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: The dock closes at eight am today.", "text": "Great, thank you.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "", "text": "i already sent the po", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Your check call is set for six pm.", "text": "great, thank you", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "Dispatch said the rate got bumped to nineteen hundred, supposedly.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm calling to confirm the pickup for load eight one", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "So after I deliver in Barstow I was planning to", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "Agent: Can I get your MC number?", "text": "It's six two, eight eight, hold on", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm loaded and rolling out of Memphis now.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "the the dry van is running fine and i'm on schedule", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Best callback number?", "text": "My cell is three three zero, two", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "Just passed Reno.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: What number can I reach you at?", "text": "my cell is seven one five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "send the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "let me find the bol real quick", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "", "text": "So, I mean, about the delivery, I mean", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i picked up the load from the", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Send the paperwork", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Can you make the six pm appointment?", "text": "Yeah, I can", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Can I pick up early if I get there before Thursday morning?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "So after I deliver in Ontario I was planning to", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm calling to confirm the pickup for load eight one", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "My truck is empty and I'm looking for a", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "My ETA is- ugh, this GPS just rerouted", "label": "wait", "cls": "J", "variant": "clean"}
+{"context": "", "text": "They told me the dock opens at eight am, apparently.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "Agent: Can I get your MC number?", "text": "yeah, it's six two, eight eight", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "Okay so basically, you know, I", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: Does the eight am slot work?", "text": "yeah, i can make it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "i wanted to ask about, i mean,", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: Can you make the six pm appointment?", "text": "yes, no problem", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "i already sent the rate con", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Anything else I can help with?", "text": "Before I forget, one more question.", "label": "wait", "cls": "H", "variant": "clean"}
+{"context": "Agent: Your check call is set for three thirty.", "text": "yeah, that works", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "Yeah so, you know, the thing is, I mean", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "so after i deliver in barstow i was planning to", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "", "text": "the rate came out to nineteen hundred, or something like that", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i'm calling to confirm the pickup", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm loaded and rolling out of stockton now", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Rate is twenty one fifty all in.", "text": "Okay, I'll take it.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: What is your MC?", "text": "yeah, it's four one five, five five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "what time does dock four close", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "about an hour out of fontana", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "i need the- no, hang on", "label": "wait", "cls": "J", "variant": "asr"}
+{"context": "", "text": "Who do I call when I get to dock four?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "what's the rate on that load out of dallas", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "can you tell the cross-dock that my eta is now", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "", "text": "The temperature on", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "Can I pick up early if I get there before three thirty?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "one sec, let me check the bol", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "Agent: Does the six pm slot work?", "text": "Yeah, I", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm calling to confirm the pickup for load", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm loaded and rolling out of memphis now", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "Okay, I'll head there now.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Best I can do is nineteen hundred.", "text": "deal, book it", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "So after I deliver in Atlanta I was planning to", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "", "text": "set my check call for- actually", "label": "wait", "cls": "J", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I just dropped the dry van", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "the trailer six two is running fine and i'm on schedule", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Rate is two thousand two hundred all in.", "text": "Deal, book it.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "The receiver signed everything", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Is there anything else?", "text": "Oh wait, there's something else.", "label": "wait", "cls": "H", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "The the reefer is running fine and I'm", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Is there anything else?", "text": "Before I forget, one more question.", "label": "wait", "cls": "H", "variant": "clean"}
+{"context": "", "text": "One sec, let me check the BOL", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "", "text": "yeah so, like, the thing is, you know", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "I can be there by three thirty, so", "label": "wait", "cls": "G", "variant": "clean"}
+{"context": "", "text": "The appointment moved to noon, or whatever", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "Agent: Where are you now?", "text": "sitting at dock four", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i just dropped the flatbed at the dallas yard", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: I will email you the updated BOL.", "text": "sounds good", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: The dock closes at eight am today.", "text": "perfect, thanks", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "sitting at the yard right now", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "i delivered to the cross-dock about an hour ago", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "the receiver signed everything", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "I already sent the BOL to your email.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: I will email you the updated BOL.", "text": "perfect, thanks", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "So after I deliver in Denver I was planning to", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "", "text": "the appointment moved to three thirty, or whatever", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "Agent: I will email you the updated BOL.", "text": "copy that", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "I'll call the", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "the appointment moved to tomorrow morning, or whatever", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "Agent: Your check call is set for Thursday morning.", "text": "okay, understood", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "i'll call dock", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "yeah so, you know, the thing is, i mean", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "what's the rate on that load out of laredo", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "so after i deliver in atlanta i was planning to", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: Can you make the noon appointment?", "text": "Yes, no problem.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "how far is the shipper", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Who do I call when I get to the receiver?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: Where are you now?", "text": "just passed laredo", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "give me a second to pull up the load", "label": "wait", "cls": "K", "variant": "asr"}
+{"context": "", "text": "Do I need a lumper", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "i delivered to", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "dispatch said the rate got bumped to nineteen hundred, supposedly", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "sitting at the receiver right now", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I picked up the load from the shipper this morning.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "i wanted to ask about, um,", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "How far is the shipper", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Can you make the Thursday morning appointment?", "text": "That works for me.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "My truck is empty and I'm looking for a load", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "i'll take the stockton load, i suppose", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "", "text": "i wanted to ask about, like,", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i just dropped", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "who do i call when i get to the shipper", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "the trailer got swapped at the warehouse, or whatever it was", "label": "wait", "cls": "I", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i just dropped the flatbed", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i'll take the dallas load, i suppose", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "", "text": "how far is the cross-dock", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I'm calling to confirm the pickup", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "Sitting at the warehouse right now.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "Agent: What is your MC?", "text": "sure, mc seven one five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: The dock closes at Thursday morning today.", "text": "Great, thank you.", "label": "speak", "cls": "C", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "The trailer six two is running fine and I'm on schedule.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "well, i mean, it's kind of, um", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "So, um, about the delivery, like", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "Hang on, let me grab the load number", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "", "text": "who do i call", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Can you send me the lumper", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Can I get your MC number?", "text": "Sure, MC seven one five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I picked up the load from the cross-dock this morning.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Best callback number?", "text": "you can reach me at seven one five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "", "text": "One sec, let me check the lumper receipt", "label": "wait", "cls": "K", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "my truck is empty and i'm looking for a load out of laredo", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "Is detention covered", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Where are you now?", "text": "about an hour out of phoenix", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Does the three thirty slot work?", "text": "Yeah, I can", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "I picked up the load", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "The receiver signed everything and", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "the the flatbed is running fine and", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Can I get your MC number?", "text": "yeah, it's three three zero, two", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "The trailer six two is running fine and I'm", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "The the reefer is running fine and I'm on schedule.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "Well, uh, it's kind of, uh", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "I need the- no, hang on", "label": "wait", "cls": "J", "variant": "clean"}
+{"context": "", "text": "I delivered the load about", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "i can be there by six pm, so", "label": "wait", "cls": "G", "variant": "asr"}
+{"context": "", "text": "What's the rate on that load out of Denver?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: Rate is two thousand two hundred all in.", "text": "That rate works", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Rate is two thousand two hundred all in.", "text": "that rate works for me", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "the receiver signed everything and", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "can you send", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Is detention covered after", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "so after i deliver in denver i was planning to", "label": "wait", "cls": "D", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "The the flatbed is running fine and", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "About an hour out of Ontario.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "I'll call the receiver myself.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "do i need a lumper receipt", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "can i pick up early if i get there before tomorrow morning", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "Can you tell the receiver that my ETA is now", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i just dropped the reefer at the memphis yard", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "", "text": "who do i call when i get to dock four", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "", "text": "Who do I call when I get to the shipper?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "", "text": "I'm about twenty miles out but the traffic on the ten is", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "", "text": "The temperature on the reefer is", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "Agent: Best I can do is two thousand two hundred.", "text": "Deal, book it.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "so, um, about the delivery, um", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "", "text": "I delivered to dock four about an hour ago.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "i'll take the barstow load, i suppose", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "Agent: Your check call is set for Thursday morning.", "text": "copy that", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "The temperature on the dry", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "what's the rate on that load", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "do i need a lumper receipt for", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "Agent: Does the Thursday morning slot work?", "text": "yes, no problem", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I'm loaded and rolling out of Laredo now.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "", "text": "The broker said the lumper was covered, supposedly.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "", "text": "i delivered the load about an", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "i'll take the laredo load, i suppose", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "", "text": "Can you send me the PO number again?", "label": "speak", "cls": "B", "variant": "clean"}
+{"context": "Agent: Best I can do is nineteen hundred.", "text": "Okay, I'll take it.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "i'll take the memphis load, i suppose", "label": "speak", "cls": "I", "variant": "asr"}
+{"context": "Agent: I will email you the updated BOL.", "text": "great, thank you", "label": "speak", "cls": "C", "variant": "asr"}
+{"context": "", "text": "I delivered to the warehouse about an hour ago.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "I just dropped trailer six two at", "label": "wait", "cls": "T", "variant": "clean"}
+{"context": "", "text": "yeah so, like, the thing is, uh", "label": "wait", "cls": "E", "variant": "asr"}
+{"context": "Agent: Dispatch, how can I help?", "text": "i just dropped the flatbed at the fontana yard", "label": "speak", "cls": "A", "variant": "asr"}
+{"context": "Agent: Where are you now?", "text": "about an hour out", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "who do i call when i get to the yard", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: Best I can do is two thousand two hundred.", "text": "that rate works for me", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Best callback number?", "text": "My cell is four one five, five five", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "My truck is empty and I'm looking for a load out of Reno.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: Where are you now?", "text": "about an hour out of atlanta", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "", "text": "The main problem with that lane is the", "label": "wait", "cls": "D", "variant": "clean"}
+{"context": "Agent: Rate is nineteen hundred all in.", "text": "Deal, book it.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "I already sent the PO number to your email.", "label": "speak", "cls": "A", "variant": "clean"}
+{"context": "Agent: What is your current location?", "text": "about an hour out of dallas", "label": "speak", "cls": "H", "variant": "asr"}
+{"context": "Agent: Best callback number?", "text": "you can reach me at six two, eight eight", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: Can you make the six pm appointment?", "text": "yeah, i can", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "Well, I mean, it's kind of, I mean", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "Agent: What number can I reach you at?", "text": "It's six two, eight eight", "label": "wait", "cls": "F", "variant": "clean"}
+{"context": "Agent: What number can I reach you at?", "text": "my cell is four one five, five five", "label": "wait", "cls": "F", "variant": "asr"}
+{"context": "Agent: Best I can do is twenty one fifty.", "text": "Okay, I'll take it.", "label": "speak", "cls": "H", "variant": "clean"}
+{"context": "", "text": "Yeah so, I mean, the thing is, like", "label": "wait", "cls": "E", "variant": "clean"}
+{"context": "", "text": "how far is the yard from atlanta", "label": "speak", "cls": "B", "variant": "asr"}
+{"context": "Agent: What is your current location?", "text": "sitting at", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "They told me the dock opens at three thirty, apparently.", "label": "speak", "cls": "I", "variant": "clean"}
+{"context": "", "text": "The rate came out to twenty one fifty, or something like that", "label": "wait", "cls": "I", "variant": "clean"}
+{"context": "Agent: This is dispatch, go ahead.", "text": "i'm loaded and", "label": "wait", "cls": "T", "variant": "asr"}
+{"context": "", "text": "one sec, the receiver is waving at me", "label": "speak", "cls": "K", "variant": "asr"}
+{"context": "", "text": "They told me the dock opens at six pm, apparently.", "label": "speak", "cls": "I", "variant": "clean"}
