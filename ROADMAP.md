@@ -1,22 +1,22 @@
 # Roadmap: the environment ladder to production
 
-Dictated by the policy owner on 2026-08-24. Four environments, each with a distinct job, ordered by how far judgment travels from its author. What exists tonight is marked; the rest is the trajectory the submission promises.
+Dictated by the policy owner on 2026-08-24. Four environments, each with a distinct job, ordered by how far judgment travels from its author. What exists tonight is marked; the rest is the trajectory the submission promises. The ladder is not hypothetical: it is transplanted from a production LLM system the author operated (local compose spinup, per-commit Kubernetes staging namespaces, record/replay fixtures gating CI, a release pipeline with an eval stage), re-sized for one model.
 
-## Dev (exists tonight)
+## dev (exists tonight)
 
-Local conditions: venv on the laptop, MPS training, seeded synthesis, gold-set evaluation, the whole loop in one place. A full iteration (synthesize, train, evaluate, log) runs in about two minutes, which is what makes the iteration log honest rather than aspirational.
+Local conditions, everything reproducible on one machine: venv training on MPS, seeded synthesis, gold-set evaluation, and the serving container spun up locally (Docker now; the same container under a local Kubernetes spinup, kind or minikube, as the scale form). CI checks run locally before they run anywhere else: `make evals` executes the same tier 1 guardrails and tier 2 bands the pipeline gates on, so a laptop can veto a promotion for exactly the reasons CI would, and a local CD copy can rehearse the deploy path when needed. A full loop iteration (synthesize, train, evaluate, log) runs in about two minutes, which is what makes the iteration log honest rather than aspirational.
 
-## Test 1: happy path (partially exists)
+## staging1: happy path, the user demo test (partially exists)
 
-The containerized API driven end to end over the anchor scenarios: complete statements, questions, acks, readouts, connector-finals, each hitting /predict and asserting the expected decision at the operating threshold. The deterministic guardrails in EVALS.md are the gate; a red blocks promotion. Exists as evaluate.py plus the Dockerfile; the missing piece is wiring them as a smoke suite that runs against the running container rather than the model files.
+The containerized API driven end to end over the anchor scenarios the way a user would meet them: complete statements, questions, acks, readouts, connector-finals, each hitting /predict and asserting the expected decision at the operating threshold, plus the type-and-watch demo page a human can poke. The deterministic guardrails in EVALS.md are the gate; a red blocks promotion. Exists as evaluate.py plus the Dockerfile; the missing piece is the smoke suite pointed at the running container rather than the model files.
 
-## Test 2: stress, synthetic data (partially exists)
+## staging2: synthetic edge cases, the stress test (partially exists)
 
-The same container under load: bench.py hammering /predict with synthesized payloads at stepped concurrency, latency percentiles and throughput against the bands, plus soak duration to catch leaks and drift in tail latency. The synthetic generator doubles as the load corpus, which is the point of owning it: the stress environment never runs dry and never leaks real caller data into a test bed.
+The same container under adversarial and volume pressure: bench.py hammering /predict with synthesized payloads at stepped concurrency, latency percentiles and throughput against the bands, soak duration to catch leaks and tail drift, and the edge-case corpus (judgment classes, truncations, ASR-style variants) served as traffic rather than as files. Owning the synthetic generator pays twice here: the load corpus never runs dry, and no real caller data ever enters a test bed.
 
-## Production: serve plus both replay modes (the trajectory)
+## production: online and offline testing (the trajectory)
 
-The serving container, plus the two replay lanes that make promotion safe:
+The serving deployment, plus the two replay lanes that make promotion safe:
 
 Offline replay: recorded traffic re-scored by any candidate model. Every recorded turn (first my own voice stack's transcripts, at scale the platform's production logs) becomes a regression corpus; a candidate must replay the archive and show its disagreements with the incumbent before it touches live traffic. This is the promotion gate, and it is also how a mistake found once stays found.
 
@@ -26,4 +26,4 @@ The two lanes answer different questions: offline replay asks "did we break anyt
 
 ## The thread through all four
 
-Promotion between environments is gated by the same EVALS.md contract everywhere: tier 1 guardrails all green, tier 2 bands in range, one iterations.md row per attempt. The environments change; the referee does not.
+Promotion up the ladder (dev, staging1, staging2, production) is gated by the same EVALS.md contract everywhere: tier 1 guardrails all green, tier 2 bands in range, one iterations.md row per attempt. The environments change; the referee does not.
