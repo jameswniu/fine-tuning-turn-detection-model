@@ -41,3 +41,14 @@ def gold_threshold(path: str | Path = "data/gold_set.json") -> float:
     except (FileNotFoundError, json.JSONDecodeError):
         return DEFAULT_SPEAK_THRESHOLD
     return gold.get("speak_threshold", DEFAULT_SPEAK_THRESHOLD)
+
+
+def load_threshold(model_dir: str | Path) -> float:
+    """Operating threshold for a model dir: its threshold.json if present, else the gold-set default."""
+    p = Path(model_dir) / "threshold.json"
+    if p.exists():
+        try:
+            return json.load(open(p, encoding="utf-8"))["threshold"]
+        except (json.JSONDecodeError, KeyError):
+            pass
+    return gold_threshold()

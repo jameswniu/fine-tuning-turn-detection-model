@@ -167,6 +167,42 @@ BANKS: list[tuple[str, str, str | None, list[str]]] = [
         "The rate came out to {rate}, or something like that",
         "The trailer got swapped at {facility}, or whatever it was",
     ]),
+    ("I", "speak", None, [
+        "They said the gate code is the same as last time, supposedly.",
+        "The receiver told me I can come early, apparently.",
+        "My dispatcher said you'd have the rate con already, I think.",
+        "That should be everything on my end, I guess.",
+    ]),
+    ("I", "wait", None, [
+        "The gate code changed last week, or something",
+        "The lumper fee was ninety bucks, or whatever",
+        "The pallet count came out to twenty two, or something like that",
+    ]),
+    ("K", "wait", None, [
+        "Hold on, I'm scrolling to find it",
+        "Wait, it's in my other email, one sec",
+        "Let me pull the rate con up on my phone",
+        "Hang on, I'm looking for the gate code",
+    ]),
+    ("K", "speak", None, [
+        "The dock guy is calling me over, hang on",
+        "I'm getting flagged through the gate, one second",
+        "My co-driver is asking me something, hold on",
+    ]),
+    ("A", "speak", None, [
+        "I need to move my dentist appointment to Thursday.",
+        "The package finally showed up this morning.",
+        "I'm heading to the gym right after this call.",
+    ]),
+    ("B", "speak", None, [
+        "What's the weather looking like this weekend?",
+        "How long is the drive to the airport at five?",
+        "Did anything important come in this morning?",
+    ]),
+    ("D", "wait", None, [
+        "Can you add a reminder for the thing about the",
+        "I was going to ask you about the email from",
+    ]),
     # J: self-interrupt restarts -> wait
     ("J", "wait", None, [
         "Book me on the- wait, hold on",
@@ -220,7 +256,7 @@ def truncate(text: str, rng: random.Random) -> str | None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", default="data/train.jsonl")
-    ap.add_argument("--per-template", type=int, default=6, help="filled instances per template")
+    ap.add_argument("--per-template", type=int, default=10, help="filled instances per template")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--gold", default="data/gold_set.json")
     args = ap.parse_args()

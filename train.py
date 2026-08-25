@@ -216,7 +216,32 @@ def main() -> None:
         json.dump(report, f, indent=2)
     print(f"best checkpoint saved to {args.out} (val_pr_auc={best_pr_auc:.4f})")
 
+    best_thr, best_cost = 0.5, float("inf")
+    for i in range(1, 99):
+        thr = i / 100
+        fp = sum(1 for p, l in zip(best_probs, best_labels) if p >= thr and l == 0)
+        fn = sum(1 for p, l in zip(best_probs, best_labels) if p < thr and l == 1)
+        cost = 5 * fp + fn
+        if cost < best_cost or (cost == best_cost and thr > best_thr):
+            best_cost, best_thr = cost, thr
+    thr_payload = {"threshold": best_thr, "cost_ratio": 5, "method": "cost-optimal on validation curve, cost = 5*FP + FN", "expected_val_cost": best_cost}
+    with open(Path(args.out) / "threshold.json", "w", encoding="utf-8") as f:
+        json.dump(thr_payload, f, indent=2)
+    print(f"cost-optimal operating threshold: {best_thr} (val cost {best_cost})")
+
+    op_metrics = metrics_at(best_labels, best_probs, best_thr)
+    report["operating_threshold"] = best_thr
+    report["operating_precision_speak"] = op_metrics["precision_speak"]
+    report["operating_recall_speak"] = op_metrics["recall_speak"]
+    with open(Path(args.out) / "training_report.json", "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2)
+
     export_onnx(args.out)
+
+    for suffix in ("-onnx", "-onnx-int8"):
+        target_dir = Path(f"{args.out}{suffix}")
+        if target_dir.exists():
+            shutil.copy(Path(args.out) / "threshold.json", target_dir / "threshold.json")
 
 
 if __name__ == "__main__":

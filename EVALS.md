@@ -43,6 +43,12 @@ These are the absolute rules from POLICY.md turned into gates. One red blocks th
 | ASR-robustness delta | asr-variant slice within 5 points of clean slice on recall | to be measured | measure in v2 |
 | Model-only inference | p50 at or below 15 ms CPU (anchors: 12 ms smart-turn v3, 5 ms LiveKit text) | to be measured | measure in v2 |
 | Throughput sanity | at or above 200 req/s single worker (1M calls/month at ~20 turns each averages under 10 decisions/s; 200 gives burst headroom) | to be measured | measure in v2 |
+| Prefix stability (streaming) | at most 1 decision flip per utterance replayed word by word; no early commit before 60% of the utterance on true-speak cards | to be measured | measure in v2 |
+| Calibration (ECE, 10 bins) | at or below 0.10 on gold hard set | to be measured (known under-confident) | measure in v2 |
+| Context dependence slice | recall delta with vs without agent context within 10 points | to be measured | measure in v2 |
+| Length slice | recall on 1-3 word utterances within 10 points of overall | to be measured | measure in v2 |
+
+A scoping note that is itself a finding: this eval suite needs no LLM-judge tier. Given fixed weights the model's output is a deterministic probability, so every check here is computable by code; the only non-determinism lives in training and is pinned by seeds. Judges are for outputs code cannot grade. At production scale the judge-shaped work reappears as human labeling of sampled live turns, not as an offline eval.
 
 ## The operating threshold rule
 

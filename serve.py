@@ -9,10 +9,10 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from transformers import AutoTokenizer
 
-from common import LABEL2ID, build_input, gold_threshold
+from common import LABEL2ID, build_input, load_threshold
 
 MODEL_DIR = os.environ.get("EOT_MODEL_DIR", "models/eot-distilbert-onnx-int8")
-THRESHOLD = float(os.environ.get("EOT_THRESHOLD", gold_threshold()))
+THRESHOLD = float(os.environ.get("EOT_THRESHOLD", load_threshold(MODEL_DIR)))
 MAX_LEN = 128
 
 app = FastAPI(title="eot-detector")
