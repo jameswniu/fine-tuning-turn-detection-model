@@ -20,8 +20,6 @@ from pathlib import Path
 
 from common import LABEL2ID, build_input, load_jsonl
 
-SCORE_BATCH_SIZE = 64
-
 
 def sweep(probs: list[float], labels: list[int], cost_ratio: float = 5, constraints: list[tuple[float, str]] | None = None) -> dict:
     """Sweep thresholds i/100 for i in 1..99, minimizing cost = cost_ratio*FPR + FNR
@@ -100,12 +98,14 @@ def load_labeled_rows(path: str) -> list[dict]:
 
 
 def score_probs(model_dir: str, rows: list[dict]) -> list[float]:
-    """Score P(speak) for each row's context/text pair.
+    """Score P(speak) for each row's context/text pair, one row per inference call.
 
     Supports an ONNX export dir (model.onnx present, scored via onnxruntime, the same path
     evaluate.py uses) and a torch checkpoint dir (scored via transformers), so the same CLI
     works against models/eot-distilbert and models/eot-distilbert-onnx-int8 alike.
     """
+    # Scored one row per inference call (batch size 1), matching serve.py's request shape:
+    # int8 dynamic quantization is batch-composition-dependent, so selection must score the way serving scores.
     model_path = Path(model_dir)
     model_inputs = [build_input(r.get("context", ""), r["text"]) for r in rows]
 
@@ -118,15 +118,14 @@ def score_probs(model_dir: str, rows: list[dict]) -> list[float]:
         tokenizer = AutoTokenizer.from_pretrained(model_dir)
         input_names = {i.name for i in session.get_inputs()}
         probs: list[float] = []
-        for start in range(0, len(model_inputs), SCORE_BATCH_SIZE):
-            chunk = model_inputs[start : start + SCORE_BATCH_SIZE]
-            encoded = tokenizer(chunk, truncation=True, padding="max_length", max_length=128, return_tensors="np")
+        for model_input in model_inputs:
+            encoded = tokenizer(model_input, truncation=True, padding="max_length", max_length=128, return_tensors="np")
             onnx_inputs = {name: value for name, value in encoded.items() if name in input_names}
             logits = session.run(None, onnx_inputs)[0]
             shifted = logits - np.max(logits, axis=-1, keepdims=True)
             exp = np.exp(shifted)
             softmax = exp / np.sum(exp, axis=-1, keepdims=True)
-            probs.extend(float(p) for p in softmax[:, LABEL2ID["speak"]])
+            probs.append(float(softmax[0, LABEL2ID["speak"]]))
         return probs
 
     import torch
@@ -139,13 +138,12 @@ def score_probs(model_dir: str, rows: list[dict]) -> list[float]:
     model.eval()
     probs = []
     with torch.no_grad():
-        for start in range(0, len(model_inputs), SCORE_BATCH_SIZE):
-            chunk = model_inputs[start : start + SCORE_BATCH_SIZE]
-            encoded = tokenizer(chunk, truncation=True, padding="max_length", max_length=128, return_tensors="pt")
+        for model_input in model_inputs:
+            encoded = tokenizer(model_input, truncation=True, padding="max_length", max_length=128, return_tensors="pt")
             encoded = {k: v.to(device) for k, v in encoded.items()}
             outputs = model(**encoded)
-            batch_probs = torch.softmax(outputs.logits, dim=-1)[:, LABEL2ID["speak"]]
-            probs.extend(batch_probs.detach().cpu().tolist())
+            prob = torch.softmax(outputs.logits, dim=-1)[0, LABEL2ID["speak"]]
+            probs.append(prob.detach().cpu().item())
     return probs
 
 
