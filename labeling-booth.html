@@ -1,0 +1,353 @@
+<title>The Turn Booth</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,560;1,9..144,340&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --ground:#1D1512; --surface:#292019; --card:#2E241C; --line:#4A3B2E; --line-soft:#3A2E24;
+    --cream:#F2E9DB; --dim:#B5A48E; --faint:#8A7A66;
+    --gold:#C9A45C; --gold-deep:#A8813C; --gold-ink:#241A10;
+    --slate:#8FA7BC; --slate-deep:#5F7A92;
+    --rust:#B85C42; --ok:#9DB87A;
+    --sans:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+    --serif:'Fraunces',Georgia,serif;
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{height:100%}
+  body{
+    background:var(--ground); color:var(--cream); font-family:var(--sans);
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    padding:0 20px 48px;
+  }
+  header{
+    width:100%; max-width:680px; padding:26px 0 0; display:flex; align-items:baseline; justify-content:space-between; gap:16px;
+  }
+  header h1{font-family:var(--serif); font-weight:560; font-size:21px; letter-spacing:.01em; color:var(--cream)}
+  header .count{font-family:var(--mono); font-size:13px; color:var(--dim); font-variant-numeric:tabular-nums}
+  .bar{width:100%; max-width:680px; height:3px; background:var(--line-soft); border-radius:2px; margin-top:12px; overflow:hidden}
+  .bar i{display:block; height:100%; width:0%; background:var(--gold); border-radius:2px; transition:width .25s ease}
+  @media (prefers-reduced-motion:reduce){ .bar i{transition:none} .card{animation:none !important} }
+
+  main{width:100%; max-width:680px; flex:1; display:flex; flex-direction:column}
+
+  .card{ margin-top:9vh; animation:rise .28s ease both; }
+  @keyframes rise{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+  .ctx{ font-size:14px; color:var(--faint); margin-bottom:18px; min-height:20px; }
+  .ctx b{color:var(--dim); font-weight:500}
+  .utt{
+    font-family:var(--serif); font-weight:340; font-size:clamp(24px,4.4vw,31px); line-height:1.4;
+    color:var(--cream); text-wrap:balance;
+  }
+  .quiet{ margin-top:26px; font-family:var(--mono); font-size:12px; letter-spacing:.28em; color:var(--faint); }
+  .ask{ margin-top:7vh; font-size:14px; color:var(--dim); }
+  .btns{display:flex; gap:12px; margin-top:14px; flex-wrap:wrap}
+  button{
+    font-family:var(--sans); font-size:16px; font-weight:600; cursor:pointer;
+    border-radius:10px; padding:15px 22px; border:1px solid transparent;
+    transition:transform .06s ease, filter .12s ease;
+  }
+  button:active{transform:scale(.985)}
+  button:focus-visible{outline:2px solid var(--cream); outline-offset:2px}
+  .b-speak{background:var(--gold); color:var(--gold-ink); flex:1.1; min-width:150px}
+  .b-speak:hover{filter:brightness(1.07)}
+  .b-wait{background:var(--slate-deep); color:var(--cream); flex:1.1; min-width:150px}
+  .b-wait:hover{filter:brightness(1.1)}
+  .b-unsure{background:transparent; color:var(--dim); border-color:var(--line); flex:.7; min-width:110px}
+  .b-unsure:hover{color:var(--cream); border-color:var(--faint)}
+  .keys{margin-top:14px; font-family:var(--mono); font-size:11.5px; color:var(--faint)}
+  .keys b{color:var(--dim); font-weight:500}
+  .backrow{margin-top:34px}
+  .b-back{background:none; border:none; color:var(--faint); font-size:13px; padding:6px 2px; font-weight:500}
+  .b-back:hover{color:var(--dim)}
+  .b-back:disabled{opacity:.35; cursor:default}
+
+  .panel{margin-top:7vh}
+  .panel h2{font-family:var(--serif); font-weight:560; font-size:clamp(26px,4.6vw,34px); text-wrap:balance; line-height:1.25}
+  .panel p.lead{margin-top:16px; font-size:15.5px; line-height:1.65; color:var(--dim); max-width:56ch}
+  .panel p.lead b{color:var(--cream); font-weight:600}
+  .startrow{margin-top:30px}
+  .b-start{background:var(--gold); color:var(--gold-ink); font-size:17px; padding:16px 30px}
+
+  .tally{display:flex; gap:22px; margin-top:22px; font-family:var(--mono); font-size:13px; color:var(--dim)}
+  .tally b{color:var(--cream); font-weight:500}
+  .mismatch{margin-top:22px; border:1px solid var(--line); border-radius:10px; padding:14px 16px; font-size:13.5px; line-height:1.6; color:var(--dim); background:var(--surface)}
+  .mismatch b{color:var(--gold)}
+  .grp{margin-top:30px}
+  .grp h3{font-size:13px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--gold)}
+  .grp p.tension{margin-top:5px; font-size:13.5px; color:var(--faint); line-height:1.5; max-width:58ch}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+  .chip{
+    font-family:var(--mono); font-size:12px; padding:7px 10px; border-radius:7px;
+    border:1px solid var(--line); color:var(--dim); background:var(--card);
+    max-width:100%; cursor:pointer;
+  }
+  .chip:hover{border-color:var(--faint)}
+  .chip .lab-S{color:var(--gold)} .chip .lab-W{color:var(--slate)} .chip .lab-U{color:var(--faint)}
+  .chip small{display:block; font-family:var(--sans); font-size:11.5px; color:var(--faint); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px}
+
+  .costq{margin-top:38px; border-top:1px solid var(--line-soft); padding-top:28px}
+  .costq h3{font-family:var(--serif); font-weight:560; font-size:20px}
+  .costq p{margin-top:8px; font-size:14px; color:var(--dim); line-height:1.6; max-width:56ch}
+  .ratio{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .r-opt{background:var(--card); border:1px solid var(--line); color:var(--dim); font-family:var(--mono); font-size:14px; padding:12px 18px}
+  .r-opt:hover{color:var(--cream)}
+  .r-opt.on{background:var(--gold); border-color:var(--gold); color:var(--gold-ink); font-weight:600}
+  textarea{
+    width:100%; margin-top:16px; background:var(--card); border:1px solid var(--line); border-radius:10px;
+    color:var(--cream); font-family:var(--sans); font-size:14.5px; line-height:1.6; padding:14px; min-height:110px; resize:vertical;
+  }
+  textarea:focus-visible{outline:2px solid var(--gold); outline-offset:1px; border-color:var(--gold)}
+  textarea::placeholder{color:var(--faint)}
+  .saverow{display:flex; gap:12px; margin-top:26px; flex-wrap:wrap; align-items:center}
+  .b-save{background:var(--gold); color:var(--gold-ink); font-size:16px; padding:15px 28px}
+  .b-save:disabled{opacity:.5; cursor:default}
+  .b-copy{background:transparent; border-color:var(--line); color:var(--dim)}
+  .b-copy:hover{color:var(--cream); border-color:var(--faint)}
+  .status{font-size:13.5px; color:var(--dim)}
+  .status.good{color:var(--ok)}
+  .status.bad{color:var(--rust)}
+  footer{width:100%; max-width:680px; margin-top:40px; font-size:12px; color:var(--faint)}
+</style>
+
+<script type="application/json" id="state">{"labels":{},"costRatio":null,"notes":"","savedAt":null}</script>
+<script type="application/json" id="samples">[
+ {"id":"B2","cls":"B","context":"","text":"Can you send me the rate confirmation again?"},
+ {"id":"H1","cls":"H","context":"Agent: Can you make the eight am appointment?","text":"Yeah, I can make it."},
+ {"id":"D3","cls":"D","context":"","text":"The main issue with that lane is the..."},
+ {"id":"K5","cls":"K","context":"","text":"Give me a second to find the BOL..."},
+ {"id":"A1","cls":"A","context":"Agent: Dispatch, how can I help?","text":"Hey, I'm calling to confirm the pickup for load four seven two tomorrow morning."},
+ {"id":"I4","cls":"I","context":"","text":"We're good to go, I think..."},
+ {"id":"J2","cls":"J","context":"","text":"Book me on the- wait, hold on..."},
+ {"id":"C1","cls":"C","context":"Agent: The dock closes at six pm today.","text":"Okay, got it."},
+ {"id":"F3","cls":"F","context":"Agent: Best callback number?","text":"You can reach me at four one five, five five..."},
+ {"id":"G1","cls":"G","context":"","text":"I can pick up Thursday morning, but..."},
+ {"id":"E2","cls":"E","context":"","text":"I wanted to ask about, like, um..."},
+ {"id":"H5","cls":"H","context":"Agent: Anything else?","text":"Actually yeah, one more thing."},
+ {"id":"B4","cls":"B","context":"","text":"Do I need a lumper receipt for this one?"},
+ {"id":"K1","cls":"K","context":"","text":"Hang on, let me grab the load number..."},
+ {"id":"D1","cls":"D","context":"","text":"I'm about twenty miles out but the traffic on the ten is..."},
+ {"id":"I8","cls":"I","context":"","text":"It's like eighteen hundred with the fuel surcharge, more or less..."},
+ {"id":"A3","cls":"A","context":"Agent: Anything else I can help with?","text":"No, that covers everything for today."},
+ {"id":"J7","cls":"J","context":"","text":"My ETA is- ugh, this GPS just rerouted..."},
+ {"id":"C4","cls":"C","context":"Agent: Rate is eighteen fifty all in.","text":"Alright."},
+ {"id":"F1","cls":"F","context":"Agent: Can I get your MC number?","text":"Yeah, it's seven one five..."},
+ {"id":"H2","cls":"H","context":"Agent: I can do nineteen hundred on that lane.","text":"That rate works for me."},
+ {"id":"E4","cls":"E","context":"","text":"Well, I mean, it's kind of, um..."},
+ {"id":"G3","cls":"G","context":"","text":"I'd normally take that load, except..."},
+ {"id":"K7","cls":"K","context":"","text":"Uh, let me look at my calendar..."},
+ {"id":"B1","cls":"B","context":"","text":"What's the detention policy if I'm stuck at the dock past two hours?"},
+ {"id":"I1","cls":"I","context":"","text":"That's all I need, I guess..."},
+ {"id":"D4","cls":"D","context":"","text":"So after I deliver in Phoenix I was planning to..."},
+ {"id":"J4","cls":"J","context":"","text":"Tell them I'll be- hmm, let me rethink this..."},
+ {"id":"A2","cls":"A","context":"","text":"I just dropped the trailer at the Fontana yard."},
+ {"id":"C2","cls":"C","context":"Agent: I'll email you the updated BOL.","text":"Perfect, thanks."},
+ {"id":"H6","cls":"H","context":"","text":"I delivered the load about an hour ago."},
+ {"id":"F4","cls":"F","context":"","text":"The trailer number ends in three, seven..."},
+ {"id":"K3","cls":"K","context":"","text":"Let me check my rate con real quick..."},
+ {"id":"E1","cls":"E","context":"","text":"Yeah so, um, the thing is, uh..."},
+ {"id":"G2","cls":"G","context":"","text":"The rate works for me, although..."},
+ {"id":"I5","cls":"I","context":"","text":"That should work, probably..."},
+ {"id":"J1","cls":"J","context":"","text":"Can you- actually, you know what..."},
+ {"id":"B3","cls":"B","context":"","text":"How far is the receiver from where I am right now?"},
+ {"id":"H3","cls":"H","context":"Agent: Where are you now?","text":"Just passed Barstow."},
+ {"id":"D2","cls":"D","context":"","text":"Can you tell the receiver that my ETA is now..."},
+ {"id":"K8","cls":"K","context":"","text":"Hold that thought, I've got another call coming in..."},
+ {"id":"A4","cls":"A","context":"","text":"The reefer unit is reading thirty four degrees and everything looks good."},
+ {"id":"I2","cls":"I","context":"","text":"I could probably make it by three, maybe..."},
+ {"id":"C3","cls":"C","context":"Agent: Your check call is set for noon.","text":"Sounds good."},
+ {"id":"J6","cls":"J","context":"","text":"Set my check call for- actually..."},
+ {"id":"F2","cls":"F","context":"Agent: What's the PO on that?","text":"PO is alpha bravo two two..."},
+ {"id":"H7","cls":"H","context":"Agent: How did the inspection go?","text":"It went fine."},
+ {"id":"E3","cls":"E","context":"","text":"Okay so basically, you know, I..."},
+ {"id":"G4","cls":"G","context":"","text":"We can do the drop trailer, and..."},
+ {"id":"K2","cls":"K","context":"","text":"One sec, I'm pulling over so I can read it..."},
+ {"id":"I6","cls":"I","context":"","text":"I'll take the Denver load, I suppose..."},
+ {"id":"J3","cls":"J","context":"","text":"I need the- no, scratch that..."},
+ {"id":"H4","cls":"H","context":"","text":"Okay, I'll call the receiver myself."},
+ {"id":"K4","cls":"K","context":"","text":"Hold on, the receiver is waving at me..."},
+ {"id":"I3","cls":"I","context":"","text":"The broker said it was covered, supposedly..."},
+ {"id":"J8","cls":"J","context":"","text":"I want to counter at- okay wait..."},
+ {"id":"H8","cls":"H","context":"","text":"Send the paperwork to my email."},
+ {"id":"K6","cls":"K","context":"","text":"Wait, let me ask my dispatcher..."},
+ {"id":"I7","cls":"I","context":"","text":"The detention was approved, or something..."},
+ {"id":"J5","cls":"J","context":"","text":"The pickup is at- sorry, I'm reading the wrong load..."}
+]</script>
+
+<header>
+  <h1>The Turn Booth</h1>
+  <span class="count" id="count"></span>
+</header>
+<div class="bar"><i id="fill"></i></div>
+<main id="app"></main>
+<footer id="foot"></footer>
+
+<script>
+(function(){
+  'use strict';
+  var PRISTINE = null;
+  var S = JSON.parse(document.getElementById('state').textContent);
+  var SAMPLES = JSON.parse(document.getElementById('samples').textContent);
+  var EXPECTED = {A:'S',B:'S',C:'S',D:'W',E:'W',F:'W',G:'W'};
+  var TENSIONS = {
+    H:['Complete, then maybe more','Grammatically done, but callers often keep going. Your call: speak, or give a beat of grace?'],
+    I:['Trailing hedge','"...I guess", "...maybe". A hedge invites silence. How should the agent treat it?'],
+    J:['Self-interrupt pivot','A restart in progress. When does the agent stop waiting for the new thought?'],
+    K:['Explicit hold','The caller asked for time. Waiting is right, the question is for how long.']
+  };
+  var idx = 0, phase = 'intro', saving = false;
+  var app = document.getElementById('app');
+  var foot = document.getElementById('foot');
+
+  try{
+    var draft = localStorage.getItem('turnbooth-draft');
+    if(draft){ var d = JSON.parse(draft);
+      if(d && d.labels && Object.keys(d.labels).length > Object.keys(S.labels).length){ S = d; }
+    }
+  }catch(e){}
+
+  function firstUnlabeled(){
+    for(var i=0;i<SAMPLES.length;i++){ if(!S.labels[SAMPLES[i].id]) return i; }
+    return SAMPLES.length;
+  }
+  function esc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function saveDraft(){ try{ localStorage.setItem('turnbooth-draft', JSON.stringify(S)); }catch(e){} }
+  function done(){ return Object.keys(S.labels).length; }
+
+  function renderHeader(){
+    document.getElementById('count').textContent = (phase==='cards') ? (idx+1)+' / '+SAMPLES.length : done()+' / '+SAMPLES.length;
+    document.getElementById('fill').style.width = (done()/SAMPLES.length*100)+'%';
+  }
+
+  function renderIntro(){
+    phase='intro';
+    app.innerHTML =
+      '<div class="panel">'+
+      '<h2>Sixty moments where a caller goes quiet.</h2>'+
+      '<p class="lead">Each card is the instant the line goes silent mid-call. You decide what a good agent does: <b>speak now</b>, or <b>keep listening</b>. Go with your gut, a second or two per card. Your answers become the policy the model is trained and judged against.</p>'+
+      '<p class="lead">Keys: <b>1</b> speak, <b>2</b> wait, <b>3</b> not sure. You can step back to fix one.</p>'+
+      '<div class="startrow"><button class="b-start" id="start">'+(done()>0?'Continue at '+(firstUnlabeled()+1):'Start labeling')+'</button></div>'+
+      '</div>';
+    document.getElementById('start').onclick = function(){ idx = Math.min(firstUnlabeled(), SAMPLES.length-1); renderCard(); };
+    foot.textContent='';
+    renderHeader();
+  }
+
+  function renderCard(){
+    if(idx >= SAMPLES.length){ renderFinale(); return; }
+    phase='cards';
+    var s = SAMPLES[idx];
+    app.innerHTML =
+      '<div class="card">'+
+      '<div class="ctx">'+(s.context ? '<b>'+esc(s.context)+'</b>' : '')+'</div>'+
+      '<div class="utt">&ldquo;'+esc(s.text)+'&rdquo;</div>'+
+      '<div class="quiet">&middot; &middot; &middot; the line goes quiet &middot; &middot; &middot;</div>'+
+      '<div class="ask">Does the agent speak now?</div>'+
+      '<div class="btns">'+
+      '<button class="b-speak" data-v="S">Speak now</button>'+
+      '<button class="b-wait" data-v="W">Keep listening</button>'+
+      '<button class="b-unsure" data-v="U">Not sure</button>'+
+      '</div>'+
+      '<div class="keys"><b>1</b> speak &nbsp; <b>2</b> wait &nbsp; <b>3</b> not sure</div>'+
+      '<div class="backrow"><button class="b-back" id="back"'+(idx===0?' disabled':'')+'>previous card</button></div>'+
+      '</div>';
+    var bs = app.querySelectorAll('[data-v]');
+    for(var i=0;i<bs.length;i++){ bs[i].onclick = function(){ label(this.getAttribute('data-v')); }; }
+    document.getElementById('back').onclick = function(){ if(idx>0){ idx--; renderCard(); } };
+    renderHeader();
+  }
+
+  function label(v){
+    S.labels[SAMPLES[idx].id] = v;
+    saveDraft();
+    idx++;
+    renderCard();
+  }
+
+  function renderFinale(){
+    phase='finale';
+    var nS=0,nW=0,nU=0, miss=[];
+    SAMPLES.forEach(function(s){
+      var v=S.labels[s.id]; if(v==='S')nS++; else if(v==='W')nW++; else if(v==='U')nU++;
+      if(EXPECTED[s.cls] && v && v!=='U' && v!==EXPECTED[s.cls]) miss.push(s);
+    });
+    var labName={S:'speak',W:'wait',U:'not sure'};
+    var h='<div class="panel"><h2>Done. Here is your policy taking shape.</h2>'+
+      '<div class="tally"><span><b>'+nS+'</b> speak</span><span><b>'+nW+'</b> wait</span><span><b>'+nU+'</b> not sure</span></div>';
+    if(miss.length){
+      h+='<div class="mismatch"><b>'+miss.length+' anchor card'+(miss.length>1?'s':'')+'</b> went against the textbook answer: '+
+        miss.map(function(s){return s.id+' (you said '+labName[S.labels[s.id]]+')';}).join(', ')+
+        '. Not wrong, just worth a second look. Tap any chip below to revisit a card.</div>';
+    }
+    ['H','I','J','K'].forEach(function(c){
+      h+='<div class="grp"><h3>'+TENSIONS[c][0]+'</h3><p class="tension">'+TENSIONS[c][1]+'</p><div class="chips">';
+      SAMPLES.forEach(function(s,i){
+        if(s.cls!==c) return;
+        var v=S.labels[s.id]||'X';
+        h+='<span class="chip" data-i="'+i+'">'+s.id+' <span class="lab-'+v+'">'+ (labName[v]||'unlabeled') +'</span><small>"'+esc(s.text)+'"</small></span>';
+      });
+      h+='</div></div>';
+    });
+    h+='<div class="costq"><h3>The cost ratio</h3>'+
+      '<p>One interruption (the agent barges in while the caller was mid-thought) is as annoying as how many sluggish responses (an extra beat of dead air before the agent answers)? This picks where the model sits on the tradeoff.</p>'+
+      '<div class="ratio">'+[3,5,10,25].map(function(r){return '<button class="r-opt'+(S.costRatio===r?' on':'')+'" data-r="'+r+'">1 : '+r+'</button>';}).join('')+'</div>'+
+      '<p style="margin-top:22px">Anything else about how the agent should behave at these moments, in your words:</p>'+
+      '<textarea id="notes" placeholder="e.g. after a price is agreed, always give a breath of grace; never interrupt a number even if the pause runs long...">'+esc(S.notes||'')+'</textarea>'+
+      '<div class="saverow">'+
+      '<button class="b-save" id="save">Save labels</button>'+
+      '<button class="b-copy" id="copy">Copy as JSON</button>'+
+      '<span class="status" id="status">'+(S.savedAt?('Last saved '+S.savedAt):'Not saved yet')+'</span>'+
+      '</div></div></div>';
+    app.innerHTML=h;
+    var rs=app.querySelectorAll('.r-opt');
+    for(var i=0;i<rs.length;i++){ rs[i].onclick=function(){ S.costRatio=parseInt(this.getAttribute('data-r'),10); saveDraft(); renderFinale(); }; }
+    var chips=app.querySelectorAll('.chip');
+    for(var j=0;j<chips.length;j++){ chips[j].onclick=function(){ idx=parseInt(this.getAttribute('data-i'),10); renderCard(); }; }
+    document.getElementById('notes').oninput=function(){ S.notes=this.value; saveDraft(); };
+    document.getElementById('save').onclick=doSave;
+    document.getElementById('copy').onclick=function(){
+      var payload=JSON.stringify({labels:S.labels,costRatio:S.costRatio,notes:S.notes},null,1);
+      try{ navigator.clipboard.writeText(payload).then(function(){ setStatus('Copied. Paste it to Claude.','good'); },function(){ fallbackCopy(payload); }); }
+      catch(e){ fallbackCopy(payload); }
+    };
+    foot.textContent='Saving publishes your labels back into this page so Claude can read them.';
+    renderHeader();
+  }
+
+  function fallbackCopy(t){ window.prompt('Copy this JSON:', t); }
+  function setStatus(msg,kind){ var el=document.getElementById('status'); if(el){ el.textContent=msg; el.className='status'+(kind?' '+kind:''); } }
+
+  function doSave(){
+    if(saving) return; saving=true;
+    setStatus('Saving...');
+    var btn=document.getElementById('save'); if(btn) btn.disabled=true;
+    S.savedAt=new Date().toLocaleString();
+    var json=JSON.stringify(S).replace(/</g,'\\u003c');
+    var doc=PRISTINE.replace(/(<script type="application\/json" id="state">)[\s\S]*?(<\/script>)/, function(_,a,b){ return a+json+b; });
+    claude.use('artifact').then(function(art){
+      if(!art){ setStatus('Save unavailable here. Use Copy as JSON.','bad'); saving=false; if(btn) btn.disabled=false; return; }
+      art.publish(doc).then(function(){
+        try{ localStorage.removeItem('turnbooth-draft'); }catch(e){}
+        setStatus('Saved. Claude can read your labels now.','good'); saving=false; if(btn) btn.disabled=false;
+      },function(err){
+        var code=(err&&err.code)||'';
+        setStatus(code==='conflict' ? 'A newer version exists elsewhere. Use Copy as JSON instead.' : 'Save failed. Use Copy as JSON.','bad');
+        saving=false; if(btn) btn.disabled=false;
+      });
+    });
+  }
+
+  document.addEventListener('keydown', function(e){
+    if(phase!=='cards') return;
+    if(e.target && (e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')) return;
+    if(e.key==='1') label('S');
+    else if(e.key==='2') label('W');
+    else if(e.key==='3') label('U');
+    else if(e.key==='ArrowLeft' && idx>0){ idx--; renderCard(); }
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    PRISTINE='<!doctype html>\n'+document.documentElement.outerHTML;
+    if(done()>=SAMPLES.length) renderFinale();
+    else renderIntro();
+  });
+})();
+</script>
