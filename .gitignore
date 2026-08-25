@@ -12,3 +12,9 @@ data/train_all_real.jsonl
 data/ood_aj.jsonl
 data/ood_train.jsonl
 data/ood_test.jsonl
+docs/interview-prep.md
+data/pretrain_en.txt
+data/pretrain_es.txt
+eval_report_*.json
+bench_report_*.json
+pretrain.log
