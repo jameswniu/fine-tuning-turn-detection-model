@@ -8,3 +8,4 @@ One row per loop iteration; the bands live in EVALS.md.
 | v2 | 2026-08-24 | 1133 | 0.61 | 0.964 | 0.00 | 0.808 | 0.60 | 0.75 | 0.38 | 0.114 | cost-optimal threshold, hedge/K/general bank expansion, streaming + calibration evals added |
 | v3 | 2026-08-24 | 1423 | 0.87 | 0.970 | 0.00 | 0.654 | 0.20 | 0.50 | 0.34 | 0.067 | context-dropout augmentation targeting the bare-utterance recall gap |
 | v4 | 2026-08-24 | 1423 | 0.86 | 0.969 | 0.00 | 0.654 | 0.20 | 0.50 | 0.34 | 0.070 | threshold objective from counts to class-conditional rates after v3 showed selection was tracking synthetic label balance, not the model |
+| v5 | 2026-08-24 | 1492 | 0.81 | 0.958 | 0.00 | 0.731 | 0.40 | 0.625 | 0.45 | 0.092 | casual-register templates + Agent-prefix context normalization, found by live probe; regression slice added |

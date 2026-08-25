@@ -97,6 +97,16 @@ BANKS: list[tuple[str, str, str | None, list[str]]] = [
         "Okay, got it.", "Sounds good.", "Perfect, thanks.", "Alright.",
         "Yeah, that works.", "Copy that.", "Okay, understood.", "Great, thank you.",
     ]),
+    # C: casual register acks and closers -> speak (found by live probe testing: the
+    # model had never seen "nah", "bye", "yep" and went uncertain on real casual speech)
+    ("C", "speak", "info", [
+        "Yep.", "Cool, thanks.", "K, sounds good.", "Yeah no, that works.",
+    ]),
+    ("C", "speak", "anything_else", [
+        "Nah, that's it, bye.", "Nope, we're good.", "Nah, I'm all set.",
+        "That's all, bye now.", "Yep, thanks, bye.", "Nope, that covers it.",
+        "Nah bye.", "No that's everything, thanks.",
+    ]),
     # D: mid-clause cutoffs -> wait
     ("D", "wait", None, [
         "I'm about twenty miles out but the traffic on {hwy} is",

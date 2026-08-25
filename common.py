@@ -10,7 +10,14 @@ DEFAULT_SPEAK_THRESHOLD = 0.8333
 
 
 def build_input(context: str, text: str) -> str:
-    """Build the model input string from conversation context and the caller utterance so far."""
+    """Build the model input string from conversation context and the caller utterance so far.
+
+    Strips a leading "Agent:" speaker tag from the context so synthetic data (which carries the
+    tag) and live inputs (which do not) land in one format.
+    """
+    context = context.strip()
+    if context.lower().startswith("agent:"):
+        context = context[6:].strip()
     if context:
         return f"agent: {context} caller: {text}"
     return f"caller: {text}"

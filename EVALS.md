@@ -29,6 +29,7 @@ These are the absolute rules from POLICY.md turned into gates. One red blocks th
 | Reproducibility | synth.py regenerates train.jsonl byte-identically at the pinned seed |
 | Serving contract | /predict returns p_complete, decision, threshold, model_latency_ms; /healthz ok; ONNX int8 loads on CPU; Docker image builds and serves |
 | Latency budget (the brief's own bar) | end-to-end p95 under 100 ms at concurrency 8 on the dev machine |
+| Probe-found regressions | every case in data/regressions.jsonl predicts its label at the operating threshold; this slice tests memory of fixed failures, not generalization, so overlap with training data is intended | check each run |
 
 ## Tier 2: statistical bands (measured every iteration; in-band = good, out = iterate)
 
