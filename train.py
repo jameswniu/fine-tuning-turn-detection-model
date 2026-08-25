@@ -216,15 +216,17 @@ def main() -> None:
         json.dump(report, f, indent=2)
     print(f"best checkpoint saved to {args.out} (val_pr_auc={best_pr_auc:.4f})")
 
+    n_wait = sum(1 for l in best_labels if l == 0) or 1
+    n_speak = sum(1 for l in best_labels if l == 1) or 1
     best_thr, best_cost = 0.5, float("inf")
     for i in range(1, 99):
         thr = i / 100
-        fp = sum(1 for p, l in zip(best_probs, best_labels) if p >= thr and l == 0)
-        fn = sum(1 for p, l in zip(best_probs, best_labels) if p < thr and l == 1)
-        cost = 5 * fp + fn
-        if cost < best_cost or (cost == best_cost and thr > best_thr):
+        fpr = sum(1 for p, l in zip(best_probs, best_labels) if p >= thr and l == 0) / n_wait
+        fnr = sum(1 for p, l in zip(best_probs, best_labels) if p < thr and l == 1) / n_speak
+        cost = 5 * fpr + fnr
+        if cost < best_cost or (cost == best_cost and thr < best_thr):
             best_cost, best_thr = cost, thr
-    thr_payload = {"threshold": best_thr, "cost_ratio": 5, "method": "cost-optimal on validation curve, cost = 5*FP + FN", "expected_val_cost": best_cost}
+    thr_payload = {"threshold": best_thr, "cost_ratio": 5, "method": "cost-optimal on validation curve, cost = 5*FPR + FNR (class-conditional rates, imbalance-invariant)", "expected_val_cost": best_cost}
     with open(Path(args.out) / "threshold.json", "w", encoding="utf-8") as f:
         json.dump(thr_payload, f, indent=2)
     print(f"cost-optimal operating threshold: {best_thr} (val cost {best_cost})")
