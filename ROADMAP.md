@@ -27,3 +27,11 @@ The two lanes answer different questions: offline replay asks "did we break anyt
 ## The thread through all four
 
 Promotion up the ladder (dev, staging1, staging2, production) is gated by the same EVALS.md contract everywhere: tier 1 guardrails all green, tier 2 bands in range, one iterations.md row per attempt. The environments change; the referee does not.
+
+## Post-submission chapters (the public repo phase)
+
+Three chapters queued for after the process concludes, each answering a question the submission only argues:
+
+1. From scratch, the harder road taken deliberately: train our own tokenizer on domain speech, scale synthesis past 100k samples, train a small transformer from random init, and publish the from-scratch versus fine-tuned curve at matched latency. Either result is the content; if scratch loses, the chapter proves with numbers why pretraining earns its keep.
+2. Multilingual for real: Spanish synthesized under the same policy, Mandarin with native human labels through the same booth, per-language scorecards in the style of the LiveKit and smart-turn model cards.
+3. The shadow lanes live: offline replay over the author's production voice-stack transcripts, then online shadow against the vendor turn model on a real phone number, disagreements published. The vendor-versus-open bake-off with receipts.

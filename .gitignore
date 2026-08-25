@@ -4,3 +4,4 @@ __pycache__/
 .venv/
 eval_report.json
 bench_report.json
+regression_report.json
