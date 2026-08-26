@@ -50,6 +50,18 @@ Three referees, each answering a different question. A frozen 60-card gold set, 
 
 The operating threshold is not a constant. It comes from a written cost ratio (one interruption costs five sluggish responses) applied to the measured curve, and it ships as data next to the weights.
 
+## Two models, one glance
+
+[docs/probe-comparison.html](docs/probe-comparison.html) scores the shipping fine-tune and the from-scratch model side by side on 36 hand-written probes, every policy class plus off-template assistant speech, texting register, and Spanish, one row at a time on the served int8 files at their own picked thresholds. Open it locally (GitHub shows the source) or regenerate it with `.venv/bin/python probe_compare.py`.
+
+| | Fine-tuned DistilBERT, 66M | From-scratch, 7.4M |
+|---|---|---|
+| Match the written policy | 31 of 35 | 34 of 35 |
+| Model latency, mean | 16.6 ms | 2.8 ms |
+| Spanish probes (6) | flat 0.75 on all six, three wrong | all six right |
+
+On the 29 English probes the two tie at 28 each and share one miss, an unpunctuated yes-no question ("do i need a lumper receipt for this one") that both read as a cutoff. The three-probe margin is entirely Spanish, which the shipping model was never trained for. The fine-tune still ships because it leads on unseen real calls, the referee that matters most; the page shows where the small model already wins.
+
 ## Map
 
 ```
@@ -62,6 +74,7 @@ train_scratch.py    from-scratch lane: byte-level BPE tokenizer + small encoder
 evaluate.py         gold-set and jsonl evaluation: sweeps, classes, calibration, stability
 serve.py            FastAPI serving over ONNX int8, plus the live probe page
 bench.py            async stress harness, stepped concurrency
+probe_compare.py    side-by-side probe page for two served models (docs/probe-comparison.html)
 pick_threshold.py   dev-set threshold selection under tier-1 guardrail constraints, scored single-row on the served artifact
 fetch_pretrain_corpus.py  license-clean bilingual Wikipedia slices for the scratch pretrain
 pretrain_scratch.py masked-language-model pretraining for the from-scratch lane
