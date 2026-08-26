@@ -27,3 +27,9 @@ docker-run:
 
 smoke:
 	curl -s http://127.0.0.1:8000/healthz && curl -s -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" -d '{"context":"","text":"Okay, got it."}'
+
+figures:  ## regenerate the README figures from their constants
+	$(PY) draw_figures.py --write
+
+figures-check:  ## fail if a committed figure drifted from its constants or the 75% type floor
+	$(PY) draw_figures.py --check

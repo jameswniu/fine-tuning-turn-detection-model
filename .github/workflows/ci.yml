@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: figures match their constants and clear the 75% type floor
+        run: python draw_figures.py --check
+      - name: every module parses
+        run: python -c "import ast, glob; [ast.parse(open(f).read(), f) for f in glob.glob('*.py')]; print('ok')"
+      - name: frozen referee is intact
+        run: |
+          python - <<'EOF'
+          import json
+          gold = json.load(open("data/gold_set.json"))
+          assert len(gold["samples"]) == 60, len(gold["samples"])
+          assert gold["speak_threshold"] == 0.8333, gold["speak_threshold"]
+          train = open("data/train.jsonl", encoding="utf-8").read()
+          leaked = [s["text"] for s in gold["samples"] if s["text"] in train]
+          assert not leaked, f"gold text leaked into training data: {leaked[:3]}"
+          print("gold set frozen, no leakage into train.jsonl")
+          EOF
