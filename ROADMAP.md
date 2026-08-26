@@ -4,7 +4,7 @@ Dictated by the policy owner on 2026-08-24. Four environments, each with a disti
 
 ## dev (exists tonight)
 
-Local conditions, everything reproducible on one machine: venv training on MPS, seeded synthesis, gold-set evaluation, and the serving container spun up locally (Docker now; the same container under a local Kubernetes spinup, kind or minikube, as the scale form). CI checks run locally before they run anywhere else: `make evals` executes the same tier 1 guardrails and tier 2 bands the pipeline gates on, so a laptop can veto a promotion for exactly the reasons CI would, and a local CD copy can rehearse the deploy path when needed. A full loop iteration (synthesize, train, evaluate, log) runs in about two minutes, which is what makes the iteration log honest rather than aspirational.
+Local conditions, everything reproducible on one machine: venv training on MPS, seeded synthesis, gold-set evaluation, and the serving container spun up locally (Docker now; the same container under a local Kubernetes spinup, kind or minikube, as the scale form). CI checks run locally before they run anywhere else. `make evals` executes the same tier 1 guardrails and tier 2 bands the pipeline gates on, so a laptop can veto a promotion for exactly the reasons CI would. A local CD copy can rehearse the deploy path when needed. A full loop iteration (synthesize, train, evaluate, log) runs in about two minutes, which is what makes the iteration log honest rather than aspirational.
 
 ## staging1: happy path, the user demo test (partially exists)
 
