@@ -50,6 +50,14 @@ Three referees, each answering a different question. A frozen 60-card gold set, 
 
 The operating threshold is not a constant. It comes from a written cost ratio (one interruption costs five sluggish responses) applied to the measured curve, and it ships as data next to the weights. The dev set that picks it was labeled by a certified judge panel, and the panel design itself was A/B tested by replay ([docs/judge-cascade-replay.md](docs/judge-cascade-replay.md)): a two-judge cascade produced identical labels to all three judges at 31 percent less cost, with zero cases where an agreeing pair was wrong, and all three judges independently marked unsure on exactly the seven boundary cards the human labeler had flagged.
 
+## The judge panel, in software terms
+
+Part of the data here was labeled by models rather than people, so this section says plainly what that means and why it can be trusted. The three judges are stock Claude, Gemini, and GPT, from three different vendors. None of them was trained on anything in this repo. Training would mean updating a model's weights, and no weights moved. Each judge simply received the written spec (POLICY.md, the human-authored turn rules) in its prompt, read one card at a time, and voted speak, wait, or unsure. Two of three wins.
+
+Before any vote counted, each judge passed a blind exam. The batch shuffled 60 cards with known human answers in among the 30 real work cards, and the judges could not tell them apart. All three scored 53 of 53 on the hard cards, and all three flagged unsure on exactly the seven cards the human labeler had marked as genuinely ambiguous, so the panel reproduced the human's uncertainty as well as his answers. One honest caveat travels with those scores. The spec quotes a few of the boundary examples, so the exam was partially open-book.
+
+Containment does the rest of the trust work, the way staging contains a deploy. Judge output feeds exactly one file, the dev set, which tunes exactly one number, the operating threshold, and that number is clamped by twelve hard human-policy gates that run in `make evals`. The training data and all three referees stay human-grounded. If every judge were somehow wrong in the same direction, the worst case is a slightly suboptimal threshold inside hard guardrails, and the eval bands would surface it. Full mechanics, the cost A/B between panel designs, and the raw votes live in [docs/judge-cascade-replay.md](docs/judge-cascade-replay.md).
+
 ## Two models, one glance
 
 [docs/probe-comparison.html](docs/probe-comparison.html) scores the shipping fine-tune and the from-scratch model side by side on 36 hand-written probes, every policy class plus off-template assistant speech, texting register, and Spanish, one row at a time on the served int8 files at their own picked thresholds. Open it locally (GitHub shows the source) or regenerate it with `.venv/bin/python probe_compare.py`.
