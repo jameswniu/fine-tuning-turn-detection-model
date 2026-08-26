@@ -48,7 +48,7 @@ That example should say wait (a caller mid-readout), and the same text ending in
 
 Three referees, each answering a different question. A frozen 60-card gold set, human-labeled and never trained on, grades curated generalization. A regression slice holds every failure found by live probing, so a fix stays fixed. And a held-out slice of real production calls from the author's own voice agent, where turns label themselves, grades the thing synthetic data cannot: the real world. Real-call files stay out of git for privacy; only aggregates appear in the docs.
 
-The operating threshold is not a constant. It comes from a written cost ratio (one interruption costs five sluggish responses) applied to the measured curve, and it ships as data next to the weights.
+The operating threshold is not a constant. It comes from a written cost ratio (one interruption costs five sluggish responses) applied to the measured curve, and it ships as data next to the weights. The dev set that picks it was labeled by a certified judge panel, and the panel design itself was A/B tested by replay ([docs/judge-cascade-replay.md](docs/judge-cascade-replay.md)): a two-judge cascade produced identical labels to all three judges at 31 percent less cost, with zero cases where an agreeing pair was wrong, and all three judges independently marked unsure on exactly the seven boundary cards the human labeler had flagged.
 
 ## Two models, one glance
 
@@ -75,6 +75,7 @@ evaluate.py         gold-set and jsonl evaluation: sweeps, classes, calibration,
 serve.py            FastAPI serving over ONNX int8, plus the live probe page
 bench.py            async stress harness, stepped concurrency
 probe_compare.py    side-by-side probe page for two served models (docs/probe-comparison.html)
+judge_cascade_replay.py  replays the dev-set labeling panel two ways over recorded votes, two-judge cascade vs all three, checks the labels match
 pick_threshold.py   dev-set threshold selection under tier-1 guardrail constraints, scored single-row on the served artifact
 fetch_pretrain_corpus.py  license-clean bilingual Wikipedia slices for the scratch pretrain
 pretrain_scratch.py masked-language-model pretraining for the from-scratch lane

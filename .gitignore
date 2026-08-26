@@ -18,3 +18,4 @@ data/pretrain_es.txt
 eval_report_*.json
 bench_report_*.json
 pretrain.log
+docs/recording-runbook.md
