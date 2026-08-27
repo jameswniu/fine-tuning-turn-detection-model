@@ -71,7 +71,7 @@ INDEX_HTML = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EoT Live Probe</title>
+<title>End-of-Turn Live Probe</title>
 <style>
   :root {
     --bg: #1D1512;
@@ -150,7 +150,7 @@ INDEX_HTML = """<!doctype html>
 </head>
 <body>
 <main class="wrap">
-  <h1>EoT Live Probe</h1>
+  <h1>End-of-Turn Live Probe</h1>
   <p class="sub">Type as the caller would speak it. Every keystroke re-scores P(turn complete) against the live ONNX model.</p>
   <div class="field">
     <label for="ctx">Agent context</label>
