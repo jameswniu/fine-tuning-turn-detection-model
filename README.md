@@ -29,11 +29,41 @@ make bench        # async stress test, latency percentiles + throughput
 make docker-build && make docker-run && make smoke   # the int8 model in a container
 ```
 
-<p align="center">
-  <img src="assets/live-probe.gif" alt="The live probe page re-scoring as a caller types: a mid-readout holds at wait, a complete thought flips to speak, an announced continuation holds at wait, and a casual closer flips to speak" width="100%">
-</p>
+The `/` page re-scores after every keystroke against the served int8 model. Eight cases from the gold set, one clip each, results first. Every one of these is a case you can type yourself once `make serve` is up.
 
-<sub>The `/` page re-scores after every keystroke. A mid-readout holds. "okay, got it." speaks. "actually yeah, one more thing." holds, because the policy says an announced continuation waits. "nah bye" speaks, the miss a live poke found and the regression slice now guards. The from-scratch and Spanish lanes have their own entry points, listed in the map below.</sub>
+A complete statement speaks. The agent opened the call and the caller says why they are calling.
+
+<p align="center"><img src="assets/probe-statement.gif" alt="Typing a full sentence confirming a pickup after the agent's greeting: the score climbs to 0.99 and the chip flips to speak" width="100%"></p>
+
+A mid-readout holds. The agent asked for the MC number and the caller is halfway through the digits; the policy makes this an absolute wait.
+
+<p align="center"><img src="assets/probe-readout.gif" alt="Typing yeah it is four one five after the agent asks for an MC number: the score stays near 0.01 and the chip reads keep listening" width="100%"></p>
+
+A complete question speaks.
+
+<p align="center"><img src="assets/probe-question.gif" alt="Typing a full question about detention policy: the score climbs to 0.99 and the chip flips to speak" width="100%"></p>
+
+A complete answer speaks. The agent asked about an appointment and the caller answered it.
+
+<p align="center"><img src="assets/probe-complete.gif" alt="Typing yeah, I can make it after the agent asks about an appointment: the score climbs to 0.99 and the chip flips to speak" width="100%"></p>
+
+An announced continuation holds, even though the sentence is complete. The agent asked "Anything else?" and the caller says there is more coming.
+
+<p align="center"><img src="assets/probe-onemore.gif" alt="Typing actually yeah, one more thing after the agent asks anything else: the score stays near 0.04 and the chip reads keep listening" width="100%"></p>
+
+A self-interrupt holds. The caller restarts mid-sentence; the new thought is coming.
+
+<p align="center"><img src="assets/probe-restart.gif" alt="Typing can you, actually, you know what: the score stays near 0.01 and the chip reads keep listening" width="100%"></p>
+
+An explicit hold holds silently. The caller is retrieving something themselves.
+
+<p align="center"><img src="assets/probe-hold.gif" alt="Typing hang on, let me grab the load number: the score stays near 0.01 and the chip reads keep listening" width="100%"></p>
+
+A casual closer speaks. "nah bye" is the miss a live poke found in v5, and the regression slice now guards it.
+
+<p align="center"><img src="assets/probe-nahbye.gif" alt="Typing nah bye: the score climbs to 0.97 and the chip flips to speak" width="100%"></p>
+
+Where it is weak, stated plainly: the judgment-class speaks. A reported-speech hedge ("the broker said it was covered, supposedly..."), a full retraction ("no, scratch that..."), and a narrated interruption ("the receiver is waving at me...") all score under the threshold today, which is what the hedge 0.20 and K 0.50 rows in EVALS.md say and what the Q&A below explains. The from-scratch and Spanish lanes have their own entry points, listed in the map below.
 
 ```bash
 curl -s -X POST localhost:8000/predict -H "Content-Type: application/json" \
@@ -150,7 +180,7 @@ probe_compare.py    side-by-side probe page for two served models (docs/probe-co
 judge_cascade_replay.py  replays the dev-set labeling panel two ways over recorded votes, checks the labels match
 draw_figures.py     emits every figure above from counted constants; --check fails CI on drift or a font under the 75% floor
 labeling-booth.html the calibration booth the gold set was labeled in
-assets/             the figures, their GIF, and its mp4
+assets/             the figures and the eight probe clips
 data/               gold set (frozen), generated training sets, judge votes, dataset card
 docs/               approach doc, judge replay, probe page, video script
 ```
