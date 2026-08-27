@@ -12,10 +12,10 @@ Full panel: three votes per card, majority wins. Cascade: GPT and Claude vote fi
 |---|---|
 | GPT and Claude agreement | 83 of 90 |
 | Cost, cascade vs full panel | 187 vs 270 calls, 31% saved |
-| Final labels, cascade vs full panel | identical on 90 of 90 |
+| Final labels, cascade vs full panel | Identical on 90 of 90 |
 | Unanimous 3-0 cards | 81 of 90 |
 | Hidden dissents (pair agreed, Gemini differed) | 2, and the pair was right both times |
-| Pair-agreed-but-wrong, the cascade's blind spot | zero cases |
+| Pair-agreed-but-wrong, the cascade's blind spot | Zero cases |
 | Judge accuracy, gold hard cards | Claude 53/53, Gemini 53/53, GPT 53/53 |
 | Judge accuracy, fresh cards vs majority | Claude 30/30, GPT 30/30, Gemini 28/30 |
 
