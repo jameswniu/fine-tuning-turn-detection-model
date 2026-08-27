@@ -197,6 +197,10 @@ INDEX_HTML = """<!doctype html>
   var debounceTimer = null;
   var requestSeq = 0;
   var knownThreshold = null;
+  var lastScoredKey = null;
+  // ASR hands the model whole words, so the page asks at every word boundary
+  // and the debounce only covers the word still being typed.
+  var WORD_BOUNDARY = /[\\s.,!?;:]$/;
 
   function setThresholdCaption() {
     if (knownThreshold === null) {
@@ -253,9 +257,13 @@ INDEX_HTML = """<!doctype html>
   function runCheck() {
     var text = textInput.value;
     if (text.trim() === '') {
+      lastScoredKey = null;
       renderIdle();
       return;
     }
+    var key = ctxInput.value.trim() + '\\u0000' + text.trim();
+    if (key === lastScoredKey) return;
+    lastScoredKey = key;
     var seq = ++requestSeq;
     fetch('/predict', {
       method: 'POST',
@@ -271,8 +279,12 @@ INDEX_HTML = """<!doctype html>
     });
   }
 
-  function scheduleCheck() {
+  function scheduleCheck(ev) {
     clearTimeout(debounceTimer);
+    if (ev && ev.data && WORD_BOUNDARY.test(ev.data)) {
+      runCheck();
+      return;
+    }
     debounceTimer = setTimeout(runCheck, 120);
   }
 
