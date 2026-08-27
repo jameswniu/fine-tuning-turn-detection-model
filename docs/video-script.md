@@ -34,7 +34,7 @@ The multilingual bonus, quickly. The multilingual fine-tune matches the English 
 
 [Screen: serve.py, live probe page, then bench output]
 
-Serving. FastAPI over ONNX Runtime, dynamic int8, CPU, Dockerfile included, threshold read from the model directory. This live page re-scores on every keystroke, which is how several training gaps were found. Type "nah bye" at a model that has never seen casual register and watch it go uncertain. Measured on my laptop: model inference thirty-two milliseconds, end to end forty-six median and fifty-eight p95 at concurrency eight, about a hundred and seventy requests a second. The from-scratch model does five milliseconds and nearly six hundred a second on the same box. Your brief asked for under a hundred milliseconds; there's real margin.
+Serving. FastAPI over ONNX Runtime, dynamic int8, CPU, Dockerfile included, threshold read from the model directory. This live page re-scores word by word, the same granularity streaming ASR gives you, and it's how several training gaps were found. Type "nah bye" at a model that has never seen casual register and watch it go uncertain. Measured on my laptop: model inference thirty-two milliseconds, end to end forty-six median and fifty-eight p95 at concurrency eight, about a hundred and seventy requests a second. The from-scratch model does five milliseconds and nearly six hundred a second on the same box. Your brief asked for under a hundred milliseconds; there's real margin.
 
 [Screen: the monitoring section of the doc]
 
