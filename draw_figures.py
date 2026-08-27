@@ -117,7 +117,7 @@ def hero(c: dict) -> str:
     f = FROZEN_NUMBERS
     w, h = 1200, 360
     label = (
-        f"fine-tune-turn-detection-transformer: an end-of-turn detector for voice agents that scores {f['gold_pr_auc']} on a frozen "
+        f"fine-tuning-turn-detection-model: an end-of-turn detector for voice agents that scores {f['gold_pr_auc']} on a frozen "
         f"human gold set with zero false interruptions, {f['real_pr_auc']} on held-out real calls, and answers "
         f"in {f['p95_ms']} ms p95 on int8 CPU at threshold {f['threshold']}"
     )
