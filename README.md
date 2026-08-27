@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="voice-ai-turn-detection-fine-tuning: an end-of-turn detector for voice agents that scores 0.949 on a frozen human gold set with zero false interruptions, 0.913 on held-out real calls, and answers in 58 ms p95 on int8 CPU at threshold 0.42" width="100%">
+  <img src="assets/hero.svg" alt="fine-tuned-turn-detection-transformers: an end-of-turn detector for voice agents that scores 0.949 on a frozen human gold set with zero false interruptions, 0.913 on held-out real calls, and answers in 58 ms p95 on int8 CPU at threshold 0.42" width="100%">
 </p>
 
 <p align="center">
-  <a href="https://github.com/jameswniu/voice-ai-turn-detection-fine-tuning/actions/workflows/ci.yml"><img alt="ci" src="https://github.com/jameswniu/voice-ai-turn-detection-fine-tuning/actions/workflows/ci.yml/badge.svg?branch=master"></a>
+  <a href="https://github.com/jameswniu/fine-tuned-turn-detection-transformers/actions/workflows/ci.yml"><img alt="ci" src="https://github.com/jameswniu/fine-tuned-turn-detection-transformers/actions/workflows/ci.yml/badge.svg?branch=master"></a>
   <img alt="gold set: 60 cards, frozen" src="https://img.shields.io/badge/gold_set-60_cards_%C2%B7_frozen-f5b342?style=flat-square&labelColor=0b0d10">
   <img alt="referees: gold, regressions, real calls" src="https://img.shields.io/badge/referees-gold_%C2%B7_regressions_%C2%B7_real_calls-5c5853?style=flat-square&labelColor=0b0d10">
   <img alt="tier-1 gates: 12 of 12 green on the served artifact" src="https://img.shields.io/badge/tier--1_gates-12%2F12_served_int8-5c5853?style=flat-square&labelColor=0b0d10">
