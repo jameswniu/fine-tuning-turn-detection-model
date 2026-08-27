@@ -99,3 +99,63 @@ docs/               approach doc, judge replay, probe page, video script
 ```
 
 Generated reports (eval_report*.json, bench_report*.json, regression_report.json) are build artifacts and stay untracked; every number in the figures and the docs comes from them at freeze time, and `make figures-check` fails if a figure drifts from its constants.
+
+## Questions a reviewer will ask
+
+Short answers, expandable. Every number in them has a source in the docs linked above.
+
+<details>
+<summary><b>Why DistilBERT, and why not something else?</b></summary>
+
+The field had converged on small text transformers for this job before this build started. LiveKit's shipped turn detector runs at 5 ms inference and 24 ms p90 on text alone, and pipecat's smart-turn at 12 ms on a modern CPU. Given a transcript-so-far as input, a 100 ms budget, and nine hours, a small pretrained encoder fine-tuned as a two-way classifier was the workhorse choice. DistilBERT specifically brings 66M parameters in six layers, about 97% of BERT-base on its paper's benchmarks, the most mature Hugging Face and ONNX path of any small encoder, and a fine-tune that finishes in about two minutes here on 1,500 rows. Those two minutes are why nine audited iterations fit in one night. The uncased variant matches ASR text, which arrives lowercase with no punctuation. Not measured, and stated as such, are MiniLM-L6, DeBERTa-v3-small, ELECTRA-small, ModernBERT, and SmolLM2-135M, the base LiveKit built on. The only architecture comparison that ran is the from-scratch lane, and it is on the chart above.
+
+</details>
+
+<details>
+<summary><b>Why int8, and what did it cost?</b></summary>
+
+Dynamic int8 quantization of the linear layers through ONNX Runtime is the standard CPU serving move, buying a smaller artifact and lower CPU latency for negligible accuracy loss on classification. It was not free, and the repo shows the bill. Quantization moved a near-threshold probability from 0.26 to 0.41 and broke a tier-1 guardrail twice, once because the threshold had been picked on the fp32 checkpoint, and once because the picker scored its constraint rows in a batch while serving scores one row at a time, and int8 dynamic quantization is batch-composition-dependent. v9 picks the threshold on the served int8 artifact, single-row, and the gate went 12 of 12. Not measured is fp32 against int8 latency head-to-head on the same box.
+
+</details>
+
+<details>
+<summary><b>Why 0.42, and not 0.5 or the 0.83 the cost ratio implies?</b></summary>
+
+The 1:5 cost ratio gives a closed-form bar of 0.833 only for a calibrated model, and this one runs under-confident (ECE 0.16). So the bar is applied to the measured curve instead, as the threshold that minimizes five false speaks plus one false wait on the judged dev set, constrained so all twelve tier-1 probes hold on the served artifact. Selection on synthetic validation data drifted the dial to 0.87 twice, in v3 and v4, which is why the dev set exists. The dial ships as data next to the weights and every run re-derives it.
+
+</details>
+
+<details>
+<summary><b>Why create the data instead of finding a dataset?</b></summary>
+
+No public end-of-turn dataset existed to download; LiveKit and pipecat each built their own. Mining YouTube was rejected for licensing and cleaning cost inside four days. Policy-driven synthesis buys auditability, since every row traces to a written rule, byte-reproducibility, since it is seeded with no LLM in the loop, and zero personal data. Its known cost, a creator's blind spots, is handled by the three referees rather than by hope. The real-call slice is where synthesis got caught: the model had learned the vendor turn-taker's habit of barging in after "one more thing", and a policy filter plus a relabel removed it.
+
+</details>
+
+<details>
+<summary><b>What is the honest ceiling of a text-only model?</b></summary>
+
+Both models miss the same probe, "do i need a lumper receipt for this one" with no context and no punctuation, scoring about 0.02 as a cutoff. An unpunctuated yes-no question ending in a pronoun looks like a mid-sentence prefix, because the question lives in the caller's rising tone, and the ASR discards it. Agent context fixes it today (recall 1.00 with context against 0.47 bare, the known weak slice); audio features are the roadmap answer. It is deliberately not in the regression slice yet, because that file's contract is that every row passes, so it enters paired with its fix.
+
+</details>
+
+<details>
+<summary><b>Did you benchmark against the vendor's turn-taker?</b></summary>
+
+Not head-to-head in this submission. The real-call slices use the vendor's ASR transcripts, which is the deployment condition, and deliberately overrule the vendor turn-taker's decisions where they contradict the policy, with each overruled row carrying a policy_corrected flag. The residual bias is stated in EVALS.md. Cut points still come from the vendor stack, so the real-call bands read as pessimistic bounds, and those numbers inherit that ASR's error distribution. The bake-off with receipts, online shadow on a real phone number with disagreements published, is the roadmap chapter.
+
+</details>
+
+<details>
+<summary><b>How does this run at a million calls a month?</b></summary>
+
+Twenty million turn decisions a month cannot be human-reviewed and do not need to be. The candidate shadows the incumbent on live traffic, decisions logged and never acted on. Where the two agree, the turn is cheap; where they disagree, it is information-dense, so humans label only sampled disagreements, adjudicated against the policy, and those feed back as training rows and referee rows. The disagreement rate itself is a drift alarm that fires before anyone has labeled anything. The same pattern already ran here in miniature three times, in the vendor-import catch, the judge panel's 2-of-3 splits, and the probe page's shared miss. ROADMAP.md has the environment ladder.
+
+</details>
+
+<details>
+<summary><b>What was measured, and what was not?</b></summary>
+
+Measured is every number on this page, from the reports listed above, on the served int8 artifact. Not measured, stated so nobody reads silence as a claim, are fp32 versus int8 latency on one box; judge retry variance, since each judge voted once per card and three vendors is diversity rather than retries; and base-model alternatives to DistilBERT. One bench was discarded as thermal pollution after back-to-back trainings, so every quoted bench comes from a quiet machine, which is a bench-hygiene finding rather than a model result.
+
+</details>
