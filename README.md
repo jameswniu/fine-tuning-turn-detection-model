@@ -29,7 +29,7 @@ make bench        # async stress test, latency percentiles + throughput
 make docker-build && make docker-run && make smoke   # the int8 model in a container
 ```
 
-The `/` page re-scores after every keystroke against the served int8 model. Eight cases from the gold set, one clip each, results first. Every one of these is a case you can type yourself once `make serve` is up.
+The `/` page re-scores as you type, at most once per word, against the served int8 model. Word granularity is what streaming ASR hands a detector. Eight cases from the gold set, one clip each, results first. Every one of these is a case you can type yourself once `make serve` is up.
 
 A complete statement speaks. The agent opened the call and the caller says why they are calling.
 

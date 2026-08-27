@@ -151,7 +151,7 @@ INDEX_HTML = """<!doctype html>
 <body>
 <main class="wrap">
   <h1>End-of-Turn Live Probe</h1>
-  <p class="sub">Type as the caller would speak it. Every keystroke re-scores P(turn complete) against the live ONNX model.</p>
+  <p class="sub">Type as the caller would speak it. P(turn complete) refreshes word by word against the live ONNX model.</p>
   <div class="field">
     <label for="ctx">Agent context</label>
     <input id="ctx" type="text" placeholder="Agent's last line (optional)" autocomplete="off">
@@ -254,14 +254,21 @@ INDEX_HTML = """<!doctype html>
     latEl.textContent = 'model: pending';
   }
 
+  // Identifies what is in the boxes right now. Null means nothing to score.
+  function currentKey() {
+    var t = textInput.value;
+    if (t.trim() === '') return null;
+    return ctxInput.value.trim() + '\\u0000' + t.trim();
+  }
+
   function runCheck() {
     var text = textInput.value;
-    if (text.trim() === '') {
+    var key = currentKey();
+    if (key === null) {
       lastScoredKey = null;
       renderIdle();
       return;
     }
-    var key = ctxInput.value.trim() + '\\u0000' + text.trim();
     if (key === lastScoredKey) return;
     lastScoredKey = key;
     var seq = ++requestSeq;
@@ -273,15 +280,18 @@ INDEX_HTML = """<!doctype html>
       if (!res.ok) throw new Error('bad response');
       return res.json();
     }).then(function (data) {
-      if (seq === requestSeq) renderResult(data);
+      // Paint only if the boxes still hold the text this answer was for.
+      if (seq === requestSeq && key === currentKey()) renderResult(data);
     }).catch(function () {
-      if (seq === requestSeq) renderError();
+      // Clear the dedupe key so the next keystroke retries after an outage.
+      if (seq === requestSeq && key === currentKey()) { lastScoredKey = null; renderError(); }
     });
   }
 
   function scheduleCheck(ev) {
     clearTimeout(debounceTimer);
-    if (ev && ev.data && WORD_BOUNDARY.test(ev.data)) {
+    // An emptied box goes blank at once; a finished word scores at once.
+    if (currentKey() === null || (ev && ev.data && WORD_BOUNDARY.test(ev.data))) {
       runCheck();
       return;
     }
