@@ -117,12 +117,12 @@ def hero(c: dict) -> str:
     f = FROZEN_NUMBERS
     w, h = 1200, 360
     label = (
-        f"eot-detector: an end-of-turn detector for voice agents that scores {f['gold_pr_auc']} on a frozen "
+        f"policy-labeled-voice-turn-detection: an end-of-turn detector for voice agents that scores {f['gold_pr_auc']} on a frozen "
         f"human gold set with zero false interruptions, {f['real_pr_auc']} on held-out real calls, and answers "
         f"in {f['p95_ms']} ms p95 on int8 CPU at threshold {f['threshold']}"
     )
     out = [head(w, h, label), rect(0, 0, w, 3, AMBER)]
-    out.append(text(600, 52, "EOT-DETECTOR · END-OF-TURN DETECTION FOR VOICE AGENTS", 22, AMBER, weight=700, anchor="middle", spacing=3))
+    out.append(text(600, 52, "POLICY-LABELED VOICE TURN DETECTION", 22, AMBER, weight=700, anchor="middle", spacing=3))
     out.append(
         f'<defs><linearGradient id="ttl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{AMBER_GLOW}"/>'
         f'<stop offset="1" stop-color="{INK}"/></linearGradient>'
