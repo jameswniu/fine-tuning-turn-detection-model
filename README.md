@@ -102,19 +102,19 @@ The last three rows share one set of weights. Nothing about the model changed be
 
 Sixty blind labels became eleven classes with a rule each, and `synth.py` turns the rules into rows. Every training line traces to one of these.
 
-| Class | Shape | Decision |
-|---|---|---|
-| A | Complete statement | Speak |
-| B | Complete question | Speak |
-| C | Bare acknowledgement | Speak; a complete turn but never a call-ender |
-| D | Mid-clause cutoff | Wait |
-| E | Disfluent trail | Wait |
-| F | Mid-data readout | Wait, absolute, however long the pause runs |
-| G | Connector-final ("and then...") | Wait |
-| H | Complete, then maybe more | Speak, unless continuation is announced ("one more thing" holds) |
-| I | Trailing hedge | Speak by default; a decorative softener on an owned claim mid-narrative holds |
-| J | Self-interrupt restart | Wait; a full retraction may earn a brief acknowledgement |
-| K | Explicit hold | Self-retrieval holds silently; a narrated outside interruption gets a courtesy acknowledgement |
+| Class | Shape | Example, from the gold set | Decision |
+|---|---|---|---|
+| A | Complete statement | "Hey, I'm calling to confirm the pickup for load four seven two tomorrow morning." | Speak |
+| B | Complete question | "What's the detention policy if I'm stuck at the dock past two hours?" | Speak |
+| C | Bare acknowledgement | "Okay, got it." | Speak; a complete turn but never a call-ender |
+| D | Mid-clause cutoff | "Can you tell the receiver that my ETA is now..." | Wait |
+| E | Disfluent trail | "Yeah so, um, the thing is, uh..." | Wait |
+| F | Mid-data readout | "Yeah, it's seven one five..." after "Can I get your MC number?" | Wait, absolute, however long the pause runs |
+| G | Connector-final | "I can pick up Thursday morning, but..." | Wait |
+| H | Complete, then maybe more | "Yeah, I can make it." speaks; "Actually yeah, one more thing." after "Anything else?" holds | Speak, unless continuation is announced |
+| I | Trailing hedge | "That's all I need, I guess..." | Speak by default; a decorative softener on an owned claim mid-narrative holds |
+| J | Self-interrupt restart | "Can you- actually, you know what..." holds; "I need the- no, scratch that..." speaks | Wait; a full retraction may earn a brief acknowledgement |
+| K | Explicit hold | "Hang on, let me grab the load number..." holds; "Hold on, the receiver is waving at me..." speaks | Self-retrieval holds silently; a narrated outside interruption gets a courtesy acknowledgement |
 
 Class I is the judgment call worth reading, because it looked like a contradiction in the labels and turned out to be the rule. "The broker said it was covered, supposedly..." was labeled speak; "The detention was approved, or something..." was labeled wait. The hedge word carries no turn signal. What decides is stance and ownership. A claim attributed to someone else is a question in disguise, so the agent speaks to confirm. An owned first-person claim with a habitual softener is just a statement, so it follows the statement rules. Attribution markers versus first-person assertion are surface features a text model can learn, which is why the ruling is trainable and not only philosophy.
 
