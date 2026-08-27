@@ -13,7 +13,7 @@
 
 **One written policy, three referees, and an int8 model that answers in 58 ms.** Built for the HappyRobot AI/ML engineering task: given the agent's last line and the caller's words so far, decide whether the caller is done talking.
 
-Watch it score a call below. Read the write-up in [docs/approach.md](docs/approach.md). Run it with `make serve`. The depth sits next to the code: [POLICY.md](POLICY.md) is the human turn policy everything hangs off, [EVALS.md](EVALS.md) the gates and bands, [iterations.md](iterations.md) the audit trail of every run including the failures, [data/README.md](data/README.md) the dataset card.
+Watch it score a call below. Read the write-up in [docs/approach.md](docs/approach.md). Run it with `make serve`. Every claim here is checked against the artifact that ships, at the [six places listed in the Q&A](#qa). The depth sits next to the code: [POLICY.md](POLICY.md) is the human turn policy everything hangs off, [EVALS.md](EVALS.md) the gates and bands, [iterations.md](iterations.md) the audit trail of every run including the failures, [data/README.md](data/README.md) the dataset card.
 
 ## Run it
 
@@ -190,6 +190,24 @@ Generated reports (eval_report*.json, bench_report*.json, regression_report.json
 ## Q&A
 
 Short answers, expandable. Every number in them has a source in the docs linked above.
+
+<details>
+<summary><b>Where do you actually verify this?</b></summary>
+
+At six places, and the rule at every one is to check the artifact that ships, not the one that trained.
+
+- CI checks the data before any training runs. The gold set must be exactly 60 cards at its frozen threshold, and no gold text may appear in `data/train.jsonl`, so the referee cannot leak into what it referees.
+- The labels were verified before they were trusted. The 30 dev cards went to three vendor judges with the 60 human gold cards hidden among them, and a judge's dev votes counted only because it reproduced the human's call 53 times out of 53.
+- The threshold is picked against the served int8 file, one row per call, the shape `serve.py` actually sends. That is the fix for the bug that ate two iterations. The fp32 checkpoint held a card at 0.26, batched int8 scoring said 0.381, and the real one-row path returned 0.412, which crossed the line and spoke over the caller.
+- Twelve tier-1 cards encode the policy's absolutes and must be green on the served artifact every run. When no threshold satisfies all twelve, `pick_threshold.py` fails loud instead of shipping a number.
+- Three referees score a model that trained on none of them: 60 frozen gold cards, 6 regression cards each traced to a live miss, and 96 turns from 60 real calls. `make eval` prints all three.
+- `make bench` hits the exact container artifact, on an idle machine. A bench taken right after training read 274 req/s where a clean re-run minutes later read 588, so every quoted number comes from a quiet box.
+
+Then by hand, at `make serve`. Typing at the live page is what found the casual-register gap: "nah bye" scored 0.34 and held the turn. That became a regression card, then training data, then a fix.
+
+Every figure here is regenerated from those same artifacts, and `python draw_figures.py --check` fails the build when a number drifts.
+
+</details>
 
 <details>
 <summary><b>Why DistilBERT, and why not something else?</b></summary>
