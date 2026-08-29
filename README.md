@@ -19,23 +19,23 @@ Watch it score a call below. Read the write-up in [docs/approach.md](docs/approa
 
 Deciding whether a caller has finished is not a punctuation problem. Five things make it hard. Four are answered here; the fifth is named honestly.
 
-#### 1. A complete sentence is not a complete turn
+### 1. A complete sentence is not a complete turn
 - "Anything else?" answered with "actually yeah, one more thing." is grammatically finished and conversationally wide open.
 - Answered. Announced continuation is its own policy class and one of the twelve tier-1 constraints on the served artifact. It scores 0.035 and holds.
 
-#### 2. The two mistakes do not cost the same
+### 2. The two mistakes do not cost the same
 - Interrupting a caller is a different failure from making one wait, so accuracy is the wrong objective.
 - Answered. The threshold comes from a 1:5 cost ratio rather than 0.5, landing at 0.42, and the model speaks over none of the 27 wait cards in the gold set.
 
-#### 3. There is no ground truth, only a policy
+### 3. There is no ground truth, only a policy
 - Two careful annotators disagree about the same pause. A label set with no written rule behind it is one person's ear.
 - Answered. [POLICY.md](POLICY.md) came before the data: sixty cards blind-labeled against it, seven marked unsure on purpose, and three vendor judges hit 53 of 53 while going unsure on exactly those seven.
 
-#### 4. The model you measure is not the model you ship
+### 4. The model you measure is not the model you ship
 - Quantization moves scores near the threshold, so a number picked on the checkpoint can be wrong on the artifact in the container.
 - Answered, expensively. One constraint card read 0.26 on the fp32 checkpoint, 0.381 in a batch, and 0.412 through the serving path that actually runs. Only the last is real, so selection scores one row at a time against the exported int8 file.
 
-#### 5. Text has no prosody
+### 5. Text has no prosody
 - Falling pitch and a trailing vowel are what a human hears. A transcript carries neither.
 - Not answered, and it is the ceiling. Trailing hedges score 0.20, time requests 0.50, and recall falls from 1.00 to 0.47 when the agent's last line is missing. Audio features are the fix, not more text.
 
@@ -46,6 +46,7 @@ python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
 make synth        # regenerate the English training set (seeded, byte-identical)
+make tier1        # derive the twelve guardrail rows from the committed data
 make train        # fine-tune the DistilBERT lane, export ONNX + int8
 make threshold    # re-pick the operating point on the served int8 file, one row per call
 make eval         # score a model against the frozen gold set
@@ -54,7 +55,7 @@ make bench        # async stress test, latency percentiles + throughput
 make docker-build && make docker-run && make smoke   # the int8 model in a container
 ```
 
-What a clean clone will and will not reproduce, verified by running the block above in one: `make synth` rewrites `data/train.jsonl` byte for byte, and the three probe cases below come out wait, speak and wait as described. The numbers will not land on the digit. Trained weights are not committed, `models/` is ignored, so `make train` builds a new model rather than restoring the frozen v9 one, and a fresh fine-tune on different library versions reads near it rather than identical: 0.968 gold PR-AUC against the 0.949 quoted here, on this laptop. Two further numbers are out of reach from a clone by design. The twelve tier-1 constraint rows are not committed, so the guardrail-constrained pick is not rerunnable, and `data/ood_test.jsonl` is real call content that stays local, which is what the [dataset card](data/README.md) says. Every figure here is regenerated from the frozen artifacts, so the README describes the v9 freeze rather than whatever your box just trained.
+What a clean clone reproduces, checked by running that block in one. `make synth` rewrites `data/train.jsonl` byte for byte, `make tier1` derives the same twelve guardrail rows, and the probe cases below come out wait, speak and wait as described. What it will not reproduce is the digits. Trained weights are not committed, `models/` is ignored, so `make train` builds a new model rather than restoring the frozen v9 one, and a fresh fine-tune on different library versions reads near it rather than identical, 0.968 gold PR-AUC against the 0.949 quoted here on the laptop this was checked on. `make threshold` then re-picks the operating point on whatever you just built, under the same twelve constraints, which is the path that produced 0.42 on the frozen artifact. One number stays out of reach by design: `data/ood_test.jsonl` is real call content that never leaves this machine, which is what the [dataset card](data/README.md) says. Every figure here is regenerated from the frozen artifacts, so the README describes the v9 freeze rather than whatever your box just trained.
 
 The `/` page re-scores as you type, at most once per word, against the served int8 model. Word granularity is what streaming ASR hands a detector. Eight cases from the gold set, one clip each, results first. Every one of these is a case you can type yourself once `make serve` is up.
 
