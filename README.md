@@ -11,7 +11,7 @@
   <img alt="figures: regenerated from constants, checked in CI" src="https://img.shields.io/badge/figures-from_constants_%C2%B7_CI_checked-5c5853?style=flat-square&labelColor=0b0d10">
 </p>
 
-**One written policy, three referees, and an int8 model that answers in 58 ms.** Built for the HappyRobot AI/ML engineering task: given the agent's last line and the caller's words so far, decide whether the caller is done talking.
+**One written policy, three referees, and an int8 model that answers in 58 ms.** Built for a voice AI take-home: given the agent's last line and the caller's words so far, decide whether the caller is done talking.
 
 Watch it score a call below. Read the write-up in [docs/approach.md](docs/approach.md). Run it with `make serve`. Every claim here is checked against the artifact that ships, at the [six places listed in the Q&A](#qa). The depth sits next to the code: [POLICY.md](POLICY.md) is the human turn policy everything hangs off, [EVALS.md](EVALS.md) the gates and bands, [iterations.md](iterations.md) the audit trail of every run including the failures, [data/README.md](data/README.md) the dataset card.
 

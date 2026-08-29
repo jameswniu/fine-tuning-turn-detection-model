@@ -31,7 +31,7 @@ A dumb system can be perfect on either axis alone (never speak means zero interr
 
 ## Scenario taxonomy: label against these
 
-Samples mix HappyRobot's world (logistics: carriers, loads, MC numbers, rates, appointments) with general assistant calls (aj's world). A trailing `...` marks where the caller pauses and the detector must decide.
+Samples mix a freight-logistics world (carriers, loads, MC numbers, rates, appointments) with general assistant calls (aj's world). A trailing `...` marks where the caller pauses and the detector must decide.
 
 **Anchor classes (expected to be easy; they sanity-check the labeler and the model):**
 
