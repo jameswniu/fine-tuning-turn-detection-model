@@ -15,6 +15,18 @@
 
 Watch it score a call below. Read the write-up in [docs/approach.md](docs/approach.md). Run it with `make serve`. Every claim here is checked against the artifact that ships, at the [six places listed in the Q&A](#qa). The depth sits next to the code: [POLICY.md](POLICY.md) is the human turn policy everything hangs off, [EVALS.md](EVALS.md) the gates and bands, [iterations.md](iterations.md) the audit trail of every run including the failures, [data/README.md](data/README.md) the dataset card.
 
+## The five hard problems in end-of-turn detection
+
+Deciding whether a caller has finished is not a punctuation problem. Five things make it hard. This stack answers four; the honest status of the fifth is in the right column.
+
+| | The problem | Where this stack stands |
+|---|---|---|
+| 1 | **A complete sentence is not a complete turn.** "Anything else?" answered with "actually yeah, one more thing." is grammatically finished and conversationally wide open. | Answered. Announced continuation is its own policy class with its own gold cards, and it is one of the twelve tier-1 constraints that must be green on the served artifact before any threshold ships. It scores 0.035 and holds. |
+| 2 | **The two mistakes do not cost the same.** Interrupting a caller is a different kind of failure from making one wait, so accuracy is the wrong objective. | Answered. The threshold comes from a 1:5 cost ratio rather than from 0.5, which puts it at 0.42, and the model speaks over none of the 27 wait cards in the gold set. |
+| 3 | **There is no ground truth, only a policy.** Two careful annotators disagree about the same pause, so a label set with no written rule behind it is just one person's ear. | Answered. [POLICY.md](POLICY.md) was written before the data. Sixty cards were blind-labeled against it, seven of them marked unsure on purpose, and three vendor judges reproduced the human call on 53 of 53 hard cards while going unsure on exactly those seven. |
+| 4 | **The model you measure is not the model you ship.** Quantization moves scores near the threshold, and a number picked on the checkpoint can be wrong on the artifact in the container. | Answered, expensively. One constraint card read 0.26 on the fp32 checkpoint, 0.381 scored in a batch, and 0.412 through the serving path that actually runs. Only the last is real, so selection now scores one row at a time against the exported int8 file. |
+| 5 | **Text has no prosody.** Falling pitch and a trailing vowel are what a human hears, and a transcript carries neither. | Not answered, and it is the ceiling. The judgment classes are where it shows: trailing hedges score 0.20 and time requests 0.50, and recall falls from 1.00 to 0.47 when the agent's last line is missing. Audio features are the fix, not more text. |
+
 ## Run it
 
 ```bash
@@ -23,11 +35,14 @@ python3 -m venv .venv
 
 make synth        # regenerate the English training set (seeded, byte-identical)
 make train        # fine-tune the DistilBERT lane, export ONNX + int8
+make threshold    # re-pick the operating point on the served int8 file, one row per call
 make eval         # score a model against the frozen gold set
 make serve        # FastAPI on :8000, with a live probe page at /
 make bench        # async stress test, latency percentiles + throughput
 make docker-build && make docker-run && make smoke   # the int8 model in a container
 ```
+
+What a clean clone will and will not reproduce, verified by running the block above in one: `make synth` rewrites `data/train.jsonl` byte for byte, and the three probe cases below come out wait, speak and wait as described. The numbers will not land on the digit. Trained weights are not committed, `models/` is ignored, so `make train` builds a new model rather than restoring the frozen v9 one, and a fresh fine-tune on different library versions reads near it rather than identical: 0.968 gold PR-AUC against the 0.949 quoted here, on this laptop. Two further numbers are out of reach from a clone by design. The twelve tier-1 constraint rows are not committed, so the guardrail-constrained pick is not rerunnable, and `data/ood_test.jsonl` is real call content that stays local, which is what the [dataset card](data/README.md) says. Every figure here is regenerated from the frozen artifacts, so the README describes the v9 freeze rather than whatever your box just trained.
 
 The `/` page re-scores as you type, at most once per word, against the served int8 model. Word granularity is what streaming ASR hands a detector. Eight cases from the gold set, one clip each, results first. Every one of these is a case you can type yourself once `make serve` is up.
 

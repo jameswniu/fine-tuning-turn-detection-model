@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from common import LABEL2ID, build_input, load_jsonl
@@ -154,6 +155,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--cost-ratio", type=float, default=5, help="Weight on false-speak vs false-wait in the cost function")
     parser.add_argument("--constraints", type=str, default="", help="Optional json or jsonl file of guardrail rows; each row's label is the required decision (speak or wait)")
     parser.add_argument("--out", type=str, default="", help="Where to write threshold.json; defaults to {model-dir}/threshold.json")
+    parser.add_argument("--allow-unsatisfiable", action="store_true", help="Write the threshold even when no value satisfies the guardrails, and stamp the file as unsatisfiable. Off by default, because the fallback pick is indistinguishable from a clean one once written")
     return parser.parse_args()
 
 
@@ -183,6 +185,21 @@ def main() -> None:
     }
     if result["tier1_unsatisfiable"]:
         payload["tier1_unsatisfiable"] = True
+        if not args.allow_unsatisfiable:
+            # Refuse to write. When no threshold satisfies the guardrails, the sweep falls back to
+            # the unconstrained pick, and writing that produced a threshold.json indistinguishable
+            # from a clean one: serve.py reads the number and nothing else, make and CI saw exit 0,
+            # and a model known to break the policy absolutes shipped quietly. The README promised
+            # this failed loudly and it did not (adversary, 2026-08-29). Recording an unsatisfiable
+            # lane on purpose is still possible, but it has to be asked for.
+            sys.stderr.write(
+                "REFUSING to write %s: no threshold satisfies the tier-1 guardrails in %s.\n"
+                "The best unconstrained pick would be %s, which breaks at least one absolute.\n"
+                "Fix the model or the constraints. To record this state deliberately, pass "
+                "--allow-unsatisfiable.\n"
+                % (args.out or Path(args.model_dir) / "threshold.json",
+                   args.constraints, result["threshold"]))
+            sys.exit(3)
 
     out_path = Path(args.out) if args.out else Path(args.model_dir) / "threshold.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)

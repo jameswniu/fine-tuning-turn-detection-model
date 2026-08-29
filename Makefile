@@ -1,12 +1,18 @@
 PY := .venv/bin/python
 
-.PHONY: synth train eval evals serve bench docker-build docker-run smoke
+.PHONY: synth train threshold eval evals serve bench docker-build docker-run smoke
 
 synth:
 	$(PY) synth.py --per-template 10
 
 train:
 	$(PY) train.py --train data/train.jsonl
+
+tier1:  ## rebuild the twelve guardrail rows from the committed data
+	$(PY) make_tier1_probes.py
+
+threshold:
+	$(PY) pick_threshold.py --model-dir models/eot-distilbert-onnx-int8 --labels data/dev_set.json --constraints data/tier1_probes.jsonl --cost-ratio 5
 
 eval:
 	$(PY) evaluate.py --model models/eot-distilbert-onnx-int8 --data data/gold_set.json --report eval_report.json
