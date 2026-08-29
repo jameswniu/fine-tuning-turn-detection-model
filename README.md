@@ -17,15 +17,27 @@ Watch it score a call below. Read the write-up in [docs/approach.md](docs/approa
 
 ## The five hard problems in end-of-turn detection
 
-Deciding whether a caller has finished is not a punctuation problem. Five things make it hard. This stack answers four; the honest status of the fifth is in the right column.
+Deciding whether a caller has finished is not a punctuation problem. Five things make it hard. Four are answered here; the fifth is named honestly.
 
-| | The problem | Where this stack stands |
-|---|---|---|
-| 1 | **A complete sentence is not a complete turn.** "Anything else?" answered with "actually yeah, one more thing." is grammatically finished and conversationally wide open. | Answered. Announced continuation is its own policy class with its own gold cards, and it is one of the twelve tier-1 constraints that must be green on the served artifact before any threshold ships. It scores 0.035 and holds. |
-| 2 | **The two mistakes do not cost the same.** Interrupting a caller is a different kind of failure from making one wait, so accuracy is the wrong objective. | Answered. The threshold comes from a 1:5 cost ratio rather than from 0.5, which puts it at 0.42, and the model speaks over none of the 27 wait cards in the gold set. |
-| 3 | **There is no ground truth, only a policy.** Two careful annotators disagree about the same pause, so a label set with no written rule behind it is just one person's ear. | Answered. [POLICY.md](POLICY.md) was written before the data. Sixty cards were blind-labeled against it, seven of them marked unsure on purpose, and three vendor judges reproduced the human call on 53 of 53 hard cards while going unsure on exactly those seven. |
-| 4 | **The model you measure is not the model you ship.** Quantization moves scores near the threshold, and a number picked on the checkpoint can be wrong on the artifact in the container. | Answered, expensively. One constraint card read 0.26 on the fp32 checkpoint, 0.381 scored in a batch, and 0.412 through the serving path that actually runs. Only the last is real, so selection now scores one row at a time against the exported int8 file. |
-| 5 | **Text has no prosody.** Falling pitch and a trailing vowel are what a human hears, and a transcript carries neither. | Not answered, and it is the ceiling. The judgment classes are where it shows: trailing hedges score 0.20 and time requests 0.50, and recall falls from 1.00 to 0.47 when the agent's last line is missing. Audio features are the fix, not more text. |
+#### 1. A complete sentence is not a complete turn
+- "Anything else?" answered with "actually yeah, one more thing." is grammatically finished and conversationally wide open.
+- Answered. Announced continuation is its own policy class and one of the twelve tier-1 constraints on the served artifact. It scores 0.035 and holds.
+
+#### 2. The two mistakes do not cost the same
+- Interrupting a caller is a different failure from making one wait, so accuracy is the wrong objective.
+- Answered. The threshold comes from a 1:5 cost ratio rather than 0.5, landing at 0.42, and the model speaks over none of the 27 wait cards in the gold set.
+
+#### 3. There is no ground truth, only a policy
+- Two careful annotators disagree about the same pause. A label set with no written rule behind it is one person's ear.
+- Answered. [POLICY.md](POLICY.md) came before the data: sixty cards blind-labeled against it, seven marked unsure on purpose, and three vendor judges hit 53 of 53 while going unsure on exactly those seven.
+
+#### 4. The model you measure is not the model you ship
+- Quantization moves scores near the threshold, so a number picked on the checkpoint can be wrong on the artifact in the container.
+- Answered, expensively. One constraint card read 0.26 on the fp32 checkpoint, 0.381 in a batch, and 0.412 through the serving path that actually runs. Only the last is real, so selection scores one row at a time against the exported int8 file.
+
+#### 5. Text has no prosody
+- Falling pitch and a trailing vowel are what a human hears. A transcript carries neither.
+- Not answered, and it is the ceiling. Trailing hedges score 0.20, time requests 0.50, and recall falls from 1.00 to 0.47 when the agent's last line is missing. Audio features are the fix, not more text.
 
 ## Run it
 
