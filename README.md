@@ -27,40 +27,24 @@ Deciding whether a caller has finished is not a punctuation problem. Five things
 | 4 | **The model you measure is not the model you ship.** Quantization moves scores near the threshold, so a number picked on the checkpoint can be wrong on the artifact in the container. | Answered, after two red iterations. One constraint card read 0.26 on the fp32 checkpoint, 0.381 batched, and 0.412 through the serving path. Picking on the checkpoint left tier-1 red; re-picking on the int8 stayed red because the guardrail check was itself batching all twelve rows into one call. Selection now scores one row at a time, the way serving does. |
 | 5 | **Text has no prosody.** Falling pitch and a trailing vowel are what a human hears. A transcript carries neither. | Not answered, because it cannot be answered here. The ceiling is the input, not the model. Trailing hedges score 0.20, time requests 0.50, and recall falls from 1.00 to 0.47 when the agent's last line is missing. The fix is an audio path into the detector, and there are three in rising cost. Word timings from the ASR response give final lengthening for free, a small parallel audio model gives the rest, and tapping the ASR encoder gives it at zero marginal compute if you host your own. |
 
-## Run it
+## Two models, measured
 
-```bash
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+Every probe below is scored one row at a time on the served int8 file, the way the API scores it. The page behind the picture holds all 36, both models side by side, with the written policy's answer beside each.
 
-make synth        # regenerate the English training set (seeded, byte-identical)
-make tier1        # derive the twelve guardrail rows from the committed data
-make train        # fine-tune the DistilBERT lane, export ONNX + int8
-make threshold    # re-pick the operating point on the served int8 file, one row per call
-make eval         # score a model against the frozen gold set
-make serve        # FastAPI on :8000, with a live probe page at /
-make bench        # async stress test, latency percentiles + throughput
-make docker-build && make docker-run && make smoke   # the int8 model in a container
-make corpus       # one-time, builds the scratch lane's data (adds the datasets package)
-make pretrain     # ~15 min, our own masked-language-model base
-make scratch      # fine-tune that base into the 7.4M from-scratch model
-```
+<p align="center"><a href="https://jameswniu.github.io/fine-tuning-turn-detection-model/"><img src="assets/probe-comparison-v1.png" alt="The first six of 36 probes, both models side by side: each row shows the caller's words, the policy's answer, and each model's probability, decision and latency" width="100%"></a></p>
 
-**What a clean clone reproduces.** Run that block top to bottom.
 
-- `make synth` rewrites `data/train.jsonl` byte for byte.
-- `make tier1` derives the same twelve guardrail rows.
-- The probe cases below come out wait, speak and wait as described.
+<p align="center">
+  <img src="assets/pretrain-curve.svg" alt="What pretraining is worth, measured as PR-AUC on unseen real calls: 0.48 random init, 0.60 adding real calls, 0.83 adding a fifteen-minute pretrain, 0.91 web-pretrained" width="100%">
+</p>
 
-**What it will not reproduce is the digits.** Weights are not committed and `models/` is ignored, so `make train` builds a new model rather than restoring the frozen v9 one.
+| | Fine-tuned DistilBERT, 66M | From-scratch, 7.4M |
+|---|---|---|
+| Match the written policy, 36 probes | 31 of 35 | 34 of 35 |
+| Model latency, mean | 16.6 ms | 2.8 ms |
+| Spanish probes (6) | Flat 0.75 on all six, three wrong | All six right |
 
-- Two clean-clone runs on this laptop read 0.968 and 0.966 gold PR-AUC, against the 0.949 quoted here.
-- They picked 0.71 and 0.63 where the frozen artifact sits at 0.42. Expect that spread rather than a matching number.
-- `make threshold` re-picks the operating point on whatever you just built, under the same twelve constraints, which is the path that produced 0.42.
-
-**Two files stay out of reach by design.** `data/ood_test.jsonl` and `data/ood_train.jsonl` are real call content that never leaves this machine, which is what the [dataset card](data/README.md) says. So `make scratch` in a clean clone trains on the synthetic corpus alone, without the real-register augmentation that carried the shipped model from 0.60 to 0.825 on real calls.
-
-Every figure here is regenerated from the frozen artifacts, so the README describes the v9 freeze rather than whatever your box just trained.
+On the 29 English probes the two tie at 28 each and share one miss, an unpunctuated yes-no question both read as a cutoff; the margin is entirely Spanish, which the shipping model never trained for. The fine-tune ships because it leads on unseen real calls, the referee that matters most. [The comparison page](https://jameswniu.github.io/fine-tuning-turn-detection-model/) holds every probe, regenerated by `probe_compare.py`.
 
 The `/` page re-scores as you type, at most once per word, against the served int8 model. Word granularity is what streaming ASR hands a detector. Eight cases from the gold set, one clip each, results first. Every one of these is a case you can type yourself once `make serve` is up.
 
@@ -98,6 +82,41 @@ The `/` page re-scores as you type, at most once per word, against the served in
 
 Where it is weak, stated plainly: the judgment-class speaks. A reported-speech hedge ("the broker said it was covered, supposedly..."), a full retraction ("no, scratch that..."), and a narrated interruption ("the receiver is waving at me...") all score under the threshold today, which is what the hedge 0.20 and K 0.50 rows in EVALS.md say and what the Q&A below explains. The from-scratch and Spanish lanes have their own entry points, listed in the map below.
 
+## Run it
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+
+make synth        # regenerate the English training set (seeded, byte-identical)
+make tier1        # derive the twelve guardrail rows from the committed data
+make train        # fine-tune the DistilBERT lane, export ONNX + int8
+make threshold    # re-pick the operating point on the served int8 file, one row per call
+make eval         # score a model against the frozen gold set
+make serve        # FastAPI on :8000, with a live probe page at /
+make bench        # async stress test, latency percentiles + throughput
+make docker-build && make docker-run && make smoke   # the int8 model in a container
+make corpus       # one-time, builds the scratch lane's data (adds the datasets package)
+make pretrain     # ~15 min, our own masked-language-model base
+make scratch      # fine-tune that base into the 7.4M from-scratch model
+```
+
+**What a clean clone reproduces.** Run that block top to bottom.
+
+- `make synth` rewrites `data/train.jsonl` byte for byte.
+- `make tier1` derives the same twelve guardrail rows.
+- The probe cases below come out wait, speak and wait as described.
+
+**What it will not reproduce is the digits.** Weights are not committed and `models/` is ignored, so `make train` builds a new model rather than restoring the frozen v9 one.
+
+- Two clean-clone runs on this laptop read 0.968 and 0.966 gold PR-AUC, against the 0.949 quoted here.
+- They picked 0.71 and 0.63 where the frozen artifact sits at 0.42. Expect that spread rather than a matching number.
+- `make threshold` re-picks the operating point on whatever you just built, under the same twelve constraints, which is the path that produced 0.42.
+
+**Two files stay out of reach by design.** `data/ood_test.jsonl` and `data/ood_train.jsonl` are real call content that never leaves this machine, which is what the [dataset card](data/README.md) says. So `make scratch` in a clean clone trains on the synthetic corpus alone, without the real-register augmentation that carried the shipped model from 0.60 to 0.825 on real calls.
+
+Every figure here is regenerated from the frozen artifacts, so the README describes the v9 freeze rather than whatever your box just trained.
+
 ```bash
 curl -s -X POST localhost:8000/predict -H "Content-Type: application/json" \
   -d '{"context": "What is your MC number?", "text": "yeah it is four one five"}'
@@ -122,20 +141,6 @@ Real-call files stay out of git; only aggregates appear in the docs. The operati
 Part of the data was labeled by stock models rather than people. No weights moved; the written spec rode in the prompt, the exam was blind, and the vote was two of three. Containment does the trust work the way staging contains a deploy: judge output reaches one file, which tunes one number, which twelve human-policy gates clamp. One caveat travels with the exam score. The spec quotes a few boundary examples, so certification was partially open-book. Mechanics, the cost A/B between panel designs, and the raw votes: [docs/judge-cascade-replay.md](docs/judge-cascade-replay.md).
 
 <p align="center"><img src="assets/band-models.svg" alt="Two models" width="100%"></p>
-
-## Two models, one glance
-
-<p align="center">
-  <img src="assets/pretrain-curve.svg" alt="What pretraining is worth, measured as PR-AUC on unseen real calls: 0.48 random init, 0.60 adding real calls, 0.83 adding a fifteen-minute pretrain, 0.91 web-pretrained" width="100%">
-</p>
-
-| | Fine-tuned DistilBERT, 66M | From-scratch, 7.4M |
-|---|---|---|
-| Match the written policy, 36 probes | 31 of 35 | 34 of 35 |
-| Model latency, mean | 16.6 ms | 2.8 ms |
-| Spanish probes (6) | Flat 0.75 on all six, three wrong | All six right |
-
-On the 29 English probes the two tie at 28 each and share one miss, an unpunctuated yes-no question both read as a cutoff; the margin is entirely Spanish, which the shipping model never trained for. The fine-tune ships because it leads on unseen real calls, the referee that matters most. [docs/probe-comparison.html](docs/probe-comparison.html) holds every probe, regenerated by `probe_compare.py`.
 
 ## How the operating point is chosen
 
