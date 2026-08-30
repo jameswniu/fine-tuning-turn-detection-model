@@ -94,75 +94,88 @@ QUESTION_TAILS = [
 ]
 
 
-def build(rng: random.Random, per_template: int) -> list[dict]:
+def build(rng: random.Random, per_template: int, contexts: list[str]) -> list[dict]:
+    """Emit the register rows.
+
+    Two properties the grouped train/val split depends on. Every distinct
+    construction carries its OWN tpl, not one per bank, so a whole feature family
+    cannot land entirely on one side of the split and go either untrained or
+    unmeasured. And roughly half of every construction is emitted under an agent
+    context, because the real-call rows all carry one and the measured slices show
+    recall collapsing from 1.00 with context to 0.47 without it.
+    """
     rows: list[dict] = []
 
+    def emit(text: str, label: str, tpl: str) -> None:
+        ctx = rng.choice(contexts) if (contexts and rng.random() < 0.5) else ""
+        rows.append({"context": ctx, "text": text, "label": label, "cls": "R", "variant": "clean", "lang": "en", "tpl": tpl})
+
     def wait(text: str, tpl: str) -> None:
-        rows.append({"context": "", "text": text, "label": "wait", "cls": "R", "variant": "clean", "lang": "en", "tpl": tpl})
+        emit(text, "wait", tpl)
 
     def speak(text: str, tpl: str) -> None:
-        rows.append({"context": "", "text": text, "label": "speak", "cls": "R", "variant": "clean", "lang": "en", "tpl": tpl})
+        emit(text, "speak", tpl)
 
     # 1. Acknowledgement openings, both finished and continuing, so the tail decides.
     for _ in range(per_template * 3):
         ack, f = rng.choice(ACKS), rng.choice(FILLERS)
-        wait(f"{ack}. {f},", "reg-ack-filler")
-        wait(f"{ack}, {f}...", "reg-ack-filler")
-        speak(f"{ack}, {f}, {rng.choice(CLOSERS)}.", "reg-ack-filler")
-        speak(f"{ack}. {f}. {rng.choice(CLOSERS)}.", "reg-ack-filler")
+        wait(f"{ack}. {f},", "ack-filler-comma")
+        wait(f"{ack}, {f}...", "ack-filler-ellipsis")
+        speak(f"{ack}, {f}, {rng.choice(CLOSERS)}.", "ack-filler-closer-inline")
+        speak(f"{ack}. {f}. {rng.choice(CLOSERS)}.", "ack-filler-closer-split")
 
     for _ in range(per_template * 3):
         ack, f = rng.choice(ACKS), rng.choice(FILLERS)
-        wait(f"{ack}. {f}, {rng.choice(CONTINUERS)}", "reg-ack-continue")
-        wait(f"{ack}, {rng.choice(CONTINUERS)}", "reg-ack-continue")
-        speak(f"{ack}, {rng.choice(CLOSERS)}.", "reg-ack-continue")
+        wait(f"{ack}. {f}, {rng.choice(CONTINUERS)}", "ack-continue-filler")
+        wait(f"{ack}, {rng.choice(CONTINUERS)}", "ack-continue-bare")
+        speak(f"{ack}, {rng.choice(CLOSERS)}.", "ack-closer-bare")
 
     # 2. Stutter and repair, unfinished and finished.
     for _ in range(per_template * 2):
         letter, word = rng.choice(REPAIR_WORDS)
-        wait(f"{letter}-{word} me at,", "reg-repair")
-        wait(f"what is {letter}- {word}", "reg-repair")
-        wait(f"the {letter}- {word} is", "reg-repair")
-        speak(f"the {letter}- {word} is all set.", "reg-repair")
-        speak(f"can you check the {letter}- {word}?", "reg-repair")
+        wait(f"{letter}-{word} me at,", "repair-lead-trail")
+        wait(f"what is {letter}- {word}", "repair-question-open")
+        wait(f"the {letter}- {word} is", "repair-subject-open")
+        speak(f"the {letter}- {word} is all set.", "repair-statement-closed")
+        speak(f"can you check the {letter}- {word}?", "repair-question-closed")
 
     # 3. Word repetition, unfinished and finished. A stammered question is still a question.
     for _ in range(per_template * 2):
         w, noun = rng.choice(REPEATED), rng.choice(TAIL_NOUNS)
-        wait(f"{w}, {w}", "reg-repeat")
-        wait(f"{w}, {w}, {w} is", "reg-repeat")
-        wait(f"{w}, {w} the {noun}", "reg-repeat")
-        speak(f"{w}, {w} the {noun}, {rng.choice(QUESTION_TAILS)}?", "reg-repeat")
-        speak(f"{w}, {w} is the {noun}?", "reg-repeat")
+        wait(f"{w}, {w}", "repeat-bare")
+        wait(f"{w}, {w}, {w} is", "repeat-triple-open")
+        wait(f"{w}, {w} the {noun}", "repeat-noun-open")
+        speak(f"{w}, {w} the {noun}, {rng.choice(QUESTION_TAILS)}?", "repeat-question-tail")
+        speak(f"{w}, {w} is the {noun}?", "repeat-question-short")
 
     # 4. Multi-sentence turns. Chained complete sentences that either trail off or land.
     for _ in range(per_template * 2):
         a, b, f = rng.choice(ACKS), rng.choice(SHORT_SENTENCES), rng.choice(FILLERS)
-        wait(f"{a}. {b}. {rng.choice(TRAILING_FRAGMENTS)}", "reg-multisentence")
-        wait(f"{a}. {a}. {b}. {rng.choice(TRAILING_FRAGMENTS)}", "reg-multisentence")
-        wait(f"{a}. {b}. {f}, {rng.choice(TRAILING_FRAGMENTS)}", "reg-multisentence")
-        speak(f"{a}. {b}. {rng.choice(CLOSERS)}.", "reg-multisentence")
-        speak(f"{a}. {f}. {b}, {rng.choice(CLOSERS)}.", "reg-multisentence")
+        wait(f"{a}. {b}. {rng.choice(TRAILING_FRAGMENTS)}", "multi-two-then-fragment")
+        wait(f"{a}. {a}. {b}. {rng.choice(TRAILING_FRAGMENTS)}", "multi-three-then-fragment")
+        wait(f"{a}. {b}. {f}, {rng.choice(TRAILING_FRAGMENTS)}", "multi-filler-then-fragment")
+        speak(f"{a}. {b}. {rng.choice(CLOSERS)}.", "multi-then-closer")
+        speak(f"{a}. {f}. {b}, {rng.choice(CLOSERS)}.", "multi-filler-then-closer")
 
     # 5. Bare fragments hold; short complete replies do not, disfluency notwithstanding.
     for _ in range(per_template * 2):
         f = rng.choice(FILLERS)
-        wait(rng.choice(TRAILING_FRAGMENTS), "reg-fragment")
-        wait(f"{rng.choice(ACKS)}, {f},", "reg-fragment")
-        wait(f"{rng.choice(HEDGE_STARTS)}, {f},", "reg-fragment")
-        speak(f"{f}, {rng.choice(CLOSERS)}.", "reg-fragment")
-        speak(f"{rng.choice(HEDGE_STARTS)}, {f}, {rng.choice(CLOSERS)}.", "reg-fragment")
+        wait(rng.choice(TRAILING_FRAGMENTS), "fragment-bare")
+        wait(f"{rng.choice(ACKS)}, {f},", "fragment-ack-filler")
+        wait(f"{rng.choice(HEDGE_STARTS)}, {f},", "fragment-hedge-filler")
+        speak(f"{f}, {rng.choice(CLOSERS)}.", "fragment-filler-closer")
+        speak(f"{rng.choice(HEDGE_STARTS)}, {f}, {rng.choice(CLOSERS)}.", "fragment-hedge-closer")
 
     # 6. Announced continuation, the guardrail class the first version broke. It holds
     #    whether it arrives clean or stammered, so both forms are taught explicitly.
     for _ in range(per_template * 2):
         f = rng.choice(FILLERS)
-        wait("actually, hold that thought.", "reg-announced")
-        wait(f"{f}, actually, hold that thought.", "reg-announced")
-        wait("wait, hold on, one more thing.", "reg-announced")
-        wait(f"{rng.choice(ACKS)}. {f}, one more thing.", "reg-announced")
-        wait("oh, before i forget, one more question.", "reg-announced")
-        wait(f"{f}, sorry, one second, one more thing.", "reg-announced")
+        wait("actually, hold that thought.", "announced-hold-clean")
+        wait(f"{f}, actually, hold that thought.", "announced-hold-filler")
+        wait("wait, hold on, one more thing.", "announced-onemore-clean")
+        wait(f"{rng.choice(ACKS)}. {f}, one more thing.", "announced-onemore-ack")
+        wait("oh, before i forget, one more question.", "announced-beforeiforget")
+        wait(f"{f}, sorry, one second, one more thing.", "announced-apology")
 
     return rows
 
@@ -183,10 +196,21 @@ def main() -> None:
     args = ap.parse_args()
 
     rng = random.Random(args.seed)
-    rows = build(rng, args.per_template)
+
+    # Agent context comes from synth.py so the register rows sit under the same
+    # prompts the rest of the corpus uses, rather than inventing a second style.
+    import synth
+
+    contexts = sorted({synth.fill(t, rng) for bank in synth.AGENT_CTX.values() for t in bank})
+
+    rows = build(rng, args.per_template, contexts)
 
     for r in rows:
         r["tpl"] = f"reg{zlib.crc32(r['tpl'].encode())}"
+
+    n_groups = len({r["tpl"] for r in rows})
+    if n_groups < 20:
+        raise SystemExit(f"only {n_groups} split groups; every construction needs its own tpl or a whole family lands on one side of the split")
 
     for r in list(rows):
         t = asr_variant(r["text"])
