@@ -46,39 +46,53 @@ make pretrain     # ~15 min, our own masked-language-model base
 make scratch      # fine-tune that base into the 7.4M from-scratch model
 ```
 
-What a clean clone reproduces, checked by running that block in one. `make synth` rewrites `data/train.jsonl` byte for byte, `make tier1` derives the same twelve guardrail rows, and the probe cases below come out wait, speak and wait as described. What it will not reproduce is the digits. Trained weights are not committed, `models/` is ignored, so `make train` builds a new model rather than restoring the frozen v9 one, and a fresh fine-tune on different library versions reads near it rather than identical. Two clean-clone runs on the same laptop read 0.968 and 0.966 gold PR-AUC against the 0.949 quoted here, and picked 0.71 and 0.63 where the frozen artifact sits at 0.42, which is the spread you should expect rather than a single number to match. `make threshold` then re-picks the operating point on whatever you just built, under the same twelve constraints, which is the path that produced 0.42 on the frozen artifact. Two files stay out of reach by design. `data/ood_test.jsonl` and `data/ood_train.jsonl` are real call content that never leaves this machine, which is what the [dataset card](data/README.md) says. So `make scratch` in a clean clone trains on the synthetic corpus alone, without the real-register augmentation that carried the shipped model from 0.60 to 0.825 on real calls. Every figure here is regenerated from the frozen artifacts, so the README describes the v9 freeze rather than whatever your box just trained.
+**What a clean clone reproduces.** Run that block top to bottom.
+
+- `make synth` rewrites `data/train.jsonl` byte for byte.
+- `make tier1` derives the same twelve guardrail rows.
+- The probe cases below come out wait, speak and wait as described.
+
+**What it will not reproduce is the digits.** Weights are not committed and `models/` is ignored, so `make train` builds a new model rather than restoring the frozen v9 one.
+
+- Two clean-clone runs on this laptop read 0.968 and 0.966 gold PR-AUC, against the 0.949 quoted here.
+- They picked 0.71 and 0.63 where the frozen artifact sits at 0.42. Expect that spread rather than a matching number.
+- `make threshold` re-picks the operating point on whatever you just built, under the same twelve constraints, which is the path that produced 0.42.
+
+**Two files stay out of reach by design.** `data/ood_test.jsonl` and `data/ood_train.jsonl` are real call content that never leaves this machine, which is what the [dataset card](data/README.md) says. So `make scratch` in a clean clone trains on the synthetic corpus alone, without the real-register augmentation that carried the shipped model from 0.60 to 0.825 on real calls.
+
+Every figure here is regenerated from the frozen artifacts, so the README describes the v9 freeze rather than whatever your box just trained.
 
 The `/` page re-scores as you type, at most once per word, against the served int8 model. Word granularity is what streaming ASR hands a detector. Eight cases from the gold set, one clip each, results first. Every one of these is a case you can type yourself once `make serve` is up.
 
-A complete statement speaks. The agent opened the call and the caller says why they are calling.
+**A complete statement speaks.** The agent opened the call and the caller says why they are calling.
 
 <p align="center"><img src="assets/probe-statement.gif" alt="Typing a full sentence confirming a pickup after the agent's greeting: the score climbs to 0.99 and the chip flips to speak" width="100%"></p>
 
-A mid-readout holds. The agent asked for the MC number and the caller is halfway through the digits; the policy makes this an absolute wait.
+**A mid-readout holds.** The agent asked for the MC number and the caller is halfway through the digits; the policy makes this an absolute wait.
 
 <p align="center"><img src="assets/probe-readout.gif" alt="Typing yeah it is four one five after the agent asks for an MC number: the score stays near 0.01 and the chip reads keep listening" width="100%"></p>
 
-A complete question speaks.
+**A complete question speaks.**
 
 <p align="center"><img src="assets/probe-question.gif" alt="Typing a full question about detention policy: the score climbs to 0.99 and the chip flips to speak" width="100%"></p>
 
-A complete answer speaks. The agent asked about an appointment and the caller answered it.
+**A complete answer speaks.** The agent asked about an appointment and the caller answered it.
 
 <p align="center"><img src="assets/probe-complete.gif" alt="Typing yeah, I can make it after the agent asks about an appointment: the score climbs to 0.99 and the chip flips to speak" width="100%"></p>
 
-An announced continuation holds, even though the sentence is complete. The agent asked "Anything else?" and the caller says there is more coming.
+**An announced continuation holds, even though the sentence is complete.** The agent asked "Anything else?" and the caller says there is more coming.
 
 <p align="center"><img src="assets/probe-onemore.gif" alt="Typing actually yeah, one more thing after the agent asks anything else: the score stays near 0.04 and the chip reads keep listening" width="100%"></p>
 
-A self-interrupt holds. The caller restarts mid-sentence; the new thought is coming.
+**A self-interrupt holds.** The caller restarts mid-sentence; the new thought is coming.
 
 <p align="center"><img src="assets/probe-restart.gif" alt="Typing can you, actually, you know what: the score stays near 0.01 and the chip reads keep listening" width="100%"></p>
 
-An explicit hold holds silently. The caller is retrieving something themselves.
+**An explicit hold holds silently.** The caller is retrieving something themselves.
 
 <p align="center"><img src="assets/probe-hold.gif" alt="Typing hang on, let me grab the load number: the score stays near 0.01 and the chip reads keep listening" width="100%"></p>
 
-A casual closer speaks. "nah bye" is the miss a live poke found in v5, and the regression slice now guards it.
+**A casual closer speaks.** "nah bye" is the miss a live poke found in v5, and the regression slice now guards it.
 
 <p align="center"><img src="assets/probe-nahbye.gif" alt="Typing nah bye: the score climbs to 0.97 and the chip flips to speak" width="100%"></p>
 
@@ -127,9 +141,9 @@ On the 29 English probes the two tie at 28 each and share one miss, an unpunctua
 
 The model outputs a probability that the caller is done. The threshold is the line where the agent starts speaking, and it is the most consequential number in the system, so a written rule picks it and every run re-derives it. Three steps.
 
-1. Start from the cost ratio. The policy says one interruption costs as much as five slow replies. So the sweep tries every threshold from 0.01 to 0.99 on the 30 judged dev cards and keeps the one with the lowest cost, counted as five times the false-speak rate plus the false-wait rate. Rates rather than counts, so a lopsided card mix cannot tilt the answer.
-2. Throw out any threshold that breaks a rule that must never break. Twelve cards are pinned: every gold readout card, the gold "one more thing" card, its dev-set twin, and the six misses a live poke found. A threshold that gets any of them wrong is off the table, whatever its cost score. If none survive, the run fails loudly instead of shipping a broken guardrail.
-3. Score the artifact that ships, the way it ships. The int8 model's scores shift with whatever else is in the batch, so every pinned card is scored alone, exactly as serving does. In v8 the same card read 0.381 in a batch and 0.412 alone, and 0.412 is the one that matters. The winner is written to `threshold.json` next to the weights, and `serve.py` reads it at startup.
+1. **Start from the cost ratio.** The policy says one interruption costs as much as five slow replies. So the sweep tries every threshold from 0.01 to 0.99 on the 30 judged dev cards and keeps the one with the lowest cost, counted as five times the false-speak rate plus the false-wait rate. Rates rather than counts, so a lopsided card mix cannot tilt the answer.
+2. **Throw out any threshold that breaks a rule that must never break.** Twelve cards are pinned: every gold readout card, the gold "one more thing" card, its dev-set twin, and the six misses a live poke found. A threshold that gets any of them wrong is off the table, whatever its cost score. If none survive, the run fails loudly instead of shipping a broken guardrail.
+3. **Score the artifact that ships, the way it ships.** The int8 model's scores shift with whatever else is in the batch, so every pinned card is scored alone, exactly as serving does. In v8 the same card read 0.381 in a batch and 0.412 alone, and 0.412 is the one that matters. The winner is written to `threshold.json` next to the weights, and `serve.py` reads it at startup.
 
 The table is the audit trail: nine runs, the threshold each picked, and what it taught. ECE is calibration error, lower is better.
 
@@ -167,7 +181,14 @@ Sixty blind labels became eleven classes with a rule each, and `synth.py` turns 
 
 Class I is the judgment call worth reading, because it looked like a contradiction in the labels and turned out to be the rule. "The broker said it was covered, supposedly..." was labeled speak; "The detention was approved, or something..." was labeled wait. The hedge word carries no turn signal. What decides is stance and ownership. A claim attributed to someone else is a question in disguise, so the agent speaks to confirm. An owned first-person claim with a habitual softener is just a statement, so it follows the statement rules. Attribution markers versus first-person assertion are surface features a text model can learn, which is why the ruling is trainable and not only philosophy.
 
-Four augmentations bake in deployment realism. Complete utterances are re-emitted truncated mid-sentence and labeled wait, the shape of an ASR partial. Every row also ships lowercased with terminal punctuation stripped, so the model cannot lean on periods. Contexted rows are emitted bare as well, so it works with and without the agent's last line. And from v6, real-call rows from the author's production voice agent join the training half at four-fold weight, grouped by call so no call leaks into the referee. The counts: 1,586 training rows, 60 gold cards (53 hard, 7 boundary), 30 judged dev cards, 6 regressions, 400 real turns split 304 to 96 by call.
+**Four augmentations bake in deployment realism.**
+
+- Complete utterances are re-emitted truncated mid-sentence and labeled wait, the shape of an ASR partial.
+- Every row ships lowercased with terminal punctuation stripped, so the model cannot lean on periods.
+- Contexted rows are emitted bare as well, so it works with and without the agent's last line.
+- From v6, real-call rows from the author's production voice agent join the training half at four-fold weight, grouped by call so no call leaks into the referee.
+
+The counts: 1,586 training rows, 60 gold cards (53 hard, 7 boundary), 30 judged dev cards, 6 regressions, 400 real turns split 304 to 96 by call.
 
 ## Serving, measured
 
