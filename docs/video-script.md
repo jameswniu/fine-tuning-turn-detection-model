@@ -1,6 +1,6 @@
 # Video walkthrough script
 
-Ten minute cap. The 29 second ad is the cold open; the spoken walkthrough targets about 9:10 at natural pace. Bracketed lines are what is on screen, not spoken; DOC means the approach Word document, REPO means the live repo surface named. Every number below is frozen from the reports; do not improvise numbers while recording. The brief's side notes are the rubric: they want to see how you think and approach the problem more than anything, with assumptions written down, so the walkthrough is organized around decisions, not metrics.
+Ten minute cap. The 29 second ad is the cold open; the spoken walkthrough targets about 9:30 at natural pace. Bracketed lines are what is on screen, not spoken; DOC means the approach Word document, REPO means the live repo surface named. Every number below is frozen from the reports; do not improvise numbers while recording. The brief's side notes are the rubric: they want to see how you think and approach the problem more than anything, with assumptions written down, so the walkthrough is organized around decisions, not metrics.
 
 ---
 
@@ -66,11 +66,11 @@ The multilingual bonus, quickly: the multilingual fine-tune matches the English 
 
 [7:25 Screen: REPO, the live probe page, typing a case]
 
-Serving. FastAPI over ONNX Runtime, dynamic int8, CPU, Dockerfile included, threshold read from the model directory. This live page re-scores word by word, the same granularity streaming ASR gives you, and it's how several training gaps were found. Type a caller halfway through reading out a number and watch it hold; type "nah bye" and it commits to speak.
+Serving. FastAPI over ONNX Runtime, dynamic int8, CPU, Dockerfile included, threshold read from the model directory. This live page re-scores word by word, the same granularity streaming ASR gives you. Watch it work the hard cases. A question still forming... it holds at under one percent. Now give it context: the agent asked about an appointment, and the caller starts answering, yeah, I... it keeps listening, because the answer is not finished yet. A self-interrupt, the caller restarting mid-thought... still holding; the new thought is coming. And a casual nah bye... it commits to speak at ninety-seven percent.
 
-Measured on my laptop: end to end fifty-eight p95 at concurrency eight, about a hundred and seventy requests a second, and the from-scratch model does five milliseconds and nearly six hundred a second on the same box. The brief asked for under a hundred milliseconds; there's real margin.
+Every one of these started as a challenge case found by typing at this page, and several became training data. End to end this serves at fifty-eight milliseconds p95 at concurrency eight, real margin under your hundred-millisecond budget.
 
-[8:10 Screen: DOC, the monitoring section]
+[8:30 Screen: DOC, the monitoring section]
 
 Production, at your scale, a million calls a month. Turn detection grades itself in production, seconds later, for free. A caller talking over the agent right after it starts is a false speak. Dead air stretching before the agent answers is a false wait. Those two rates are the online eval, no annotation budget, and they map one to one to the offline curve.
 
@@ -78,6 +78,6 @@ Sample the low-confidence turns and every barge-in for human labels, a few hundr
 
 And the question of whether I'm limited by the datasets I built: yes, deliberately, and only until launch. My synthesis encodes policy; production supplies distribution. You just watched that handoff run once, in miniature, with sixty calls. At a million a month it's the same loop with the volume turned up.
 
-[9:15 Screen: REPO, file tree]
+[9:35 Screen: REPO, file tree]
 
 Everything's in the repo. The code, the Dockerfile, the frozen gold set, the booth I labeled it in, the iteration log including both failures, and the doc with every assumption written down where it's load-bearing. Thanks for a genuinely fun problem. Looking forward to talking through it.
