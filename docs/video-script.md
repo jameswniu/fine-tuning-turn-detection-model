@@ -10,7 +10,7 @@ Ten minute cap. The 29 second ad is the cold open; the spoken walkthrough target
 
 [0:29 Screen: REPO, README top, the hero]
 
-That question, "is the caller done talking," is the whole assignment. Hi, I'm James, and this is my build. You said you wanted to see how I think and approach the problem more than a polished benchmark, so this walkthrough is organized around the decisions, what each one cost, and the assumptions I wrote down as I went. The shape in one breath: three models trained through one recipe, three referees judging them including real production phone calls, and the winner serving at fifty-eight milliseconds p95, int8 on CPU. The most valuable thing here is not a green number; it's what the real calls exposed, and what I did about it. I'll move between the doc and the repo.
+That question, "is the caller done talking," is the whole problem. Hi, I'm James, and this is my build. You said you wanted to see how I think, more than a polished benchmark. So this walkthrough is organized around the decisions, what each one cost, and the assumptions I wrote down as I went. The shape in one breath: three models trained through one recipe, three referees judging them including real production phone calls, and the winner serving at fifty-eight milliseconds p95, int8 on CPU. The most valuable thing here is not a green number; it's what the real calls exposed, and what I did about it. I'll move between the doc and the repo.
 
 [1:10 Screen: DOC, the problem priced]
 

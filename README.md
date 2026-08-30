@@ -113,7 +113,7 @@ make scratch      # fine-tune that base into the 7.4M from-scratch model
 - They picked 0.71 and 0.63 where the frozen artifact sits at 0.42. Expect that spread rather than a matching number.
 - `make threshold` re-picks the operating point on whatever you just built, under the same twelve constraints, which is the path that produced 0.42.
 
-**Two files stay out of reach by design.** `data/ood_test.jsonl` and `data/ood_train.jsonl` are real call content that never leaves this machine, which is what the [dataset card](data/README.md) says. So `make scratch` in a clean clone trains on the synthetic corpus alone, without the real-register augmentation that carried the shipped model from 0.60 to 0.825 on real calls.
+**Two files stay out of reach by design.** `data/ood_test.jsonl` and `data/ood_train.jsonl` are real call content that never leaves this machine, which is what the [dataset card](data/README.md) says. So `make scratch` in a clean clone trains on the synthetic corpus alone, without the real-register augmentation that carried the shipped model from 0.65 to 0.91 on real calls.
 
 Every figure here is regenerated from the frozen artifacts, so the README describes the v9 freeze rather than whatever your box just trained.
 

@@ -95,7 +95,7 @@ And the brief's direct question, whether we are limited by the datasets previous
 
 ## The discussion questions, answered in advance
 
-The brief's five questions are answered here. The rest of what a reviewer is likely to raise, including why DistilBERT, why int8 and what it cost, why 0.42, where verification actually happens, and an explicit list of what was not measured, sits in collapsed blocks at the bottom of the README.
+The brief's five questions are answered here. What else a reviewer might raise sits in collapsed blocks at the bottom of the README: why DistilBERT, why int8 and what it cost, why 0.42, where verification actually happens, and an explicit list of what was not measured.
 
 On the limits of the current solution. The ceiling of a text-only detector is prosody, and it sits in the input rather than the model. Some utterances read identically whether the caller is finished or inhaling for more. That signal lives in pitch decline, final lengthening, and breath, and none of it reaches a text model. The system also inherits the transcriber's cadence, since a decision can only update when a partial arrives. On data: synthetic generation covers the policy but compresses the diversity of real callers. The gold referee is sixty cards, so per-class readings carry wide intervals. And the policy encodes one operator's judgment, mine, a feature for coherence and a limit for customers whose callers behave differently.
 
