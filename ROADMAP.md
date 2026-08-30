@@ -1,6 +1,6 @@
 # Roadmap: the environment ladder to production
 
-Dictated by the policy owner on 2026-08-24. Four environments, each with a distinct job, ordered by how far judgment travels from its author. What exists tonight is marked; the rest is the trajectory the submission promises. The ladder is not hypothetical: it is transplanted from a production LLM system the author operated (local compose spinup, per-commit Kubernetes staging namespaces, record/replay fixtures gating CI, a release pipeline with an eval stage), re-sized for one model.
+Dictated by the policy owner on 2026-08-24. Four environments, each with a distinct job, ordered by how far judgment travels from its author. What exists tonight is marked; the rest is the trajectory this repo promises. The ladder is not hypothetical: it is transplanted from a production LLM system the author operated (local compose spinup, per-commit Kubernetes staging namespaces, record/replay fixtures gating CI, a release pipeline with an eval stage), re-sized for one model.
 
 ## dev (exists tonight)
 
@@ -28,10 +28,10 @@ The two lanes answer different questions: offline replay asks "did we break anyt
 
 Promotion up the ladder (dev, staging1, staging2, production) is gated by the same EVALS.md contract everywhere: tier 1 guardrails all green, tier 2 bands in range, one iterations.md row per attempt. The environments change; the referee does not.
 
-## Post-submission chapters (the public repo phase)
+## Next chapters (the public repo phase)
 
-The original first two chapters moved into the submission itself: the from-scratch lane ran (own tokenizer, small encoder from random init, and the two lessons it bought, the WordPiece out-of-vocabulary blowup and the template-leak validation split), and Spanish shipped under the same policy. What remains queued for after the process concludes:
+The original first two chapters moved into the build itself: the from-scratch lane ran (own tokenizer, small encoder from random init, and the two lessons it bought, the WordPiece out-of-vocabulary blowup and the template-leak validation split), and Spanish shipped under the same policy. What remains queued for after the process concludes:
 
 1. Mandarin with native human labels through the same booth, and per-language scorecards in the style of the LiveKit and smart-turn model cards. Spanish shipped with a synthetic held-out referee; Mandarin is the language the author can native-label, so it carries the human-referee bar.
-2. The shadow lanes at full size. Offline replay ran in miniature inside the submission, real-call slices from the author's production voice stack, split by call into an augmentation half and a held-out referee. What remains is online shadow against the vendor turn model on a real phone number, disagreements published. The vendor-versus-open bake-off with receipts.
-3. The from-scratch frontier at scale: synthesis past 100k samples, the scratch-versus-fine-tuned curve at matched latency with per-register slices, extending the submission's first pass.
+2. The shadow lanes at full size. Offline replay ran in miniature inside the build, real-call slices from the author's production voice stack, split by call into an augmentation half and a held-out referee. What remains is online shadow against the vendor turn model on a real phone number, disagreements published. The vendor-versus-open bake-off with receipts.
+3. The from-scratch frontier at scale: synthesis past 100k samples, the scratch-versus-fine-tuned curve at matched latency with per-register slices, extending this repo's first pass.

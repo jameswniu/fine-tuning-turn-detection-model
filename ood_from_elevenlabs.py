@@ -17,7 +17,7 @@ that noise is accepted and stated in the approach doc.
 
 Privacy: the output file contains real personal call content. It is written
 locally, kept out of git, and only aggregate metrics from it appear in the
-submission. Requires ELEVENLABS_API_KEY, and an agent id via ELEVENLABS_AGENT_ID
+build. Requires ELEVENLABS_API_KEY, and an agent id via ELEVENLABS_AGENT_ID
 or --agent. Read-only against the API.
 """
 

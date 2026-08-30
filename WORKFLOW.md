@@ -1,6 +1,6 @@
 # End-of-Turn Detection: Workflow & Labeling Guide
 
-The take-home in one sentence: build the model that decides, while a caller is talking, the exact moment the agent should start speaking.
+The task in one sentence: build the model that decides, while a caller is talking, the exact moment the agent should start speaking.
 
 ## The loop (who does what)
 
@@ -16,7 +16,7 @@ taxonomy (below)
    -> approach doc + video script
 ```
 
-James is the policy judge: labels the calibration set, sets the cost asymmetry, reviews iteration metrics whenever. Claude runs everything else. James is IN the loop at exactly two doors: the submission email, and any public push. Everything else is reversible.
+James is the policy judge: labels the calibration set, sets the cost asymmetry, reviews iteration metrics whenever. Claude runs everything else. James is IN the loop at exactly two doors: the email that sends it, and any public push. Everything else is reversible.
 
 ## The decision being made
 

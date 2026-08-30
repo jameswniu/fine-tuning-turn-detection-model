@@ -1,6 +1,6 @@
 # End-of-Turn Detection, an approach
 
-This is the short document for the take-home. It presents the solution and the reasoning. The repo carries the depth: POLICY.md holds the labeled turn policy, EVALS.md the gates and bands, data/README.md the dataset provenance, and iterations.md the audit trail of every training run.
+This document presents the solution and the reasoning. The repo carries the depth: POLICY.md holds the labeled turn policy, EVALS.md the gates and bands, data/README.md the dataset provenance, and iterations.md the audit trail of every training run.
 
 ## The problem, priced
 
@@ -24,7 +24,7 @@ Why created instead of found, in one breath. Public conversational corpora carry
 
 ## Models, three lanes
 
-The submission trains three models through one recipe and lets the measured curve pick what ships.
+The build trains three models through one recipe and lets the measured curve pick what ships.
 
 The first lane fine-tunes DistilBERT, 66M parameters, English. It classifies the last agent line plus the caller's words so far. It is the safe recipe the open-source state of the art validates.
 
@@ -52,7 +52,7 @@ A regression slice holds every failure found by live probing, a hard gate that a
 
 Then the referee that changed the build. Everything above lives near one distribution. So I pulled sixty real production calls from my own voice agent and let them label themselves: the point where the caller actually stopped is a true complete, and a mid-turn prefix of the same utterance is a true wait. The discriminator is exact, calls initiated through Twilio and longer than the watchdog pings. Four hundred rows, split by call: two thirds available for training augmentation, one third locked as the real-call referee. The labels carry stated noise. The vendor's own turn-taker drew the boundaries, and a random cut can land where a phrase happens to sound complete, so the numbers read as pessimistic bounds. Excluding sentence-boundary cuts moved the headline by only two points, which is how I know the noise is not the story. The story: the fine-tuned model, 0.96 and zero false-speak on gold, scored 0.61 on real calls with false-speak around forty percent. Real callers hesitate, restart, and trail off in ways neither my templates nor my hand-written gold cards do. Every offline referee agreed with each other, and the real world disagreed with all of them.
 
-The fix ran inside the take-home. The training-side two thirds went back into the data mix as real-register augmentation, graded on the locked third. It worked on every lane it touched. The shipping fine-tune went from 0.65 to 0.913 on the real referee, with recall 0.959. The multilingual lane landed at 0.875. The scratch lane's movement is the pretraining curve above. One correction to the referee itself is named. Turns where the vendor's turn-taker answered against our written policy would import its behavior into the labels, so the slice builder relabels those to wait, marked and counted. This pull matched zero verbatim phrases. The one real poisoning incident traced to softer register patterns instead, caught by a tier-1 gate going red and fixed with data, not string filters.
+The fix ran inside the build. The training-side two thirds went back into the data mix as real-register augmentation, graded on the locked third. It worked on every lane it touched. The shipping fine-tune went from 0.65 to 0.913 on the real referee, with recall 0.959. The multilingual lane landed at 0.875. The scratch lane's movement is the pretraining curve above. One correction to the referee itself is named. Turns where the vendor's turn-taker answered against our written policy would import its behavior into the labels, so the slice builder relabels those to wait, marked and counted. This pull matched zero verbatim phrases. The one real poisoning incident traced to softer register patterns instead, caught by a tier-1 gate going red and fixed with data, not string filters.
 
 The raw call content never enters the repo. The slice files stay local; only aggregates appear here.
 
