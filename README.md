@@ -349,3 +349,24 @@ Every number on this page is measured on the served int8 artifact. Four things a
 - One bench was discarded as thermal pollution after back-to-back trainings; every quoted bench comes from a quiet machine.
 
 </details>
+
+## Roadmap: prosody, and the transcriber route
+
+Two of the brief's discussion questions ask about work this build does not contain. Nothing here was implemented; this is the plan and what each step would cost, so the gap reads as a scope decision rather than an omission. The measured limits behind it are in [docs/approach.md](docs/approach.md).
+
+**Audio and multimodal, and why any of them beat a VAD.** A VAD knows only that sound stopped, so it buys safety with silence and every timeout setting is wrong for half the cases. Text sees what was said, which is most of the turn signal and is cheap to train, fast to serve, and easy to debug, which is why it came first. What text cannot see is prosody: falling pitch, final lengthening, and breath decide some turns whose words are identical either way. The reference architecture makes the ceiling visible as wiring, since one arrow reaches the turn detector carrying final transcription while raw audio flows past it to the interruption handler. The fix is a second arrow, in three rising costs.
+
+- Word timings, free today. Every vendor ASR response already carries word-level timestamps, and final-word lengthening plus pause duration are among the strongest endpoint cues in the phonetics literature. Feeding them to the current model adds no model and no latency, and a text-only pipeline throws them away.
+- A small parallel audio model, roughly a dozen milliseconds on CPU. It sits beside the ASR rather than inside it, consumes the same stream, and fuses with the text score at the decision layer. This is the shape Pipecat's Smart Turn ships.
+- Tapping the ASR encoder, free compute but coupled. Only available if you host your own ASR, since no vendor exposes encoder states.
+
+The eval harness transfers to all three unchanged, which is the point of building the referee before the model. The frozen gold set, the cost ratio, the guardrails, and the production proxies do not care whether the score came from text or audio.
+
+**Could the transcriber do this itself.** It could, and the reason it does not today is that an ASR is trained to be invariant to prosody. "Yeah" flat and "yeah" rising have to produce the same token or the vocabulary stops holding, so that invariance is the product rather than a gap. The pitch reaches the acoustic encoder and dies at the text bottleneck. Two ways to keep it:
+
+- Whisper. Add an end-of-turn token to the decoder vocabulary and fine-tune on turn-annotated audio, then read that token's probability against continuation tokens from the same forward pass that produces the transcript. Endpointing becomes a byproduct of transcription and prosody arrives through the encoder.
+- Streaming RNN-T, Parakeet-family. Train an end-of-utterance token into the transducer vocabulary, or hang a small classifier head off the encoder states.
+
+Both need audio with true turn boundaries, which is exactly what the production self-labeling loop above already produces. The tradeoff is coupling, since one model then owns two jobs on one latency budget, so the detector stays separate while iterating fast and gets distilled into the transcriber once the policy stabilizes.
+
+There is a latency prize either way. Waiting for a final transcript means waiting for the ASR to settle, typically 100 to 300 ms after speech stops. An audio-side detector needs no words, so it can decide before the transcript lands. Prosody is not only an accuracy fix; it buys back time.
