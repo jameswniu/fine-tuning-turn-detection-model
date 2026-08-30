@@ -5,8 +5,8 @@ PY := .venv/bin/python
 synth:
 	$(PY) synth.py --per-template 10
 
-train:
-	$(PY) train.py --train data/train.jsonl
+train:  ## trains a NEW model into its own directory; the shipped artifact is tracked and is never a default target
+	$(PY) train.py --train data/train.jsonl --out models/eot-distilbert-retrain
 
 corpus:  ## one-time: the data the scratch pretrain reads (installs the datasets package, not a serving dep)
 	uv pip install -q --python $(PY) datasets

@@ -1,4 +1,6 @@
-models/
+models/*
+!models/eot-distilbert-onnx-int8/
+!models/eot-scratch-pre-onnx-int8/
 __pycache__/
 *.pyc
 .venv/
