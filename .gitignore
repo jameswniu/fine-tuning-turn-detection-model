@@ -21,3 +21,4 @@ eval_report_*.json
 bench_report_*.json
 pretrain.log
 docs/recording-runbook.md
+data/train_plus_register.jsonl

@@ -66,7 +66,7 @@ The multilingual bonus, quickly: the multilingual fine-tune matches the English 
 
 [7:25 Screen: REPO, the live probe page, typing a case]
 
-Serving. FastAPI over ONNX Runtime, dynamic int8, CPU, Dockerfile included, threshold read from the model directory. This live page re-scores word by word, the same granularity streaming ASR gives you, and it's how several training gaps were found. Type "nah bye" at a model that has never seen casual register and watch it go uncertain.
+Serving. FastAPI over ONNX Runtime, dynamic int8, CPU, Dockerfile included, threshold read from the model directory. This live page re-scores word by word, the same granularity streaming ASR gives you, and it's how several training gaps were found. Type a caller halfway through reading out a number and watch it hold; type "nah bye" and it commits to speak.
 
 Measured on my laptop: end to end fifty-eight p95 at concurrency eight, about a hundred and seventy requests a second, and the from-scratch model does five milliseconds and nearly six hundred a second on the same box. The brief asked for under a hundred milliseconds; there's real margin.
 
