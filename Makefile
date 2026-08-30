@@ -1,12 +1,24 @@
 PY := .venv/bin/python
 
-.PHONY: synth train threshold eval evals serve bench docker-build docker-run smoke
+.PHONY: synth train threshold eval evals serve bench docker-build docker-run smoke corpus pretrain scratch
 
 synth:
 	$(PY) synth.py --per-template 10
 
 train:
 	$(PY) train.py --train data/train.jsonl
+
+corpus:  ## one-time: the data the scratch pretrain reads (installs the datasets package, not a serving dep)
+	uv pip install -q --python $(PY) datasets
+	$(PY) synth_scale.py --per-template 60
+	$(PY) synth_es.py --per-template 30
+	$(PY) fetch_pretrain_corpus.py
+
+pretrain:  ## ~15 min on MPS: masked-language-model base for the from-scratch lane, run corpus first
+	$(PY) pretrain_scratch.py
+
+scratch:  ## fine-tune the from-scratch base on the task, run pretrain first
+	$(PY) train_scratch.py --init-from models/eot-scratch-base --lr 1e-4 --out models/eot-scratch-pre $(if $(wildcard data/ood_train.jsonl),--real data/ood_train.jsonl,)
 
 tier1:  ## rebuild the twelve guardrail rows from the committed data
 	$(PY) make_tier1_probes.py
