@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/jameswniu/fine-tuning-turn-detection-model/raw/master/assets/ad.mp4"><img src="assets/ad-preview.gif" width="365" alt="Two people keep colliding in a doorway, each starting the moment the other does. The same pair then move cleanly, one waiting a beat, and the spot asks whether the caller is done talking."></a>
+  <a href="https://github.com/jameswniu/fine-tuning-turn-detection-model/raw/master/assets/ad.mp4"><img src="assets/ad-preview.gif" width="360" alt="Two people keep colliding in a doorway, each starting the moment the other does. The same pair then move cleanly, one waiting a beat, and the spot asks whether the caller is done talking."></a>
 </p>
 
 <p align="center">
