@@ -12,9 +12,11 @@
 </p>
 
 <p align="center">
-  <a href="assets/ad.mp4"><img src="assets/ad-preview.gif" width="270" alt="The thirty-second spot, doorway collisions becoming a clean handoff once the model learns when to speak"></a>
-  <br>
-  <sub><b>The 30-second spot.</b> Click through for the version with sound.</sub>
+  <a href="https://github.com/jameswniu/fine-tuning-turn-detection-model/raw/master/assets/ad.mp4"><img src="assets/ad-preview.gif" width="380" alt="Two people keep colliding in a doorway, each starting the moment the other does. The same pair then move cleanly, one waiting a beat, and the spot asks whether the caller is done talking."></a>
+</p>
+
+<p align="center">
+  <sub><a href="https://github.com/jameswniu/fine-tuning-turn-detection-model/raw/master/assets/ad.mp4">Watch with sound</a></sub>
 </p>
 
 **Given the agent's last line and the caller's words so far, decide whether the caller is done talking.** The fine-tuned DistilBERT ships as int8: 0.949 on a frozen human gold set with zero interruptions, 0.913 on held-out real calls, 58 ms p95 on CPU. A 7.4M encoder trained from scratch beat it on the policy probes and lost on unseen real calls, the referee that matters most.
