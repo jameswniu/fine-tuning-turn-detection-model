@@ -11,6 +11,12 @@
   <img alt="figures: regenerated from constants, checked in CI" src="https://img.shields.io/badge/figures-from_constants_%C2%B7_CI_checked-5c5853?style=flat-square&labelColor=0b0d10">
 </p>
 
+<p align="center">
+  <a href="assets/ad.mp4"><img src="assets/ad-preview.gif" width="270" alt="The thirty-second spot, doorway collisions becoming a clean handoff once the model learns when to speak"></a>
+  <br>
+  <sub><b>The 30-second spot.</b> Click through for the version with sound.</sub>
+</p>
+
 **Given the agent's last line and the caller's words so far, decide whether the caller is done talking.** The fine-tuned DistilBERT ships as int8: 0.949 on a frozen human gold set with zero interruptions, 0.913 on held-out real calls, 58 ms p95 on CPU. A 7.4M encoder trained from scratch beat it on the policy probes and lost on unseen real calls, the referee that matters most.
 
 Watch it score a call below, read [docs/approach.md](docs/approach.md), run it with `make serve`. The depth sits next to the code: [POLICY.md](POLICY.md), [EVALS.md](EVALS.md), [iterations.md](iterations.md), [data/README.md](data/README.md).
