@@ -11,25 +11,25 @@
   <img alt="figures: regenerated from constants, checked in CI" src="https://img.shields.io/badge/figures-from_constants_%C2%B7_CI_checked-5c5853?style=flat-square&labelColor=0b0d10">
 </p>
 
-**Given the agent's last line and the caller's words so far, decide whether the caller is done talking.** The fine-tuned DistilBERT ships, as int8: 0.949 PR-AUC on a frozen human gold set with zero interruptions, 0.913 on held-out real calls, 58 ms p95 on CPU. A 7.4M encoder trained from scratch beat it on the policy probes and lost on unseen real calls, the referee that matters most.
+**Given the agent's last line and the caller's words so far, decide whether the caller is done talking.** The fine-tuned DistilBERT ships as int8: 0.949 on a frozen human gold set with zero interruptions, 0.913 on held-out real calls, 58 ms p95 on CPU. A 7.4M encoder trained from scratch beat it on the policy probes and lost on unseen real calls, the referee that matters most.
 
-Watch it score a call below. Read the write-up in [docs/approach.md](docs/approach.md). Run it with `make serve`. Every claim here is checked against the artifact that ships, at the [six places listed in the Q&A](#qa). The depth sits next to the code: [POLICY.md](POLICY.md) is the human turn policy everything hangs off, [EVALS.md](EVALS.md) the gates and bands, [iterations.md](iterations.md) the audit trail of every run including the failures, [data/README.md](data/README.md) the dataset card.
+Watch it score a call below, read [docs/approach.md](docs/approach.md), run it with `make serve`. The depth sits next to the code: [POLICY.md](POLICY.md), [EVALS.md](EVALS.md), [iterations.md](iterations.md), [data/README.md](data/README.md).
 
 ## The five hard problems in end-of-turn detection
 
-Deciding whether a caller has finished is not a punctuation problem. Five things make it hard. Four are answered here; the honest status of the fifth is in the right column.
+Four are answered here; the fifth is honest about its ceiling.
 
 | | The problem | Where this stack stands |
 |---|---|---|
-| 1 | **A complete sentence is not a complete turn.** "Anything else?" answered with "actually yeah, one more thing." is grammatically finished and conversationally wide open. | Answered. Announced continuation is its own policy class and one of the twelve tier-1 constraints on the served artifact. It scores 0.035 and holds. |
-| 2 | **The two mistakes do not cost the same.** Interrupting a caller is a different failure from making one wait, so accuracy is the wrong objective. | Answered. The threshold comes from a 1:5 cost ratio rather than 0.5, landing at 0.42, and the model speaks over none of the 27 wait cards in the gold set. |
-| 3 | **There is no ground truth, only a policy.** Two careful annotators disagree about the same pause. A label set with no written rule behind it is one person's ear. | Answered. [POLICY.md](POLICY.md) came before the data: sixty cards blind-labeled against it, seven marked unsure on purpose, and three vendor judges hit 53 of 53 while going unsure on exactly those seven. |
-| 4 | **The model you measure is not the model you ship.** Quantization moves scores near the threshold, so a number picked on the checkpoint can be wrong on the artifact in the container. | Answered, after two red iterations. One constraint card read 0.26 on the fp32 checkpoint, 0.381 batched, and 0.412 through the serving path. Picking on the checkpoint left tier-1 red; re-picking on the int8 stayed red because the guardrail check was itself batching all twelve rows into one call. Selection now scores one row at a time, the way serving does. |
-| 5 | **Text has no prosody.** Falling pitch and a trailing vowel are what a human hears. A transcript carries neither. | Not answered, because it cannot be answered here. The ceiling is the input, not the model. Trailing hedges score 0.20, time requests 0.50, and recall falls from 1.00 to 0.47 when the agent's last line is missing. The fix is an audio path into the detector, and there are three in rising cost. Word timings from the ASR response give final lengthening for free, a small parallel audio model gives the rest, and tapping the ASR encoder gives it at zero marginal compute if you host your own. |
+| 1 | **A complete sentence is not a complete turn.** "Anything else?" answered with "actually yeah, one more thing." is finished grammar, wide-open conversation. | Answered. Announced continuation is a policy class and a tier-1 constraint. It scores 0.035 and holds. |
+| 2 | **The two mistakes cost differently.** Interrupting is not the same failure as dead air, so accuracy is the wrong objective. | Answered. A 1:5 cost ratio picks the threshold, 0.42, and the model speaks over none of the 27 wait cards. |
+| 3 | **There is no ground truth, only a policy.** A label set with no written rule behind it is one person's ear. | Answered. [POLICY.md](POLICY.md) came first; sixty cards blind-labeled against it, and three vendor judges hit 53 of 53. |
+| 4 | **The model you measure is not the model you ship.** Quantization moves scores near the threshold. | Answered, after two red iterations. One card read 0.26 on the checkpoint and 0.412 through the serving path. Selection now scores one row at a time, the way serving does. |
+| 5 | **Text has no prosody.** Falling pitch and a trailing vowel never reach a transcript. | Not answerable here. The ceiling is the input, not the model; the fix is an audio path, three options in the roadmap below. |
 
 ## Two models, measured
 
-Every probe below is scored one row at a time on the served int8 file, the way the API scores it. The page behind the picture holds all 36, both models side by side, with the written policy's answer beside each.
+Every probe is scored on the served int8 file, one row at a time, the way the API scores it. The page behind the picture holds all 36, side by side.
 
 <p align="center"><a href="https://jameswniu.github.io/fine-tuning-turn-detection-model/"><img src="assets/probe-comparison-v1.png" alt="The first six of 36 probes, both models side by side: each row shows the caller's words, the policy's answer, and each model's probability, decision and latency" width="100%"></a></p>
 
@@ -42,17 +42,17 @@ Every probe below is scored one row at a time on the served int8 file, the way t
 |---|---|---|
 | Match the written policy, 36 probes | 31 of 35 | 34 of 35 |
 | Model latency, mean | 16.6 ms | 2.8 ms |
-| Spanish probes (6) | Flat 0.75 on all six, three wrong | All six right |
+| Spanish probes (6) | Flat 0.75, three wrong | All six right |
 
-On the 29 English probes the two tie at 28 each and share one miss, an unpunctuated yes-no question both read as a cutoff; the margin is entirely Spanish, which the shipping model never trained for. The fine-tune ships because it leads on unseen real calls, the referee that matters most. [The comparison page](https://jameswniu.github.io/fine-tuning-turn-detection-model/) holds every probe, regenerated by `probe_compare.py`.
+On English they tie at 28 each and share one miss, an unpunctuated yes-no question. The fine-tune ships because it leads on unseen real calls.
 
-The `/` page re-scores as you type, at most once per word, against the served int8 model. Word granularity is what streaming ASR hands a detector. Eight cases from the gold set, one clip each, results first. Every one of these is a case you can type yourself once `make serve` is up.
+The `/` page re-scores as you type, word by word, against the served model. Eight cases from the gold set; every one is typable yourself once `make serve` is up.
 
-**A complete statement speaks.** The agent opened the call and the caller says why they are calling.
+**A complete statement speaks.**
 
 <p align="center"><img src="assets/probe-statement.gif" alt="Typing a full sentence confirming a pickup after the agent's greeting: the score climbs to 0.99 and the chip flips to speak" width="100%"></p>
 
-**A mid-readout holds.** The agent asked for the MC number and the caller is halfway through the digits; the policy makes this an absolute wait.
+**A mid-readout holds.** An absolute wait, however long the pause runs.
 
 <p align="center"><img src="assets/probe-readout.gif" alt="Typing yeah it is four one five after the agent asks for an MC number: the score stays near 0.01 and the chip reads keep listening" width="100%"></p>
 
@@ -60,27 +60,27 @@ The `/` page re-scores as you type, at most once per word, against the served in
 
 <p align="center"><img src="assets/probe-question.gif" alt="Typing a full question about detention policy: the score climbs to 0.99 and the chip flips to speak" width="100%"></p>
 
-**A complete answer speaks.** The agent asked about an appointment and the caller answered it.
+**A complete answer speaks.**
 
 <p align="center"><img src="assets/probe-complete.gif" alt="Typing yeah, I can make it after the agent asks about an appointment: the score climbs to 0.99 and the chip flips to speak" width="100%"></p>
 
-**An announced continuation holds, even though the sentence is complete.** The agent asked "Anything else?" and the caller says there is more coming.
+**An announced continuation holds, even though the sentence is complete.**
 
 <p align="center"><img src="assets/probe-onemore.gif" alt="Typing actually yeah, one more thing after the agent asks anything else: the score stays near 0.04 and the chip reads keep listening" width="100%"></p>
 
-**A self-interrupt holds.** The caller restarts mid-sentence; the new thought is coming.
+**A self-interrupt holds.**
 
 <p align="center"><img src="assets/probe-restart.gif" alt="Typing can you, actually, you know what: the score stays near 0.01 and the chip reads keep listening" width="100%"></p>
 
-**An explicit hold holds silently.** The caller is retrieving something themselves.
+**An explicit hold holds silently.**
 
 <p align="center"><img src="assets/probe-hold.gif" alt="Typing hang on, let me grab the load number: the score stays near 0.01 and the chip reads keep listening" width="100%"></p>
 
-**A casual closer speaks.** "nah bye" is the miss a live poke found in v5, and the regression slice now guards it.
+**A casual closer speaks.** "nah bye" is the miss a live poke found in v5; the regression slice now guards it.
 
 <p align="center"><img src="assets/probe-nahbye.gif" alt="Typing nah bye: the score climbs to 0.97 and the chip flips to speak" width="100%"></p>
 
-Where it is weak, stated plainly: the judgment-class speaks. A reported-speech hedge ("the broker said it was covered, supposedly..."), a full retraction ("no, scratch that..."), and a narrated interruption ("the receiver is waving at me...") all score under the threshold today, which is what the hedge 0.20 and K 0.50 rows in EVALS.md say and what the Q&A below explains. The from-scratch and Spanish lanes have their own entry points, listed in the map below.
+Where it is weak, stated plainly: the judgment classes. A reported-speech hedge, a full retraction, and a narrated interruption all score under the threshold today, which is what the hedge 0.20 and K 0.50 rows in [EVALS.md](EVALS.md) say.
 
 ## Run it
 
@@ -101,21 +101,7 @@ make pretrain     # ~15 min, our own masked-language-model base
 make scratch      # fine-tune that base into the 7.4M from-scratch model
 ```
 
-**What a clean clone reproduces.** Run that block top to bottom.
-
-- `make synth` rewrites `data/train.jsonl` byte for byte.
-- `make tier1` derives the same twelve guardrail rows.
-- The probe cases below come out wait, speak and wait as described.
-
-**What it will not reproduce is the digits.** Weights are not committed and `models/` is ignored, so `make train` builds a new model rather than restoring the frozen v9 one.
-
-- Two clean-clone runs on this laptop read 0.968 and 0.966 gold PR-AUC, against the 0.949 quoted here.
-- They picked 0.71 and 0.63 where the frozen artifact sits at 0.42. Expect that spread rather than a matching number.
-- `make threshold` re-picks the operating point on whatever you just built, under the same twelve constraints, which is the path that produced 0.42.
-
-**Two files stay out of reach by design.** `data/ood_test.jsonl` and `data/ood_train.jsonl` are real call content that never leaves this machine, which is what the [dataset card](data/README.md) says. So `make train` in a clean clone rebuilds the pre-augmentation fine-tune, measured at 0.65 on real calls where the shipped artifact reads 0.91, and `make scratch` trains the scratch lane on the synthetic corpus alone, a configuration not measured here.
-
-Every figure here is regenerated from the frozen artifacts, so the README describes the v9 freeze rather than whatever your box just trained.
+A clean clone reproduces the data byte for byte and the probe behavior above. It will not reproduce the digits: two clean runs read 0.968 and 0.966 gold against the 0.949 quoted, and picked 0.71 and 0.63 where the frozen artifact sits at 0.42. The real-call files never leave the author's machine, so `make train` rebuilds the pre-augmentation fine-tune, 0.65 on real calls where the shipped artifact reads 0.91. Every figure here describes the v9 freeze, not whatever your box just trained.
 
 ```bash
 curl -s -X POST localhost:8000/predict -H "Content-Type: application/json" \
@@ -130,7 +116,7 @@ curl -s -X POST localhost:8000/predict -H "Content-Type: application/json" \
   <img src="assets/referees.svg" alt="Three referees, one question each: a frozen gold set of 60 human-labeled cards for generalization, 6 probe-found regressions for memory, and 96 held-out real-call turns for discovery" width="100%">
 </p>
 
-Real-call files stay out of git; only aggregates appear in the docs. The operating threshold is data, not a constant: a written cost ratio (one interruption costs five sluggish responses) applied to the measured curve, picked on the served int8 artifact one row at a time, and shipped next to the weights.
+Real-call files stay out of git; only aggregates appear here. The threshold is data, not a constant: a written cost ratio applied to the measured curve, picked on the served artifact, shipped next to the weights.
 
 ## The judge panel, in software terms
 
@@ -138,37 +124,35 @@ Real-call files stay out of git; only aggregates appear in the docs. The operati
   <img src="assets/judges.svg" alt="How the dev set was labeled and why to trust it: 60 gold cards with known human answers hidden among 30 fresh cards, three stock vendor judges with zero training, two-of-three majority, and the output feeds one file that tunes one number clamped by 12 human gates" width="100%">
 </p>
 
-Part of the data was labeled by stock models rather than people. No weights moved; the written spec rode in the prompt, the exam was blind, and the vote was two of three. Containment does the trust work the way staging contains a deploy: judge output reaches one file, which tunes one number, which twelve human-policy gates clamp. One caveat travels with the exam score. The spec quotes a few boundary examples, so certification was partially open-book. Mechanics, the cost A/B between panel designs, and the raw votes: [docs/judge-cascade-replay.md](docs/judge-cascade-replay.md).
+Stock models labeled the dev set under containment: judge output reaches one file, which tunes one number, which twelve human gates clamp. The exam was blind, though the spec quotes a few boundary examples, so certification was partially open-book. Mechanics and raw votes: [docs/judge-cascade-replay.md](docs/judge-cascade-replay.md).
 
 <p align="center"><img src="assets/band-models.svg" alt="Two models" width="100%"></p>
 
 ## How the operating point is chosen
 
-The model outputs a probability that the caller is done. The threshold is the line where the agent starts speaking, and it is the most consequential number in the system, so a written rule picks it and every run re-derives it. Three steps.
+- Sweep every threshold on the judged dev cards and keep the lowest cost, counted as five false speaks to one false wait.
+- Throw out any threshold that breaks one of twelve pinned cards; if none survive, fail loud.
+- Score the artifact that ships, the way it ships: int8, one row per call. The winner lands in `threshold.json` and `serve.py` reads it at startup.
 
-1. **Start from the cost ratio.** The policy says one interruption costs as much as five slow replies. So the sweep tries every threshold from 0.01 to 0.99 on the 30 judged dev cards and keeps the one with the lowest cost, counted as five times the false-speak rate plus the false-wait rate. Rates rather than counts, so a lopsided card mix cannot tilt the answer.
-2. **Throw out any threshold that breaks a rule that must never break.** Twelve cards are pinned: every gold readout card, the gold "one more thing" card, its dev-set twin, and the six misses a live poke found. A threshold that gets any of them wrong is off the table, whatever its cost score. If none survive, the run fails loudly instead of shipping a broken guardrail.
-3. **Score the artifact that ships, the way it ships.** The int8 model's scores shift with whatever else is in the batch, so every pinned card is scored alone, exactly as serving does. In v8 the same card read 0.381 in a batch and 0.412 alone, and 0.412 is the one that matters. The winner is written to `threshold.json` next to the weights, and `serve.py` reads it at startup.
-
-The table is the audit trail: nine runs, the threshold each picked, and what it taught. ECE is calibration error, lower is better.
+Nine runs, the threshold each picked, and what it taught. ECE is calibration error, lower is better.
 
 | Run | Threshold | Gold PR-AUC | False-speak | ECE | What it taught |
 |---|---|---|---|---|---|
-| v1 | 0.833 | 0.961 | 0.00 | N/A | The textbook 5/6 bar assumes a calibrated model; this one is under-confident, so recall was only 0.58 |
-| v2 | 0.61 | 0.964 | 0.00 | 0.114 | Picking the threshold on the measured curve instead brought recall to 0.81 |
-| v3 | 0.87 | 0.970 | 0.00 | 0.067 | Picking it on synthetic validation data pushed it high; that data is easier than real speech |
-| v4 | 0.86 | 0.969 | 0.00 | 0.070 | Switching the objective from counts to rates did not fix it; the synthetic set itself was the problem |
-| v5 | 0.81 | 0.958 | 0.00 | 0.092 | A human typing "nah bye" into the live page got wait; casual speech was added and the regression file started |
-| v6 | 0.18 | 0.955 | 0.037 | 0.169 | A judged dev set and real-call rows replaced synthetic validation; the threshold collapsed and "one more thing" started getting interrupted |
-| v7 | 0.27 | 0.949 | 0.00 | 0.160 | The twelve pinned cards became hard constraints; passed on the fp32 model, failed on the int8 model that actually serves |
-| v8 | 0.40 | 0.949 | 0.00 | 0.160 | Re-picked on int8, 11 of 12; the picker scored cards in a batch while serving scores one at a time |
-| v9 | 0.42 | 0.949 | 0.00 | 0.160 | Scored one card at a time, 12 of 12; real calls 0.913 PR-AUC, recall 0.959 |
+| v1 | 0.833 | 0.961 | 0.00 | N/A | The textbook 5/6 bar assumes calibration; this model runs under-confident, recall 0.58 |
+| v2 | 0.61 | 0.964 | 0.00 | 0.114 | Picking on the measured curve brought recall to 0.81 |
+| v3 | 0.87 | 0.970 | 0.00 | 0.067 | Synthetic validation pushed the dial high; it is easier than real speech |
+| v4 | 0.86 | 0.969 | 0.00 | 0.070 | Rates instead of counts did not fix it; the synthetic set was the problem |
+| v5 | 0.81 | 0.958 | 0.00 | 0.092 | A human typed "nah bye" and got wait; casual speech joined, the regression file began |
+| v6 | 0.18 | 0.955 | 0.037 | 0.169 | Judged dev cards replaced synthetic validation; the dial collapsed, "one more thing" got interrupted |
+| v7 | 0.27 | 0.949 | 0.00 | 0.160 | Twelve cards became hard constraints; green on fp32, red on the int8 that serves |
+| v8 | 0.40 | 0.949 | 0.00 | 0.160 | Re-picked on int8, 11 of 12; the picker batched where serving scores one at a time |
+| v9 | 0.42 | 0.949 | 0.00 | 0.160 | Scored one card at a time, 12 of 12; real calls 0.913, recall 0.959 |
 
-The last three rows share one set of weights. Nothing about the model changed between v7 and v9; the measuring instrument did. That is what the loop exists to surface. The eval gets debugged as hard as the model, and every fix was the same fix: measure the artifact that ships, in the shape it ships.
+The last three rows share one set of weights; only the measuring instrument changed. The eval gets debugged as hard as the model.
 
 ## The policy, as rows
 
-Sixty blind labels became eleven classes with a rule each, and `synth.py` turns the rules into rows. Every training line traces to one of these.
+Sixty blind labels became eleven classes with a rule each, and `synth.py` turns the rules into rows.
 
 | Class | Shape | Example, from the gold set | Decision |
 |---|---|---|---|
@@ -184,27 +168,20 @@ Sixty blind labels became eleven classes with a rule each, and `synth.py` turns 
 | J | Self-interrupt restart | "Can you- actually, you know what..." holds; "I need the- no, scratch that..." speaks | Wait; a full retraction may earn a brief acknowledgement |
 | K | Explicit hold | "Hang on, let me grab the load number..." holds; "Hold on, the receiver is waving at me..." speaks | Self-retrieval holds silently; a narrated outside interruption gets a courtesy acknowledgement |
 
-Class I is the judgment call worth reading, because it looked like a contradiction in the labels and turned out to be the rule. "The broker said it was covered, supposedly..." was labeled speak; "The detention was approved, or something..." was labeled wait. The hedge word carries no turn signal. What decides is stance and ownership. A claim attributed to someone else is a question in disguise, so the agent speaks to confirm. An owned first-person claim with a habitual softener is just a statement, so it follows the statement rules. Attribution markers versus first-person assertion are surface features a text model can learn, which is why the ruling is trainable and not only philosophy.
+Class I is the ruling I would defend on a whiteboard. "The broker said it was covered, supposedly..." speaks; "The detention was approved, or something..." waits. Ownership decides: an attributed claim is a question in disguise, an owned claim with a softener is just a statement, and attribution markers are surface features a model can learn.
 
-**Four augmentations bake in deployment realism.**
-
-- Complete utterances are re-emitted truncated mid-sentence and labeled wait, the shape of an ASR partial.
-- Every row ships lowercased with terminal punctuation stripped, so the model cannot lean on periods.
-- Contexted rows are emitted bare as well, so it works with and without the agent's last line.
-- From v6, real-call rows from the author's production voice agent join the training half at four-fold weight, grouped by call so no call leaks into the referee.
-
-The counts: 1,586 training rows, 60 gold cards (53 hard, 7 boundary), 30 judged dev cards, 6 regressions, 400 real turns split 304 to 96 by call.
+Four augmentations bake in deployment realism: complete utterances re-emitted truncated and labeled wait, everything lowercased with punctuation stripped, contexted rows also emitted bare, and from v6, real-call rows at four-fold weight, grouped by call so none leak into the referee. The counts: 1,586 training rows, 60 gold cards, 30 judged dev cards, 6 regressions, 400 real turns split 304 to 96 by call.
 
 ## Serving, measured
 
-The contract is one endpoint. `POST /predict` takes `{context, text}` and returns `{p_complete, decision, threshold, model_latency_ms}`; `/healthz` reports the model directory. The model runs as ONNX Runtime with dynamic int8 quantization on CPU, and the Docker image serves only the int8 artifact. Two bench runs are quoted on purpose, because they disagree and the disagreement is a finding.
+`POST /predict` takes `{context, text}` and returns `{p_complete, decision, threshold, model_latency_ms}`. ONNX Runtime, dynamic int8, CPU; the Docker image serves only the int8 artifact. Two bench runs are quoted because they disagree, and the disagreement is a finding.
 
 | Box state | C1 req/s, p95 | C8 req/s, p95 | Model p50 at c8 |
 |---|---|---|---|
 | Quiet machine | 55, 21.2 ms | 316, 32.8 ms | 21.7 ms |
 | Mid training load | 28, 42.5 ms | 170, 57.9 ms | 39.5 ms |
 
-The hero quotes the worse p95, 58 ms, against the brief's 100 ms budget, so the headline holds on a busy box. The gap between the rows is bench hygiene, not the model; quoted benches come from an idle machine, and a third run polluted by back-to-back trainings was discarded. Not yet measured is fp32 against int8 latency on one box.
+The hero quotes the worse p95 against the brief's 100 ms budget, so the headline holds on a busy box.
 
 ## Map
 
@@ -229,8 +206,6 @@ assets/             the figures and the eight probe clips
 data/               gold set (frozen), generated training sets, judge votes, dataset card
 docs/               approach doc, judge replay, probe page, video script
 ```
-
-Generated reports (eval_report*.json, bench_report*.json, regression_report.json) are build artifacts and stay untracked; every number in the figures and the docs comes from them at freeze time, and `make figures-check` fails if a figure drifts from its constants.
 
 ## Q&A
 
@@ -350,23 +325,17 @@ Every number on this page is measured on the served int8 artifact. Four things a
 
 </details>
 
-## Roadmap: prosody, and the transcriber route
+<details>
+<summary><b>Roadmap: prosody, and the transcriber route</b></summary>
 
-Two of the brief's discussion questions ask about work this build does not contain. Nothing here was implemented; this is the plan and what each step would cost, so the gap reads as a scope decision rather than an omission. The measured limits behind it are in [docs/approach.md](docs/approach.md).
+Nothing in this block was implemented; it is the plan and what each step costs, so the gap reads as a scope decision. The measured limits behind it are in [docs/approach.md](docs/approach.md).
 
-**Audio and multimodal, and why any of them beat a VAD.** A VAD knows only that sound stopped, so it buys safety with silence and every timeout setting is wrong for half the cases. Text sees what was said, which is most of the turn signal and is cheap to train, fast to serve, and easy to debug, which is why it came first. What text cannot see is prosody: falling pitch, final lengthening, and breath decide some turns whose words are identical either way. The reference architecture makes the ceiling visible as wiring, since one arrow reaches the turn detector carrying final transcription while raw audio flows past it to the interruption handler. The fix is a second arrow, in three rising costs.
+A VAD knows only that sound stopped, so it buys safety with silence. Text sees what was said, most of the turn signal, which is why it came first; what it cannot see is prosody. The fix is a second arrow into the detector, in three rising costs.
 
-- Word timings, free today. Every vendor ASR response already carries word-level timestamps, and final-word lengthening plus pause duration are among the strongest endpoint cues in the phonetics literature. Feeding them to the current model adds no model and no latency, and a text-only pipeline throws them away.
-- A small parallel audio model, roughly a dozen milliseconds on CPU. It sits beside the ASR rather than inside it, consumes the same stream, and fuses with the text score at the decision layer. This is the shape Pipecat's Smart Turn ships.
-- Tapping the ASR encoder, free compute but coupled. Only available if you host your own ASR, since no vendor exposes encoder states.
+- Word timings, free today: every vendor ASR response carries word-level timestamps, and final-word lengthening plus pause duration are among the strongest endpoint cues in the phonetics literature.
+- A small parallel audio model, about a dozen milliseconds on CPU, fused with the text score at the decision layer. The shape Pipecat's Smart Turn ships.
+- Tapping the ASR encoder, free compute but coupled, only if you host your own ASR.
 
-The eval harness transfers to all three unchanged, which is the point of building the referee before the model. The frozen gold set, the cost ratio, the guardrails, and the production proxies do not care whether the score came from text or audio.
+Could the transcriber do this itself? An ASR is trained prosody-invariant, "yeah" flat and "yeah" rising must yield the same token, so the signal dies at the text bottleneck. Whisper can learn an end-of-turn token read from the same forward pass; a streaming RNN-T can carry one in its transducer vocabulary or a classifier head off the encoder states. Both need audio with true turn boundaries, which the production self-labeling loop already produces. The detector stays separate while iterating and gets distilled into the transcriber once the policy stabilizes. Either way there is a latency prize: an audio-side detector needs no words, so it can decide before the transcript settles.
 
-**Could the transcriber do this itself.** It could, and the reason it does not today is that an ASR is trained to be invariant to prosody. "Yeah" flat and "yeah" rising have to produce the same token or the vocabulary stops holding, so that invariance is the product rather than a gap. The pitch reaches the acoustic encoder and dies at the text bottleneck. Two ways to keep it:
-
-- Whisper. Add an end-of-turn token to the decoder vocabulary and fine-tune on turn-annotated audio, then read that token's probability against continuation tokens from the same forward pass that produces the transcript. Endpointing becomes a byproduct of transcription and prosody arrives through the encoder.
-- Streaming RNN-T, Parakeet-family. Train an end-of-utterance token into the transducer vocabulary, or hang a small classifier head off the encoder states.
-
-Both need audio with true turn boundaries, which is exactly what the production self-labeling loop above already produces. The tradeoff is coupling, since one model then owns two jobs on one latency budget, so the detector stays separate while iterating fast and gets distilled into the transcriber once the policy stabilizes.
-
-There is a latency prize either way. Waiting for a final transcript means waiting for the ASR to settle, typically 100 to 300 ms after speech stops. An audio-side detector needs no words, so it can decide before the transcript lands. Prosody is not only an accuracy fix; it buys back time.
+</details>
