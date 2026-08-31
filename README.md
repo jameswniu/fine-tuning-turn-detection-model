@@ -22,7 +22,7 @@ Four are answered here; the fifth is honest about its ceiling.
 | | The problem | Where this stack stands |
 |---|---|---|
 | 1 | **A complete sentence is not a complete turn.** "Anything else?" answered with "actually yeah, one more thing." is finished grammar, wide-open conversation. | Answered. Announced continuation is a policy class and a tier-1 constraint. It scores 0.035 and holds. |
-| 2 | **The two mistakes cost differently.** Interrupting is not the same failure as dead air, so accuracy is the wrong objective. | Answered. A 1:5 cost ratio picks the threshold, 0.42, and the model speaks over none of the 27 wait cards. |
+| 2 | **The two mistakes cost differently.** Talking over a caller and leaving the line hanging are different failures, so accuracy is the wrong objective. | Answered. A 1:5 cost ratio picks the threshold, 0.42, and the model speaks over none of the 27 wait cards. |
 | 3 | **There is no ground truth, only a policy.** A label set with no written rule behind it is one person's ear. | Answered. [POLICY.md](POLICY.md) came first; sixty cards blind-labeled against it, and three vendor judges hit 53 of 53. |
 | 4 | **The model you measure is not the model you ship.** Quantization moves scores near the threshold. | Answered, after two red iterations. One card read 0.26 on the checkpoint and 0.412 through the serving path. Selection now scores one row at a time, the way serving does. |
 | 5 | **Text has no prosody.** Falling pitch and a trailing vowel never reach a transcript. | Not answerable here. The ceiling is the input, not the model; the fix is an audio path, three options in the roadmap below. |
@@ -101,7 +101,12 @@ make pretrain     # ~15 min, our own masked-language-model base
 make scratch      # fine-tune that base into the 7.4M from-scratch model
 ```
 
-A clean clone reproduces the data byte for byte and the probe behavior above. It will not reproduce the digits: two clean runs read 0.968 and 0.966 gold against the 0.949 quoted, and picked 0.71 and 0.63 where the frozen artifact sits at 0.42. The real-call files never leave the author's machine, so `make train` rebuilds the pre-augmentation fine-tune, 0.65 on real calls where the shipped artifact reads 0.91. Every figure here describes the v9 freeze, not whatever your box just trained.
+What a clean clone gives you:
+
+- The data rebuilds byte for byte, and the probe cases above come out wait, speak, and wait as described.
+- The digits will differ. Two clean runs read 0.968 and 0.966 gold against the 0.949 quoted, and picked 0.71 and 0.63 where the frozen artifact sits at 0.42.
+- The real-call files never leave the author's machine, so `make train` rebuilds the pre-augmentation fine-tune, 0.65 on real calls where the shipped artifact reads 0.91.
+- Every figure here describes the v9 freeze, whatever your box just trained.
 
 ```bash
 curl -s -X POST localhost:8000/predict -H "Content-Type: application/json" \
@@ -116,7 +121,8 @@ curl -s -X POST localhost:8000/predict -H "Content-Type: application/json" \
   <img src="assets/referees.svg" alt="Three referees, one question each: a frozen gold set of 60 human-labeled cards for generalization, 6 probe-found regressions for memory, and 96 held-out real-call turns for discovery" width="100%">
 </p>
 
-Real-call files stay out of git; only aggregates appear here. The threshold is data, not a constant: a written cost ratio applied to the measured curve, picked on the served artifact, shipped next to the weights.
+- Real-call files stay out of git; only aggregates appear here.
+- The threshold is a dial the measured curve turns, a written cost ratio picked on the served artifact and shipped next to the weights.
 
 ## The judge panel, in software terms
 
@@ -124,7 +130,9 @@ Real-call files stay out of git; only aggregates appear here. The threshold is d
   <img src="assets/judges.svg" alt="How the dev set was labeled and why to trust it: 60 gold cards with known human answers hidden among 30 fresh cards, three stock vendor judges with zero training, two-of-three majority, and the output feeds one file that tunes one number clamped by 12 human gates" width="100%">
 </p>
 
-Stock models labeled the dev set under containment: judge output reaches one file, which tunes one number, which twelve human gates clamp. The exam was blind, though the spec quotes a few boundary examples, so certification was partially open-book. Mechanics and raw votes: [docs/judge-cascade-replay.md](docs/judge-cascade-replay.md).
+- Stock models labeled the dev set under containment, where judge output reaches one file, which tunes one number, which twelve human gates clamp.
+- The exam was blind, with one caveat. The spec quotes a few boundary examples, so certification was partially open-book.
+- The mechanics and raw votes live in [docs/judge-cascade-replay.md](docs/judge-cascade-replay.md).
 
 <p align="center"><img src="assets/band-models.svg" alt="Two models" width="100%"></p>
 
@@ -170,7 +178,14 @@ Sixty blind labels became eleven classes with a rule each, and `synth.py` turns 
 
 Class I is the ruling I would defend on a whiteboard. "The broker said it was covered, supposedly..." speaks; "The detention was approved, or something..." waits. Ownership decides: an attributed claim is a question in disguise, an owned claim with a softener is just a statement, and attribution markers are surface features a model can learn.
 
-Four augmentations bake in deployment realism: complete utterances re-emitted truncated and labeled wait, everything lowercased with punctuation stripped, contexted rows also emitted bare, and from v6, real-call rows at four-fold weight, grouped by call so none leak into the referee. The counts: 1,586 training rows, 60 gold cards, 30 judged dev cards, 6 regressions, 400 real turns split 304 to 96 by call.
+Four augmentations bake in deployment realism:
+
+- Complete utterances get cut off mid-sentence and labeled wait, the exact shape an ASR partial arrives in.
+- Everything ships lowercased, punctuation stripped, so nothing can cheat off a period.
+- Contexted rows are also emitted bare, so the model works with and without the agent's last line.
+- From v6, real-call rows join at four-fold weight, grouped by call so none leak into the referee.
+
+The counts land at 1,586 training rows, 60 gold cards, 30 judged dev cards, 6 regressions, and 400 real turns split 304 to 96 by call.
 
 ## Serving, measured
 
