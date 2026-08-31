@@ -80,7 +80,7 @@ The `/` page re-scores as you type, word by word, against the served model. Eigh
 
 <p align="center"><img src="assets/probe-nahbye.gif" alt="Typing nah bye: the score climbs to 0.97 and the chip flips to speak" width="100%"></p>
 
-Where it is weak, stated plainly: the judgment classes. A reported-speech hedge, a full retraction, and a narrated interruption all score under the threshold today, which is what the hedge 0.20 and K 0.50 rows in [EVALS.md](EVALS.md) say.
+Where it is still weak: the judgment calls. A reported-speech hedge like "the broker said it was covered, supposedly..." should make the agent speak, and the model gets only two of ten such cases right. The explicit-hold class, "hold on, the receiver is waving at me...", sits at half. The bar for every judgment class is 0.60, and [EVALS.md](EVALS.md) tracks both until they clear it.
 
 ## Run it
 
@@ -224,95 +224,79 @@ docs/               approach doc, judge replay, probe page, video script
 
 ## Q&A
 
-Short answers, expandable. Every number in them has a source in the docs linked above.
+Short answers, expandable. Every number has a source in the docs linked above.
 
 <details>
 <summary><b>Where do you actually verify this?</b></summary>
 
-At six places, and the rule at every one is to check the artifact that ships, not the one that trained.
+At six places, and the rule at every one is to check the artifact that ships.
 
-- CI checks the data before any training runs. The gold set must be exactly 60 cards at its frozen threshold, and no gold text may appear in `data/train.jsonl`, so the referee cannot leak into what it referees.
-- The labels were verified before they were trusted. The 30 dev cards went to three vendor judges with the 60 human gold cards hidden among them, and a judge's dev votes counted only because it reproduced the human's call 53 times out of 53.
-- The threshold is picked against the served int8 file, one row per call, the shape `serve.py` actually sends. That is the fix for the bug that ate two iterations. The fp32 checkpoint held a card at 0.26, batched int8 scoring said 0.381, and the real one-row path returned 0.412, which crossed the line and spoke over the caller.
-- Twelve tier-1 cards encode the policy's absolutes and must be green on the served artifact every run. When no threshold satisfies all twelve, `pick_threshold.py` fails loud instead of shipping a number.
-- Three referees score a model that trained on none of them: 60 frozen gold cards, 6 regression cards each traced to a live miss, and 96 turns from 60 real calls. `make eval` prints all three.
-- `make bench` hits the exact container artifact, on an idle machine. A bench taken right after training read 274 req/s where a clean re-run minutes later read 588, so every quoted number comes from a quiet box.
+- CI checks the data first. The gold set must be exactly 60 frozen cards, and no gold text may appear in `data/train.jsonl`.
+- The threshold is picked against the served int8 file, one row per call, the shape `serve.py` actually sends. The fp32 checkpoint held a card at 0.26; the real one-row path returned 0.412 and spoke over the caller.
+- Three referees score a model that trained on none of them, and `make eval` prints all three.
+- Then by hand at `make serve`. Typing at the live page found the casual-register gap, "nah bye" at 0.34, which became a regression card, then training data, then a fix.
 
-Then by hand, at `make serve`. Typing at the live page is what found the casual-register gap: "nah bye" scored 0.34 and held the turn. That became a regression card, then training data, then a fix.
-
-Every figure here is regenerated from those same artifacts, and `python draw_figures.py --check` fails the build when a number drifts.
+`python draw_figures.py --check` fails the build when a figure drifts from its constants.
 
 </details>
 
 <details>
 <summary><b>Why DistilBERT, and why not something else?</b></summary>
 
-Because iteration speed won the night. It is the smallest mature encoder whose fine-tune runs in two minutes on this data, and the field already ships this model class.
+Iteration speed won the night. It is the smallest mature encoder whose fine-tune runs in two minutes on this data, in the model class production systems already ship (LiveKit's text detector at 5 ms, smart-turn at 12 ms).
 
-- The class was set by what production systems ship. LiveKit's text turn detector runs at 5 ms inference, smart-turn at 12 ms on CPU.
-- 66M parameters in six layers, about 97% of BERT-base on its paper's benchmarks, with the most mature Hugging Face and ONNX path of any small encoder.
-- Two-minute fine-tunes bought nine audited iterations in one night. The uncased variant matches ASR text, lowercase with no punctuation.
-- Not compared: MiniLM-L6, DeBERTa-v3-small, ELECTRA-small, ModernBERT, SmolLM2-135M. The from-scratch lane is the one comparison that ran.
+- Two-minute fine-tunes bought nine audited iterations in one night, and the uncased variant matches ASR text.
+- Not compared: MiniLM-L6, DeBERTa-v3-small, ELECTRA-small, ModernBERT, SmolLM2-135M. The from-scratch lane is the comparison that ran.
 
 </details>
 
 <details>
 <summary><b>Why int8, and what did it cost?</b></summary>
 
-Standard CPU serving economics. Smaller artifact, faster inference, near-zero accuracy loss, and the one real cost it charged is documented and fixed.
+Standard CPU serving economics, and the one real cost it charged is documented and fixed.
 
-- Dynamic int8 through ONNX Runtime quantizes the linear layers; classification tolerates it well.
-- The bill: quantization moved a near-threshold score from 0.26 to 0.41 and broke a tier-1 gate twice.
-- The fix: v9 picks the threshold on the served int8 artifact, one row at a time, because int8 dynamic quantization is batch-composition-dependent. The gate went 12 of 12.
-- Not measured: fp32 against int8 latency head-to-head on one box.
+- The bill. Quantization moved a near-threshold score from 0.26 to 0.41 and broke a tier-1 gate twice.
+- The fix. v9 picks the threshold on the served int8 artifact one row at a time, and the gate went 12 of 12.
 
 </details>
 
 <details>
 <summary><b>Why 0.42, and not 0.5 or the 0.83 the cost ratio implies?</b></summary>
 
-Because the model runs under-confident (ECE 0.16), the 1:5 cost ratio is applied to the measured curve instead of the closed-form 0.833 it implies.
+The model runs under-confident (ECE 0.16), so the 1:5 ratio is applied to the measured curve rather than the closed-form 0.833.
 
-- The pick minimizes five false speaks plus one false wait on the judged dev set.
-- The sweep is constrained, not free: all twelve tier-1 probes must stay green on the served artifact.
-- Selection on synthetic validation drifted the dial to 0.87 twice, in v3 and v4. That lesson is why the dev set exists.
-- The dial ships as data next to the weights and every run re-derives it.
+- The sweep minimizes five false speaks plus one false wait, constrained by all twelve tier-1 probes.
+- Selection on synthetic validation drifted the dial to 0.87 twice, and that lesson is why the judged dev set exists.
 
 </details>
 
 <details>
 <summary><b>Why create the data instead of finding a dataset?</b></summary>
 
-Because no public end-of-turn dataset exists. The builders in this space, LiveKit and pipecat, each made their own.
+No public end-of-turn dataset exists. The builders in this space, LiveKit and pipecat, each made their own.
 
-- Policy-driven synthesis buys auditability (every row traces to a written rule), byte-reproducibility (seeded, no LLM), and zero personal data.
-- Mining YouTube was rejected on licensing and cleaning cost inside a four-day window.
-- The known cost of synthesis, a creator's blind spots, is what the three referees exist to catch.
-- Caught once in the act: the model learned the vendor's barge-in after "one more thing" from real-call rows. A policy filter and a relabel removed it.
+- Policy-driven synthesis buys auditability, byte-reproducibility, and zero personal data.
+- Its known cost, a creator's blind spots, is what the three referees exist to catch, and they caught one. The model learned the vendor's barge-in habit from real-call rows, removed with a policy filter and a relabel.
 
 </details>
 
 <details>
 <summary><b>What is the honest ceiling of a text-only model?</b></summary>
 
-Prosody. The question-ness of an unpunctuated yes-no question lives in the caller's rising tone, and the ASR discards it before the model ever sees the turn.
+Prosody. The question-ness of an unpunctuated yes-no question lives in the caller's rising tone, which the ASR discards.
 
-- Both models miss the same probe, "do i need a lumper receipt for this one", scoring about 0.02 as a cutoff.
-- Agent context fixes it today: recall 1.00 with context against 0.47 bare, the known weak slice.
-- Audio features are the roadmap answer.
-- It enters the regression slice paired with its fix, since that file's contract is that every row passes.
+- Both models miss the same probe, "do i need a lumper receipt for this one", scoring it as a cutoff.
+- Agent context recovers it today, recall 1.00 with context against 0.47 bare, and audio features are the roadmap answer.
 
 </details>
 
 <details>
 <summary><b>Did you benchmark against the vendor's turn-taker?</b></summary>
 
-Not head-to-head yet, on purpose. The shipped model uses the vendor's transcripts, overrules its decisions where they contradict the policy, and saves the bake-off for shadow deployment.
+Not head-to-head yet, on purpose. The shipped model rides the vendor's transcripts and overrules its decisions where they contradict the policy.
 
-- Real-call slices ride the vendor's ASR output, which is the deployment condition.
-- Where the vendor turn-taker contradicted the written policy, the label was corrected and flagged policy_corrected.
-- The residual bias is stated in EVALS.md: cut points still come from the vendor stack, so the real-call bands read as pessimistic bounds.
-- The roadmap chapter is online shadow on a real phone number, disagreements published.
+- Contradicting labels were corrected and flagged policy_corrected, and the residual bias is stated in [EVALS.md](EVALS.md).
+- The bake-off is the roadmap chapter, online shadow on a real phone number with disagreements published.
 
 </details>
 
@@ -321,10 +305,8 @@ Not head-to-head yet, on purpose. The shipped model uses the vendor's transcript
 
 Shadow the incumbent, mine the disagreements, and spend human review only where the two models differ.
 
-- Twenty million monthly decisions cannot be reviewed, and agreements are cheap; disagreements are the information-dense turns.
-- Sampled disagreements get human labels against the policy, then feed back as training rows and referee rows.
-- The disagreement rate itself is a drift alarm that fires before anyone labels anything.
-- The pattern already ran here three times in miniature: the vendor-import catch, the judge panel's splits, and the probe page's shared miss. ROADMAP.md has the ladder.
+- Disagreements are the information-dense turns. Sampled ones get human labels, then feed back as training and referee rows.
+- The disagreement rate itself is a drift alarm, and the pattern already ran here three times in miniature.
 
 </details>
 
@@ -333,24 +315,22 @@ Shadow the incumbent, mine the disagreements, and spend human review only where 
 
 Every number on this page is measured on the served int8 artifact. Four things are explicitly not, so silence never reads as a claim.
 
-- Not measured: fp32 against int8 latency on one box.
-- Not measured: judge retry variance. Each judge voted once per card, and three vendors is diversity, not retries.
-- Not measured: base-model alternatives to DistilBERT.
-- One bench was discarded as thermal pollution after back-to-back trainings; every quoted bench comes from a quiet machine.
+- fp32 against int8 latency on one box.
+- Judge retry variance. Each judge voted once per card.
+- Base-model alternatives to DistilBERT.
+- One bench was discarded as thermal pollution, so every quoted bench comes from a quiet machine.
 
 </details>
 
 <details>
-<summary><b>Roadmap: prosody, and the transcriber route</b></summary>
+<summary><b>Roadmap, prosody, and the transcriber route</b></summary>
 
-Nothing in this block was implemented; it is the plan and what each step costs, so the gap reads as a scope decision. The measured limits behind it are in [docs/approach.md](docs/approach.md).
+Nothing here was implemented. It is the plan and its costs, so the gap reads as a scope decision, and the measured limits sit in [docs/approach.md](docs/approach.md).
 
-A VAD knows only that sound stopped, so it buys safety with silence. Text sees what was said, most of the turn signal, which is why it came first; what it cannot see is prosody. The fix is a second arrow into the detector, in three rising costs.
+- Word timings are free today. Vendor ASR responses already carry them, and final-word lengthening plus pause duration are among the strongest endpoint cues in the phonetics literature.
+- A small parallel audio model, about a dozen milliseconds on CPU, fuses with the text score at the decision layer.
+- Tapping the ASR encoder is free compute but coupled, available only if you host your own ASR.
 
-- Word timings, free today: every vendor ASR response carries word-level timestamps, and final-word lengthening plus pause duration are among the strongest endpoint cues in the phonetics literature.
-- A small parallel audio model, about a dozen milliseconds on CPU, fused with the text score at the decision layer. The shape Pipecat's Smart Turn ships.
-- Tapping the ASR encoder, free compute but coupled, only if you host your own ASR.
-
-Could the transcriber do this itself? An ASR is trained prosody-invariant, "yeah" flat and "yeah" rising must yield the same token, so the signal dies at the text bottleneck. Whisper can learn an end-of-turn token read from the same forward pass; a streaming RNN-T can carry one in its transducer vocabulary or a classifier head off the encoder states. Both need audio with true turn boundaries, which the production self-labeling loop already produces. The detector stays separate while iterating and gets distilled into the transcriber once the policy stabilizes. Either way there is a latency prize: an audio-side detector needs no words, so it can decide before the transcript settles.
+The transcriber could learn this itself, Whisper through an end-of-turn token in the decoder, a streaming RNN-T through its transducer vocabulary. Both need true turn boundaries, which the self-labeling loop already produces. Either way an audio-side detector needs no words, so it can decide before the transcript settles.
 
 </details>
