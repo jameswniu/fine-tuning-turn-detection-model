@@ -1,0 +1,10 @@
+fine-tuning-turn-detection-model
+Copyright 2026 James W. Niu
+
+The source code, the synthetic and human-labeled datasets under data/, and the trained model artifacts under models/ are licensed under the Apache License 2.0 (see LICENSE).
+
+models/eot-distilbert-onnx-int8 is a fine-tune of distilbert-base-uncased, published by Hugging Face under the Apache License 2.0. Its tokenizer and vocabulary files come from that base model.
+
+models/eot-scratch-pre-onnx-int8 was pretrained from scratch on text streamed from the wikimedia/wikipedia dataset on Hugging Face. That text is licensed CC BY-SA 4.0 and is not redistributed in this repository.
+
+The real-call evaluation slices described in data/README.md are not in this repository and are not covered by this license.
