@@ -24,8 +24,8 @@ sys.path.insert(0, str(REPO))
 from common import LABEL2ID, build_input, load_threshold  # noqa: E402
 
 MODELS = [
-    ("Fine-tuned DistilBERT (ships, 66M)", REPO / "models/eot-distilbert-onnx-int8"),
-    ("From-scratch, own pretrain (7.4M)", REPO / "models/eot-scratch-pre-onnx-int8"),
+    ("Fine-tuned DistilBERT (ships, 66.96M)", REPO / "models/eot-distilbert-onnx-int8"),
+    ("From-scratch, own pretrain (7.36M)", REPO / "models/eot-scratch-pre-onnx-int8"),
 ]
 
 # (class, agent context, caller text, policy expectation)
