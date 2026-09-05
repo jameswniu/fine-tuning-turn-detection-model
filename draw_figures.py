@@ -29,17 +29,22 @@ FLOOR_PX = 12
 
 # Report-derived figures, pinned at the v9 freeze. Each carries the artifact it was read from.
 FROZEN_NUMBERS = {
-    "gold_pr_auc": "0.949",  # eval_report.json, hard set, served int8
+    "gold_pr_auc": "0.949",  # eval_report.json, hard set, served int8, 53 cards
+    "gold_wait_n": 27,  # gold cards labeled wait, the denominator of the zero
+    "gold_false_speak": "0.000",  # 0 of 27, the 0.42 row of hard.threshold_sweep
     "real_pr_auc": "0.913",  # eval_report_distilen_oodtest.json, ood_test at 0.42
-    "p95_ms": "58",  # bench_report_distilen.json, concurrency 8, worst measured
+    "real_wait_n": 47,  # ood_test turns labeled wait
+    "real_false_speak_count": 11,  # of those 47, at 0.42
+    "real_false_speak": "0.234",  # the same sweep on ood_test, the sibling of the gold zero
+    "p95_ms": "32.8",  # bench_report.json, quiet box, end-to-end wall p95 at concurrency 8
     "threshold": "0.42",  # models/eot-distilbert-onnx-int8/threshold.json
     "ood_n": 96,  # data/ood_test.jsonl (gitignored, real calls)
     "tier1_gates": 12,  # pick_threshold.py constraint probes
-    "curve": [  # ood_test PR-AUC per lane, iterations.md Fleet lanes
-        ("0.48", "random init", "scratch, 7.4M"),
-        ("0.60", "+ real calls", "scratch-real, 7.4M"),
-        ("0.83", "+ 15-min pretrain", "scratch-pre, 7.4M"),
-        ("0.91", "web-pretrained", "DistilBERT, 66M"),
+    "curve": [  # ood_test PR-AUC per lane, params by ONNX initializer sum
+        ("0.48", "random init", "scratch, 3.70M"),
+        ("0.60", "+ real calls", "scratch-real, 3.99M"),
+        ("0.83", "+ 15-min pretrain", "scratch-pre, 7.36M"),
+        ("0.91", "web-pretrained", "DistilBERT, 66.96M"),
     ],
     "ood_band": 0.85,  # EVALS.md tier-2 real-call band
 }
@@ -117,9 +122,10 @@ def hero(c: dict) -> str:
     f = FROZEN_NUMBERS
     w, h = 1200, 360
     label = (
-        f"fine-tuning-turn-detection-model: an end-of-turn detector for voice agents that scores {f['gold_pr_auc']} on a frozen "
-        f"human gold set with zero false interruptions, {f['real_pr_auc']} on held-out real calls, and answers "
-        f"in {f['p95_ms']} ms p95 on int8 CPU at threshold {f['threshold']}"
+        f"fine-tuning-turn-detection-model: an end-of-turn detector for voice agents, read at threshold {f['threshold']} on int8 CPU. "
+        f"On the frozen human gold set it scores {f['gold_pr_auc']} PR-AUC and speaks over none of the {f['gold_wait_n']} wait cards. "
+        f"On {f['ood_n']} held-out real-call turns it scores {f['real_pr_auc']} and speaks over {f['real_false_speak_count']} of the "
+        f"{f['real_wait_n']} wait turns, a rate of {f['real_false_speak']}. End-to-end p95 is {f['p95_ms']} ms at concurrency 8 on a quiet box"
     )
     out = [head(w, h, label), rect(0, 0, w, 3, AMBER)]
     out.append(text(600, 52, "VOICE AI · END-OF-TURN DETECTION · FINE-TUNED AND FROM SCRATCH", 22, AMBER, weight=700, anchor="middle", spacing=3))
@@ -132,13 +138,13 @@ def hero(c: dict) -> str:
     out.append(text(600, 108, "Is the caller done talking?", 48, "url(#ttl)", font=SANS, weight=700, anchor="middle"))
     out.append(
         f'<text x="600" y="152" font-family="{MONO}" font-size="27" fill="{MUTED}" text-anchor="middle">'
-        f'One written policy, <tspan fill="{AMBER}">three referees</tspan>, answers in {f["p95_ms"]} ms</text>'
+        f'One written policy, <tspan fill="{AMBER}">three referees</tspan>, {f["p95_ms"]} ms p95 on a quiet box</text>'
     )
     out.append(rect(300, 176, 600, 2, "url(#rule)"))
     stats = [
-        (195, f["gold_pr_auc"], "gold PR-AUC", "zero false speaks"),
-        (465, f["real_pr_auc"], "real calls", f"held-out, {f['ood_n']} turns"),
-        (735, f"{f['p95_ms']} ms", "p95 latency", "int8, 8-way load"),
+        (195, f["gold_pr_auc"], "gold PR-AUC", f"0 of {f['gold_wait_n']} false speaks"),
+        (465, f["real_pr_auc"], "real calls PR-AUC", f"held-out, {f['ood_n']} turns"),
+        (735, f["real_false_speak"], "real false speaks", f"{f['real_false_speak_count']} of {f['real_wait_n']} wait turns"),
         (1005, f["threshold"], "threshold", f"cost 1:5, {f['tier1_gates']} gates"),
     ]
     for x, num, l1, l2 in stats:
@@ -197,7 +203,7 @@ def referees(c: dict) -> str:
     cards = [
         ("gold set", f"{c['gold_n']} cards, frozen", "Does it generalize to", "the human's judgment?", "never trained on", AMBER),
         ("regressions", f"{c['regressions']} probe-found misses", "Does a fixed failure", "stay fixed?", "overlap intended", AMBER),
-        ("real calls", f"{f['ood_n']} held-out turns", "What can synthetic data", "not imagine?", "policy-corrected", SLATE),
+        ("real calls", f"{f['ood_n']} held-out turns", "What can synthetic data", "not imagine?", "labeled by rule", SLATE),
     ]
     for i, (title, n, q1, q2, chip, color) in enumerate(cards):
         x = 30 + i * 330
@@ -321,7 +327,7 @@ def render_all() -> dict[str, str]:
         "judges.svg": judges(c),
         "pretrain-curve.svg": pretrain_curve(),
         "band-judged.svg": band("THE REFEREES", "Three referees, one question each", f"gold {c['gold_n']} · regressions {c['regressions']} · real {FROZEN_NUMBERS['ood_n']}"),
-        "band-models.svg": band("TWO MODELS", "What a fifteen-minute pretrain buys", "66M vs 7.4M params"),
+        "band-models.svg": band("TWO MODELS", "What a fifteen-minute pretrain buys", "66.96M vs 7.36M params"),
     }
 
 
