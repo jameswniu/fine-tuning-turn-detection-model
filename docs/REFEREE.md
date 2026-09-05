@@ -13,20 +13,22 @@ Nowhere on any surface here do "30MB", "135MB", "3.4 ms" or "87 commits" appear.
 
 ## Mismatches
 
-None remain at 3ac915b. All 26 entries from the 94fad40 audit are resolved in the files, and what each fix was is in the cards below.
+None remain. All 26 entries from the 94fad40 audit are resolved in the files, and a second adversarial pass over the corrected diff found ten more, all of them also resolved. The two that mattered were the published `gh-pages` copies still serving four of the removed numbers, and a headline latency labelled as the shipped artifact that had been measured on an earlier build. What each fix was is in the cards below.
 
 Three greps still match and none is a claim. `WORKFLOW.md` line 30 uses "zero interruptions" to describe a hypothetical system that never speaks, not this model. `ood_from_elevenlabs.py` keeps the `policy_corrected` key because the filter is real code, and the correction was to the prose that claimed it had fired. `docs/probe-comparison.html` rows 25 and 26 read 0.978 and 0.968, which are measured probe scores for unrelated rows rather than the removed 0.968 gold claim.
 
+One claim was outside the working tree but inside the repository. The `gh-pages` branch serves the page the README links to, and both `index.html` and `probe-comparison.html` there were byte-identical to `docs/probe-comparison.html` at 43a5649, so a reader one click from the README still saw 16.6 ms, 2.8 ms, 66M and 7.4M after this pass had removed all four. Both files are now copies of the corrected `docs/probe-comparison.html`, committed on `gh-pages` and unpushed.
+
 Two claims sit outside the repository and no commit can reach them.
 
-- **The GitHub repository description**, set in the GitHub web UI rather than in any tracked file, still reads "zero false interruptions", "ONNX int8 on CPU at 58 ms p95" and "three eval referees on real calls". All three are wrong for the same reasons items 1, 3 and 24 named. This replacement fits the 350-character limit. `End-of-turn detection for voice agents. Fine-tuned DistilBERT, int8 on CPU at threshold 0.42, reads 0.949 PR-AUC on a frozen 53-card human gold set with no false speaks on its 27 wait cards, and 0.913 on 96 held-out real-call turns where it speaks over 11 of 47. Three referees, gold, regressions and real calls. 32.8 ms end-to-end p95 at concurrency 8.`
+- **The GitHub repository description**, set in the GitHub web UI rather than in any tracked file, still reads "zero false interruptions", "ONNX int8 on CPU at 58 ms p95" and "three eval referees on real calls". All three are wrong for the same reasons items 1, 3 and 24 named. The replacement the coordinator supplied is 352 characters, not 349, and it still carries the 32.8 ms quiet-box claim that defect 3 removed, so this is that text with the re-benched number and the false machine-state claim dropped, at 337 characters. `End-of-turn detection for voice agents. Fine-tuned DistilBERT, int8 on CPU at threshold 0.42, 0.949 PR-AUC on a frozen 53-card human gold set, no false speaks on its 27 wait cards, and 0.913 on 96 held-out real-call turns, speaking over 11 of 47. Three referees, gold, regressions and real calls. 33.1 ms end-to-end p95 at concurrency 8.`
 - **The submitted PDF** is the render of `docs/approach.md` at commit ae1d2d0. That file has now changed, so the PDF is a frozen copy of the pre-audit text and still carries items 5, 6, 8, 9, 18 and 19 verbatim. Nothing in this repository can correct a PDF already sent. Anyone re-rendering it should render the current `docs/approach.md`.
 
 ## Reproduced live at 3ac915b
 
-Gold PR-AUC 0.9487856622228145 on n 53, gold false-speak 0.0 and recall 0.6538, per-class A through H 1.000 with I 0.200, J 0.857 and K 0.500, ECE 0.15956, the seven boundary cards individually and their 0.3068 mean, real calls 0.9129 with 0.2340 false-speak and 0.9592 recall on n 96 split 49 speak and 47 wait, regressions 1.0 on n 6, all 12 pinned cards passing one row at a time, `admissible_count` 56 from a live `make threshold` that rewrote `threshold.json` byte-identically, the quantization trio at 0.2629 fp32 single-row, 0.3813 int8 batched and 0.4117 int8 single-row, the judge replay at 53/53 for all three vendors with 83/90 pair agreement and 31% saved, parameter counts by ONNX initializer sum, tokenizer vocabularies of 1,723 byte-level BPE for the random-init lane and 16,000 byte-level BPE for the pretrained one, `python draw_figures.py --check` green on all six figures, `python probe_compare.py` at 31/35 and 34/35, and `make serve` answering `/predict` with 0.4117 and wait.
+Gold PR-AUC 0.9487856622228145 on n 53, gold false-speak 0.0 and recall 0.6538, per-class A through H 1.000 with I 0.200, J 0.857 and K 0.500, ECE 0.15956, the seven boundary cards individually and their 0.3068 mean, real calls 0.9129 with 0.2340 false-speak and 0.9592 recall on n 96 split 49 speak and 47 wait, regressions 1.0 on n 6, all 12 pinned cards passing one row at a time, `admissible_count` 56 from a live `make threshold` that rewrote `threshold.json` byte-identically, the quantization trio at 0.2629 fp32 single-row, 0.3813 int8 batched and 0.4117 int8 single-row, the judge replay at 53/53 for all three vendors with 83/90 pair agreement and 31% saved, parameter counts by ONNX initializer sum, tokenizer vocabularies of 1,723 byte-level BPE for the random-init lane and 16,000 byte-level BPE for the pretrained one, `python draw_figures.py --check` green on all six figures, `python probe_compare.py` at 31/35 and 34/35, `make serve` answering `/predict` with 0.4117 and wait, and four `make bench` passes against the shipped int8 file reading c8 wall p95 33.1, 31.0, 31.3 and 30.6 ms at 312 to 321 req/s with the box at a load average near 4 of its 18 cores.
 
-A clean clone cannot reproduce any real-call number, because `data/ood_*.jsonl` is gitignored, nor any report file for the same reason. A reviewer cloning the repo can regenerate the gold, regression, pinned-card, threshold and judge numbers and none of the real-call ones. Did not retrain, since `make train` builds a different model. CI covers figure constants, module parsing and gold-set integrity. It runs no eval, no threshold pick and no pinned-card check, which is why only two badges remain on the README and the CI answer block says so.
+A clean clone cannot reproduce any real-call number, because `data/ood_*.jsonl` is gitignored, nor any report file for the same reason. It also cannot reproduce most of the fleet, since `models/*` is gitignored except two directories, the shipped `eot-distilbert-onnx-int8` and `eot-scratch-pre-onnx-int8`. So the gold, regression, pinned-card, threshold and judge numbers regenerate for those two lanes only. The gold and Spanish figures at approach.md lines 53, 55 and 56 and iterations.md lines 26, 28 and 29 do not, and neither does the fp32 half of the 0.26 reading, since `eot-distilbert-onnx` is gitignored too. Did not retrain, since `make train` builds a different model. CI covers figure constants, module parsing and gold-set integrity. It runs no eval, no threshold pick and no pinned-card check, which is why only two badges remain on the README and the CI answer block says so.
 
 ## Cards
 
@@ -56,7 +58,7 @@ Sibling   the same file at the same 0.42 interrupts 11 of 47 real turns, a rate 
 Bound     zero seen in 27 puts the exact 95% upper bound at 0.105, so this is under roughly one in ten, never never
 Knob      the threshold, since below 0.42 the pinned continuation card at 0.412 flips
 ```
-Appears at README line 2 alt, line 10, line 21, `hero.svg` as the "0 of 27 false speaks" stat, EVALS.md line 39, approach.md line 38. The bare phrases "zero false interruptions", "zero interruptions" and "zero false speaks" appear nowhere in the repo now.
+Appears at README line 2 alt, line 10, line 21, `hero.svg` as the "0 of 27 false speaks" stat, EVALS.md line 39, approach.md line 38. The bare phrases "zero false interruptions" and "zero false speaks" appear nowhere in the repo now. "zero interruptions" survives only at WORKFLOW.md line 30, describing a system that never speaks, which is not a claim about this model.
 
 ### Gold recall 0.654 at the operating point
 
@@ -100,19 +102,21 @@ Knob      the threshold, since 0.9 drops false-speak to 0.085 and recall to 0.73
 ```
 Appears at README line 2 alt, line 10, line 21, `hero.svg` as the 0.234 stat with its "11 of 47 wait turns" label, approach.md lines 38 and 52, iterations.md lines 16 and 17, EVALS.md lines 39 and 51.
 
-### 32.8 ms end-to-end p95
+### 33.1 ms end-to-end p95
 
 ```
-Claim     32.8 ms p95, the speed number against the brief's 100 ms budget
+Claim     33.1 ms p95, the speed number against the brief's 100 ms budget
 Unit      95th percentile of end-to-end wall time per request at concurrency 8 over 1500 requests, the client's clock, not model-only time
-Match     the served int8 file behind FastAPI and uvicorn, one worker, ONNX Runtime on CPU, one row per request
-Set       bench_report.json, taken on an idle box, which is the rule three files in this repo already state
+Match     the shipped int8 file behind FastAPI and uvicorn, one worker, ONNX Runtime on CPU, one row per request
+Set       four passes benched on 2026-09-04 with the dev box at a load average near 4 of its 18 cores, worst of the four quoted
 Command   make bench, which runs bench.py --n 1500 --concurrency 1,8,32, and the report is gitignored
-Sibling   model-only p95 is 31.0 ms on the same run, and the same artifact under a training load read 57.9 ms wall and 48.2 ms model
-Bound     one laptop, no GPU, and the two box states disagree by 25 ms, which is a bench-hygiene finding rather than a model one
-Knob      what else the machine is doing, since nothing about the model changed between the two readings
+Sibling   model-only p95 is 30.4 ms on the same pass, and the same file under a training load read 57.9 ms wall and 48.2 ms model
+Bound     one box, no GPU, and the four passes spanned 30.6 to 33.1 ms, so the spread inside one machine state is 2.5 ms
+Knob      what else the machine is doing, since nothing about the model changed between the two states
 ```
-Appears at README line 2 alt, line 10, line 192, line 195, `hero.svg` twice, EVALS.md line 57, approach.md lines 64 and 68 where the table now carries a box-state column. The 57.9 ms loaded reading is kept beside it at README line 193, EVALS.md line 57 and approach.md line 69, always labelled as the loaded box. "58 ms" appears nowhere now.
+Appears at README line 2 alt, line 10, line 192, line 195, `hero.svg` twice, EVALS.md line 57, approach.md line 70. The 57.9 ms loaded reading sits beside it at README line 193, EVALS.md line 57 and approach.md line 71, labelled as the loaded box. "58 ms" and "32.8 ms" appear nowhere now.
+
+The number this replaces was worse than wrong, it was the right defect in the wrong file. `bench_report.json` was written 2026-08-24 at 21:23:01 and the shipped `model.onnx` at 2026-08-25 at 01:04:10, so the quiet bench this pass first promoted to the headline had never touched the artifact it was labelling. The only bench of the shipped file was the loaded one at 01:16:14. Re-benching was the fix, and the mtime check is the check that catches it.
 
 ### 12 of 12 pinned cards
 
@@ -168,13 +172,13 @@ Sibling   7.36M reads 0.973 gold and 0.825 real, 3.99M reads 0.994 and 0.597, an
 Bound     no committed report prints a count, so every figure label rests on this one command being re-run
 Knob      the pretrain step, the only difference between the 3.99M and 7.36M lanes, worth 23 points of real-call score
 ```
-Appears at README lines 10, 37 and 97, `band-models.svg` at "66.96M vs 7.36M params", `pretrain-curve.svg` three times, approach.md lines 29, 34, 52 to 56 and 68 to 71, iterations.md lines 25 to 29 and 38. The label "7.4M" appears nowhere in the repo now, and the from-scratch row in approach.md that carried scratch-real's numbers under a 3.7M label is relabelled 3.99M, with the true 3.70M model given its own row.
+Appears at README lines 10, 37 and 97, `band-models.svg` at "66.96M vs 7.36M params", the four sub-labels of `pretrain-curve.svg`, approach.md lines 29, 34, 52 to 58 and 70 to 73, iterations.md lines 25 to 29 and 38. The label "7.4M" appears nowhere in the repo now, and the from-scratch row in approach.md that carried scratch-real's numbers under a 3.7M label is relabelled 3.99M, with the true 3.70M model given its own row.
 
 ### The pretraining curve, 0.48 to 0.60 to 0.825 to 0.913
 
 ```
 Claim     0.48, 0.60, 0.825 and 0.913, what pretraining is worth
-Unit      average precision on the same 96 held-out real turns, four models, everything else held fixed
+Unit      average precision on the same 96 held-out real turns, four models, same encoder throughout, vocabulary 1,723 then 2,841 then 16,000
 Match     four served int8 files scored one row at a time, at 3.70M, 3.99M, 7.36M and 66.96M, with only the last two in git
 Set       data/ood_test.jsonl, gitignored, 96 turns over 19 calls with rule-assigned labels, so no reader can regenerate any of the four
 Command   evaluate.py per model dir into eval_report_scratch_oodtest.json at 0.4773, scratchreal 0.5971, scratchpre 0.8253, distilen 0.9129
@@ -210,7 +214,7 @@ Sibling   the two tie at 28 each on English and share one miss, an unpunctuated 
 Bound     35 self-written probes are a demonstration, no interval worth quoting and no independent labeler
 Knob      the probe list, since one row moves the fraction three points with no model change, and the mean latency moves a millisecond every run
 ```
-Appears at README lines 28, 30 alt, 39 and 40, docs/probe-comparison.html header and lead. The "36 probes" label beside "31 of 35" now carries its reason in the same sentence, and the README says the latency row is one run on one laptop.
+Appears at README lines 28, 30 alt, 39 and 40, docs/probe-comparison.html header and lead, and the `gh-pages` copies of that file at `index.html` and `probe-comparison.html`, which is where the README line 30 link actually lands. The "36 probes" label beside "31 of 35" now carries its reason in the same sentence, and the README says the latency row is one run on one laptop.
 
 ### The 1:5 cost ratio, threshold 0.42, ECE 0.160
 
@@ -224,7 +228,7 @@ Sibling   the closed-form answer for 1:5 is 0.833, and on synthetic validation t
 Bound     30 cards is a thin objective, and 0.42 is the lowest admissible value, so the pick sits on a wall
 Knob      the ratio, which is a one-line change
 ```
-Appears at `hero.svg`, README lines 21, 138, 195, 259 and 261, EVALS.md lines 36, 57 and 61, iterations.md lines 15 to 17, data/gold_set.json, approach.md line 52. The admissible count is 56 everywhere now, matching `threshold.json` and a live sweep, and the "58 of 99" in approach.md is gone.
+Appears at `hero.svg`, README lines 21, 121, 137, 259, 261 and 263, EVALS.md lines 36, 57 and 61, iterations.md lines 15 to 17, data/gold_set.json, approach.md line 52. The admissible count is 56 everywhere now, matching `threshold.json` and a live sweep, and the "58 of 99" in approach.md is gone.
 
 ### The judgment classes, 1 of 5 hedges and 4 of 8 holds
 
@@ -238,7 +242,7 @@ Sibling   the same hedge shape passes on the probe page at 0.981, so page and go
 Bound     5 cards for the class the weakness paragraph leads with, where one card is 20 points
 Knob      the agent's last line, since recall goes 1.00 to 0.47 without it
 ```
-Appears at README lines 79 and 175, EVALS.md lines 42 and 57, the Hedge and K columns of iterations.md lines 9 to 17. The README's "two of ten" is now "1 of the 5 scored hedge cards", which is the same 0.20 read as the rate it is.
+Appears at README lines 79 and 175, EVALS.md line 42, the Hedge and K columns of iterations.md lines 9 to 17. The README's "two of ten" is now "1 of the 5 scored hedge cards", which is the same 0.20 read as the rate it is.
 
 ### The quantization trio, 0.2629 and 0.3813 and 0.4117
 
@@ -252,7 +256,7 @@ Sibling   the continuation card beside it reads 0.035 single-row on the live pag
 Bound     one card proves the failure mode exists, not how often, and nothing measures batch sensitivity across the set
 Knob      batch composition under dynamic int8 quantization, so score the way you serve
 ```
-Appears at README lines 23, 103, 232 and 253, iterations.md lines 15 and 16.
+Appears at README lines 23, 232 and 253, iterations.md lines 15 and 16.
 
 ### The announced-continuation score, 0.035
 
