@@ -308,7 +308,7 @@ Shadow the incumbent, mine the disagreements, and spend human review only where 
 <details>
 <summary><b>What was measured, and what was not?</b></summary>
 
-Every number on this page is measured on the served int8 artifact. Four things are explicitly not, so silence never reads as a claim.
+Every number on this page is measured on the served int8 artifact, with one stated exception, the v1 to v8 rows of the run table, whose reports were overwritten. Four more things are explicitly not measured, so silence never reads as a claim.
 
 - fp32 against int8 latency on one box, so the quoted latency is the int8 path only.
 - Judge retry variance. Each judge voted once per card.
