@@ -1,14 +1,10 @@
 # Video walkthrough script
 
-Ten minute cap. The 29 second ad is the cold open; the spoken walkthrough targets about 9:30 at natural pace. Bracketed lines are what is on screen, not spoken; DOC means the approach Word document, REPO means the live repo surface named. Every number below is frozen from the reports; do not improvise numbers while recording. The brief's side notes are the rubric: they want to see how you think and approach the problem more than anything, with assumptions written down, so the walkthrough is organized around decisions, not metrics.
+Ten minute cap. The spoken walkthrough targets about 9:30 at natural pace. Bracketed lines are what is on screen, not spoken; DOC means the approach Word document, REPO means the live repo surface named. Every number below is frozen from the reports; do not improvise numbers while recording. The brief's side notes are the rubric: they want to see how you think and approach the problem more than anything, with assumptions written down, so the walkthrough is organized around decisions, not metrics.
 
 ---
 
-[0:00 Screen: the ad plays, full frame, sound up]
-
-(No narration. The ad carries itself: the doorway collisions, the wait, the flow, her closer, the card.)
-
-[0:29 Screen: REPO, README top, the hero]
+[0:00 Screen: REPO, README top, the hero]
 
 That question, "is the caller done talking," is the whole problem. Hi, I'm James, and this is my build.
 

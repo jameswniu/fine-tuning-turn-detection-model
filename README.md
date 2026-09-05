@@ -13,15 +13,7 @@
 
 **Given the agent's last line and the caller's words so far, decide whether the caller is done talking.** The fine-tuned DistilBERT ships as int8: 0.949 on a frozen human gold set with zero interruptions, 0.913 on held-out real calls, 58 ms p95 on CPU. A 7.4M encoder trained from scratch beat it on the policy probes and lost on unseen real calls, the referee that matters most.
 
-Watch it score a call below, read [docs/approach.md](docs/approach.md), run it with `make serve`. The depth sits next to the code: [POLICY.md](POLICY.md), [EVALS.md](EVALS.md), [iterations.md](iterations.md), [data/README.md](data/README.md).
-
-<p align="center">
-  <a href="https://github.com/jameswniu/fine-tuning-turn-detection-model/raw/master/assets/ad.mp4"><img src="assets/ad-preview.gif" width="360" alt="Two people keep colliding in a doorway, each starting the moment the other does. The same pair then move cleanly, one waiting a beat, and the spot asks whether the caller is done talking."></a>
-</p>
-
-<p align="center">
-  <sub><a href="https://github.com/jameswniu/fine-tuning-turn-detection-model/raw/master/assets/ad.mp4">Watch with sound</a></sub>
-</p>
+Read [docs/approach.md](docs/approach.md), run it with `make serve`. The depth sits next to the code: [POLICY.md](POLICY.md), [EVALS.md](EVALS.md), [iterations.md](iterations.md), [data/README.md](data/README.md).
 
 ## The five hard problems in end-of-turn detection
 
