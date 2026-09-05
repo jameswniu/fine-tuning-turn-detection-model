@@ -1,52 +1,30 @@
 # Referee cards
 
-One card per number a stranger sees, written from the code and the reports rather than the README. Audited on the `referee-card` branch off origin/master at 94fad40. Every score below comes from `models/eot-distilbert-onnx-int8/model.onnx`, sha256 `597de86f...814ed6`, at threshold 0.42. Each card is the eight spoken lines. The locations sit under it so the card stays sayable in a minute.
+One card per number a stranger sees, written from the code and the reports rather than the README. First audited on the `referee-card` branch off origin/master at 94fad40, then re-audited after the corrections at c28fff8. Every score below comes from `models/eot-distilbert-onnx-int8/model.onnx`, sha256 `597de86f...814ed6`, at threshold 0.42. Each card is the eight spoken lines. The locations sit under it so the card stays sayable in a minute.
 
 ## Numbers on a surface that no script or report produces
 
-- 0.968 gold (README line 115). The other half of that sentence, 0.966, is `eval_report_fresh_gold.json`. The fresh run's fp32 export scores 0.9650 on the same 53 cards single-row, and its int8 export 0.9665. Neither is 0.968.
-- Every headline in the v1 to v8 rows (README lines 157 to 164, iterations.md lines 7 to 14). Gold 0.961, 0.964, 0.970, 0.969, 0.958, 0.955, ECE 0.114 through 0.169, and v6's real-call reading of 0.905. Each run overwrote the last report, so only the log carries them. The nine-row table is the repo's central story and none of it is checkable.
+None survive. The two entries that stood here at 94fad40 were settled like this.
 
-Absent from every surface here: "30MB", "135MB", "3.4 ms", "87 commits". origin/master is 89 commits.
+- **0.968 gold, and its "two clean runs picked 0.71 and 0.63" pairing (README line 115 at 94fad40). REMOVED and replaced with the measurement.** There was one clean retrain, not two. Its fp32 export reads 0.9650 on the 53 gold cards and its int8 export 0.9665, both re-scored live one row at a time, and the two thresholds are 0.71 from `models/eot-distilbert-fresh-onnx/threshold.json` at 41 admissible values and 0.63 from `models/eot-distilbert-fresh-onnx-int8/threshold.json` at 32. The README now says that plainly, as one set of weights read through two execution paths, which is this repo's own headline finding rather than run-to-run variance.
+- **The v1 to v8 headline numbers (README lines 157 to 164 and iterations.md lines 7 to 14 at 94fad40). KEPT, and labelled for what they are.** Each run wrote its report to the same filename and the next run overwrote it, so no file backs those readings today. Both tables now carry a line saying so, and both name v9 as the only row that regenerates from the committed artifact. The history stays because a build log is worth more than a hole, and the gold recall column that was missing from the README table is back.
+
+Nowhere on any surface here do "30MB", "135MB", "3.4 ms" or "87 commits" appear. origin/master is 89 commits.
 
 ## Mismatches
 
-1. "zero false interruptions" carries no set label on the GitHub description or the README line 2 hero alt, README line 14 shortens it to "zero interruptions", and `hero.svg` says "zero false speaks" and sets it beside "0.913 real calls" as if the zero covered both. One number, three phrasings, no denominator. The same file at the same threshold interrupts 11 of 47 wait turns on the held-out real calls, 0.234, printed in the approach doc's own table and EVALS.md line 51.
-2. 58 ms p95 is from `bench_report_distilen.json`, taken mid training load. README line 329, EVALS.md line 57 and iterations.md line 38 each say only quiet-machine benches get quoted. The quiet bench reads 32.8 ms. README line 207 says the opposite of the other three.
-3. 58 ms is wall time at concurrency 8, not model time. The GitHub description reads "ONNX int8 on CPU at 58 ms p95". Model-only p95 at c8 is 48.2 ms loaded and 31.0 ms quiet.
-4. Quiet-bench throughput is 320 req/s in EVALS.md line 57 against 316.35 in `bench_report.json`. README line 204's 316 is that value rounded and is fine.
-5. `models/eot-distilbert-onnx-int8/threshold.json` records `admissible_count` 56 and a live sweep returns 56. approach.md line 52 says "58 of 99 at 0.42". Falsifiable from a file the reviewer already has.
-6. Parameter counts, measured by summing ONNX initializer elements on the committed and local exports: 3.70M for scratch, 3.99M for scratch-real, 7.36M for scratch-pre, 66.96M for DistilBERT, 135.33M for the multilingual model. README line 14 and `band-models.svg` say 7.4M, which is right for scratch-pre only. approach.md line 29 calls the whole from-scratch effort 3.7M.
-7. `pretrain-curve.svg` labels the 0.48 and 0.60 points "7.4M" via `draw_figures.py` lines 39 and 40. Those readings come from a 3.70M and a 3.99M model.
-8. approach.md line 55's "From-scratch, no pretrain, 3.7M" row carries 0.994 gold, 0.996 Spanish, 0.597 real and ECE 0.045, which are scratch-real's numbers. scratch-real is 3.99M. The true 3.70M model reads 0.502 gold and 0.477 real and appears nowhere in that table.
-9. Multilingual size is 135M in iterations.md line 24 and 134M in approach.md line 53. 135.33M measured, so iterations.md is right and the document is wrong.
-10. "36 probes" shares a README line 51 table row with "31 of 35" and "34 of 35". The page shows 36 and grades 35 because the 36th is an unsure boundary card, and that reason sits only in the page footer.
-11. The announced-continuation score is 0.035 in README line 32, 0.036 on the probe page, and "near 0.04" in the README line 77 alt. Different contexts, one apparent card, three values.
-12. "two of ten" hedge cases (README line 91). Class I has 8 gold cards, 3 of them unsure, so 5 are scored and 1 is right. The 0.20 everywhere else is that rate, redressed here as a count.
-13. "96 turns from 60 calls" appears in data/README.md line 23 and again as "96 turns from 60 production calls" in EVALS.md line 51. It is 96 turns from 19 calls. The 400-turn parent holds 59 calls, split 304 over 40 and 96 over 19, with no call on both sides.
-14. data/README.md line 23 says the real-call rows were "Labeled by the author". `ood_from_elevenlabs.py` lines 121 to 142 assign every label by rule with no human pass, a full user turn becoming speak and a random non-sentence-final prefix becoming wait. EVALS.md line 51 and approach.md line 48 both say self-labeled. The doc that describes the data takes the wrong side of its own repo.
-15. The `policy_corrected` filter (data/README.md line 23, README lines 287 and 306, "policy-corrected" in `referees.svg`) touched zero shipped rows. The code first appears at commit 0e15d5b on 2026-08-25 at 02:07 and is absent at 3d4975a at 00:26, while all three ood files were written at 01:12 between them, and iterations.md line 13 records "policy-filtered 0 vendor-behavior rows". No row in any ood file carries the key.
-16. data/README.md line 23 says the repo ships "the loaders, the reports, and this description". `.gitignore` matches every report and `git ls-files` returns none, so nothing here is independently checkable.
-17. "nah bye" after the fix is 0.978 in data/README.md and 0.985 on the probe page, which is the contexted row. README line 89's alt says 0.97, which is the bare row and reads 0.9718 live, a different input rather than a third value for the same one.
-18. "the multilingual lane matches English gold (0.960 vs 0.958)" (approach.md line 38) pairs a model picked at 0.33, where its own gold false-speak is 0.889, against a v5 reading. Neither ships. The shipped pair is 0.979 and 0.949.
-19. "scored 0.61 on real calls" (approach.md line 48) sits in the paragraph about the held-out third but is measured over all 400 turns at threshold 0.81, a different set.
-20. EVALS.md line 43 declares a boundary band of 0.35 to 0.65 with "zero confidently wrong (over 0.9 or under 0.1)". `evaluate.py` line 16 measures a different interval, 0.4 to 0.9, and reports `count_in_band` 0, which reads as a pass. Scored one row at a time the seven cards read A4 0.985, D1 0.026, H3 0.986, I4 0.068, I5 0.021, I8 0.045 and J7 0.016, so all 7 of 7 are confidently wrong by the doc's own rule and none is in the declared band. The row still shows the v1 reading "Mean 0.44, In band" against a shipped mean of 0.307.
-21. EVALS.md line 40 shows recall 0.77 against a 0.85 target. Shipped gold recall is 0.654, and the bands-landed paragraph never mentions it.
-22. "12 of 12" counts pinned cards. EVALS.md's Tier 1 table lists 7 named checks.
-23. "Flat 0.75" (README line 53) is not computed. The six Spanish probe scores are 0.814, 0.777, 0.731, 0.734, 0.798 and 0.768, mean 0.770.
-24. "three eval referees on real calls" (GitHub description). The three test sets are gold, regressions and real calls. One of the three is real calls.
-25. iterations.md line 32 calls the small model's tokenizer an "own WordPiece tokenizer". `train_scratch.py` line 14 says "Byte-level BPE, not WordPiece" and names the 1532-piece WordPiece attempt as the v1 failure it replaced. The committed `models/eot-scratch-pre-onnx-int8/tokenizer.json` is byte-level BPE with 16,000 pieces, which settles it.
-26. README line 115's "two clean runs ... picked 0.71 and 0.63" is one run and two artifacts. `models/eot-distilbert-fresh-onnx/threshold.json` records 0.71 with 41 admissible values and `models/eot-distilbert-fresh-onnx-int8/threshold.json` records 0.63 with 32, both from the same retrain. The sentence reads as run-to-run variance and is fp32 against int8, which is the repo's own headline finding stated as its opposite.
+None remain at c28fff8. All 26 entries from the 94fad40 audit are resolved in the files, and what each fix was is in the cards below.
 
-## The submitted PDF against the repo
+Two claims sit outside the repository and no commit can reach them.
 
-The PDF is the render of `docs/approach.md` at commit ae1d2d0, and that file is unchanged at HEAD. Comparing every numeric token, the two are identical apart from the two `width="100%"` figure attributes that do not survive rendering. Items 5, 6, 8, 9, 18 and 19 are therefore true of the PDF verbatim, and item 9 is the one a reviewer could have checked against `iterations.md` in the same repository.
+- **The GitHub repository description**, set in the GitHub web UI rather than in any tracked file, still reads "zero false interruptions", "ONNX int8 on CPU at 58 ms p95" and "three eval referees on real calls". All three are wrong for the same reasons items 1, 3 and 24 named. This replacement fits the 350-character limit. `End-of-turn detection for voice agents. Fine-tuned DistilBERT, int8 on CPU at threshold 0.42, reads 0.949 PR-AUC on a frozen 53-card human gold set with no false speaks on its 27 wait cards, and 0.913 on 96 held-out real-call turns where it speaks over 11 of 47. Three referees, gold, regressions and real calls. 32.8 ms end-to-end p95 at concurrency 8.`
+- **The submitted PDF** is the render of `docs/approach.md` at commit ae1d2d0. That file has now changed, so the PDF is a frozen copy of the pre-audit text and still carries items 5, 6, 8, 9, 18 and 19 verbatim. Nothing in this repository can correct a PDF already sent. Anyone re-rendering it should render the current `docs/approach.md`.
 
-## Reproduced live
+## Reproduced live at c28fff8
 
-Gold PR-AUC 0.9487856622228145 on n 53, gold false-speak 0.0 and recall 0.6538, per-class I 0.200 K 0.500 J 0.857, ECE 0.15956, the seven boundary cards individually and their 0.3068 mean, real calls 0.9129 with 0.2340 false-speak and 0.9592 recall on n 96, regressions 1.0 on n 6, all 12 pinned cards passing one row at a time, `admissible_count` 56, the quantization trio at 0.2629 fp32 single-row, 0.381 int8 batched and 0.4117 int8 single-row, the judge replay at 53/53 for all three vendors with 83/90 pair agreement and 31% saved, parameter counts by ONNX initializer sum, tokenizer vocabularies of 1,723 and 16,000, and `make serve` answering `/predict` with 0.4117 wait.
+Gold PR-AUC 0.9487856622228145 on n 53, gold false-speak 0.0 and recall 0.6538, per-class A through H 1.000 with I 0.200, J 0.857 and K 0.500, ECE 0.15956, the seven boundary cards individually and their 0.3068 mean, real calls 0.9129 with 0.2340 false-speak and 0.9592 recall on n 96 split 49 speak and 47 wait, regressions 1.0 on n 6, all 12 pinned cards passing one row at a time, `admissible_count` 56 from a live `make threshold` that rewrote `threshold.json` byte-identically, the quantization trio at 0.2629 fp32 single-row, 0.3813 int8 batched and 0.4117 int8 single-row, the judge replay at 53/53 for all three vendors with 83/90 pair agreement and 31% saved, parameter counts by ONNX initializer sum, tokenizer vocabularies of 1,723 byte-level BPE for the random-init lane and 16,000 byte-level BPE for the pretrained one, `python draw_figures.py --check` green on all six figures, `python probe_compare.py` at 31/35 and 34/35, and `make serve` answering `/predict` with 0.4117 and wait.
 
-Not reproducible from a clean clone: every real-call number, because `data/ood_*.jsonl` is gitignored, and every report file for the same reason. A reviewer cloning the repo can regenerate the gold, regression, pinned-card and judge numbers and none of the real-call ones. Did not retrain, since `make train` builds a different model. CI covers figure constants, module parsing and gold-set integrity. It runs no eval, no threshold pick and no pinned-card check.
+A clean clone cannot reproduce any real-call number, because `data/ood_*.jsonl` is gitignored, nor any report file for the same reason. A reviewer cloning the repo can regenerate the gold, regression, pinned-card, threshold and judge numbers and none of the real-call ones. Did not retrain, since `make train` builds a different model. CI covers figure constants, module parsing and gold-set integrity. It runs no eval, no threshold pick and no pinned-card check, which is why only two badges remain on the README and the CI answer block says so.
 
 ## Cards
 
@@ -62,21 +40,21 @@ Sibling   0.913 on held-out real calls, where the no-pretrain small model that r
 Bound     one card is two points of the whole, no public band exists, and the self-set bar is this project's own v1 at 0.961
 Knob      the training mix, which took gold from 0.958 down to 0.949 and real calls up
 ```
-Appears at README line 2 alt, line 14, `hero.svg`, the GitHub description, README lines 163 and 164, EVALS.md line 57, iterations.md line 23, approach.md lines 38 and 52.
+Appears at README line 2 alt, line 10, line 153, `hero.svg`, EVALS.md lines 38 and 57, iterations.md lines 17 and 25, approach.md lines 38 and 52.
 
-### Zero false interruptions
+### No false speaks on the 27 gold wait cards
 
 ```
-Claim     zero false interruptions, the second half of the headline
+Claim     zero, and the number it now travels with, 0.234 on real calls
 Unit      of the 27 gold cards labeled wait, none scores at or above 0.42, a rate of 0 over 27
 Match     speak when p is at or above 0.42, so the boundary value speaks, at serve.py line 58 and pick_threshold.py line 63
 Set       the same frozen cards, and 4 of those 27 are pinned rows the threshold was chosen to keep correct
 Command   make eval, false_speak_rate at the 0.42 row of hard.threshold_sweep in eval_report_frozen_gold.json
-Sibling   the same file at the same 0.42 interrupts 11 of 47 real turns, a rate of 0.234
+Sibling   the same file at the same 0.42 interrupts 11 of 47 real turns, a rate of 0.234, and both now sit in the same sentence
 Bound     zero seen in 27 puts the exact 95% upper bound at 0.105, so this is under roughly one in ten, never never
 Knob      the threshold, since below 0.42 the pinned continuation card at 0.412 flips
 ```
-Appears at the GitHub description, README line 2 alt, README line 14, `hero.svg`, README line 33, the False-speak column of README line 164 and iterations.md line 15, approach.md line 38.
+Appears at README line 2 alt, line 10, line 21, `hero.svg` as the "0 of 27 false speaks" stat, EVALS.md line 39, approach.md line 38. The bare phrases "zero false interruptions", "zero interruptions" and "zero false speaks" appear nowhere in the repo now.
 
 ### Gold recall 0.654 at the operating point
 
@@ -87,10 +65,10 @@ Match     the same served int8 file, one row per call, at or above 0.42 counts a
 Set       the same frozen cards, the 26 speak ones, 7 unsure excluded, precision 1.0 alongside
 Command   make eval, recall at the 0.42 row of hard.threshold_sweep, sklearn recall_score at evaluate.py line 91
 Sibling   on held-out real calls the same file recalls 0.959, so the two recalls point opposite ways
-Bound     EVALS.md line 40 targets 0.85, so this is far out of band and the summary paragraph never says so
+Bound     EVALS.md line 40 targets 0.85, so this is far out of band, and both the table and the summary now say so
 Knob      the agent's last line, since recall is 1.00 with it and 0.47 without
 ```
-Appears at the Recall column of iterations.md lines 13 to 15, and as "recall 0.58" and "recall to 0.81" in README lines 157 and 158.
+Appears at README line 10, the Gold recall column of the README run table at lines 145 to 153, EVALS.md lines 40, 50 and 57, iterations.md lines 9 to 17.
 
 ### 0.913 on held-out real calls
 
@@ -98,13 +76,13 @@ Appears at the Recall column of iterations.md lines 13 to 15, and as "recall 0.5
 Claim     0.913, the score on speech nobody wrote for this project
 Unit      average precision over 96 turns of data/ood_test.jsonl, 49 speak and 47 wait
 Match     the same served int8 file, one row per call, same input format
-Set       400 turns cut from the author's own deployed agent, labels assigned by rule with no human pass at ood_from_elevenlabs.py lines 121 to 142, split by call into 304 and 96
+Set       400 turns cut from the author's own deployed agent over 59 calls, labels assigned by rule with no human pass at ood_from_elevenlabs.py lines 121 to 142, split by call into 304 over 40 and 96 over 19
 Command   evaluate.py --data data/ood_test.jsonl, jsonl.pr_auc in eval_report_frozen_oodtest.json, and both data and report are gitignored
 Sibling   0.949 on the gold set, where the small model reading 0.597 here reads 0.994
 Bound     96 turns from 19 calls, one agent, one vendor, one language, and rows from a call are not independent
 Knob      real-call rows in training, added at four-fold weight and grouped by call
 ```
-Appears at README line 2 alt, line 14, `hero.svg`, iterations.md lines 15 and 23, EVALS.md line 51, approach.md lines 36, 48 and 52, and as "0.91" in `pretrain-curve.svg`.
+Appears at README line 2 alt, line 10, line 153, `hero.svg`, iterations.md lines 17 and 25, EVALS.md line 51, approach.md lines 34, 38 and 52, and as "0.91" in `pretrain-curve.svg`.
 
 ### 0.234 false-speak and 0.959 recall at threshold 0.42
 
@@ -118,21 +96,21 @@ Sibling   0.000 false-speak on the gold cards, same file, same threshold, and th
 Bound     EVALS.md line 51 draws the line at 10%, and 11 of 47 is Wilson 0.136 to 0.372 or exactly 0.123 to 0.380
 Knob      the threshold, since 0.9 drops false-speak to 0.085 and recall to 0.735
 ```
-Appears at approach.md line 52, iterations.md lines 14 and 15, EVALS.md line 51.
+Appears at README line 2 alt, line 10, line 21, `hero.svg` as the 0.234 stat with its "11 of 47 wait turns" label, approach.md lines 38 and 52, iterations.md lines 16 and 17, EVALS.md lines 39 and 51.
 
-### 58 ms p95
+### 32.8 ms end-to-end p95
 
 ```
-Claim     58 ms p95, the speed number against the brief's 100 ms budget
-Unit      95th percentile of end-to-end wall time per request at concurrency 8 over 1200 requests, not model-only time
+Claim     32.8 ms p95, the speed number against the brief's 100 ms budget
+Unit      95th percentile of end-to-end wall time per request at concurrency 8 over 1500 requests, the client's clock, not model-only time
 Match     the served int8 file behind FastAPI and uvicorn, one worker, ONNX Runtime on CPU, one row per request
-Set       bench_report_distilen.json, taken while a training run held the same box, against bench_report.json at 32.8 ms quiet
+Set       bench_report.json, taken on an idle box, which is the rule three files in this repo already state
 Command   make bench, which runs bench.py --n 1500 --concurrency 1,8,32, and the report is gitignored
-Sibling   model-only p95 is 48.2 ms loaded and 31.0 ms quiet, and at concurrency 32 the loaded wall p95 is 421 ms
-Bound     one laptop, no GPU, two runs disagreeing by 25 ms, and three places in the repo demand an idle box
-Knob      what else the machine is doing, since nothing about the model changed
+Sibling   model-only p95 is 31.0 ms on the same run, and the same artifact under a training load read 57.9 ms wall and 48.2 ms model
+Bound     one laptop, no GPU, and the two box states disagree by 25 ms, which is a bench-hygiene finding rather than a model one
+Knob      what else the machine is doing, since nothing about the model changed between the two readings
 ```
-Appears at `hero.svg` twice, README line 2 alt, README line 14, the GitHub description, and as 57.9 ms at README line 205, EVALS.md line 57 and approach.md's serving table.
+Appears at README line 2 alt, line 10, line 192, line 195, `hero.svg` twice, EVALS.md line 57, approach.md lines 64 and 68 where the table now carries a box-state column. The 57.9 ms loaded reading is kept beside it at README line 193, EVALS.md line 57 and approach.md line 69, always labelled as the loaded box. "58 ms" appears nowhere now.
 
 ### 12 of 12 pinned cards
 
@@ -144,9 +122,9 @@ Set       derived by make_tier1_probes.py from 4 readout cards, gold H5, dev dH4
 Command   make tier1 then make threshold, re-run live here at 12 of 12
 Sibling   the same 12 read 11 of 12 at v8 and red at v7 on identical weights, so only the measurement changed
 Bound     12 hand-picked cards, 6 of them already in the training data, so this tests memory rather than generalization
-Knob      the batch shape, since batched these score dH4 at 0.381 and one at a time 0.412
+Knob      the batch shape, since batched these score dH4 at 0.3813 and one at a time 0.4117
 ```
-Appears at the README line 9 badge, iterations.md line 15, EVALS.md line 57, README line 267, `hero.svg`, `judges.svg`.
+Appears at README lines 88, 129, 138, 153, 254 and 263, EVALS.md line 57 where the 12-against-7 difference is now stated inline, iterations.md lines 17 and 25, `hero.svg`, `judges.svg`. The README badge that carried it is gone, because CI never ran this check.
 
 ### 60-card frozen gold set, 7 unsure
 
@@ -160,7 +138,7 @@ Sibling   the 7 unsure cards read 0.985, 0.026, 0.986, 0.068, 0.021, 0.045 and 0
 Bound     one labeler and one policy author, no second annotator, so this measures fidelity to one written policy
 Knob      the policy, and class I is where it bites and where the model scores 1 of 5
 ```
-Appears at the README line 7 badge, `band-judged.svg`, `referees.svg`, README lines 34 and 196, data/README.md line 11.
+Appears at the README line 7 badge, README lines 10, 22 and 184, `band-judged.svg`, `referees.svg`, data/README.md line 11, approach.md line 18. This is the one badge kept beside CI, because the CI job asserts it.
 
 ### Three vendor judges, 53 of 53 on 90 blind cards
 
@@ -171,24 +149,24 @@ Match     no threshold, votes are speak, wait or unsure, and majority() at judge
 Set       60 gold and 30 fresh cards shuffled, judged by stock Claude, Gemini and GPT with the policy in the prompt, votes committed
 Command   python judge_cascade_replay.py, re-run live at 53/53 for all three and 83/90 pair agreement
 Sibling   Gemini is the outlier at 28 of 30 on fresh cards, and both hidden dissents went the pair's way
-Bound     one vote per judge per card, no retry variance, which README line 327 lists as not measured
+Bound     one vote per judge per card, no retry variance, which the README's measured-and-not block lists as not measured
 Knob      the prompt, whose quoted boundary examples make 53 of 53 easier than it sounds
 ```
-Appears at the README line 10 badge, README line 34, `judges.svg`, docs/judge-cascade-replay.md.
+Appears at README lines 22, 123 to 129, `judges.svg`, data/README.md line 15, docs/judge-cascade-replay.md lines 19 and 32. The README badge that carried it is gone, because CI never runs the replay.
 
-### 7.4M and 3.7M from scratch
+### The measured parameter counts
 
 ```
-Claim     7.4M and 3.7M, the sizes of the models built from nothing
-Unit      parameter count, measured as 3.70M for scratch, 3.99M for scratch-real, 7.36M for scratch-pre, 66.96M for DistilBERT, 135.33M multilingual
-Match     summed ONNX initializer elements on the committed and local exports, so 7.36M is the only one that rounds to 7.4M
+Claim     3.70M, 3.99M, 7.36M, 66.96M and 135.33M, the sizes of every lane
+Unit      parameter count, the sum of the ONNX initializer elements of each committed or local export
+Match     3.70M scratch at random init, 3.99M scratch-real, 7.36M scratch-pre, 66.96M DistilBERT, 135.33M multilingual
 Set       trained by train_scratch.py on a byte-level BPE tokenizer built in repo, pretrained by pretrain_scratch.py
 Command   python -c "import onnx;from onnx import numpy_helper as n;m=onnx.load(P);print(sum(n.to_array(t).size for t in m.graph.initializer))"
 Sibling   7.36M reads 0.973 gold and 0.825 real, 3.99M reads 0.994 and 0.597, and 3.70M reads 0.502 and 0.477
-Bound     no committed report prints a count, so every figure label rests on memory and three are wrong once measured
-Knob      the pretrain step, the only difference between the small models, worth 23 points of real-call score
+Bound     no committed report prints a count, so every figure label rests on this one command being re-run
+Knob      the pretrain step, the only difference between the 3.99M and 7.36M lanes, worth 23 points of real-call score
 ```
-Appears at README line 14, `band-models.svg`, `pretrain-curve.svg` three times, approach.md lines 29, 53, 54 and 55, iterations.md lines 24 to 27.
+Appears at README lines 10, 37 and 97, `band-models.svg` at "66.96M vs 7.36M params", `pretrain-curve.svg` three times, approach.md lines 29, 34, 52 to 56 and 68 to 71, iterations.md lines 25 to 29 and 38. The label "7.4M" appears nowhere in the repo now, and the from-scratch row in approach.md that carried scratch-real's numbers under a 3.7M label is relabelled 3.99M, with the true 3.70M model given its own row.
 
 ### The pretraining curve, 0.48 to 0.60 to 0.825 to 0.913
 
@@ -202,35 +180,35 @@ Sibling   on gold the same four read 0.502, 0.994, 0.973 and 0.949, the opposite
 Bound     four points, one seed each, no error bars, and the 0.48 model also has a 1,723-piece vocabulary against 16,000
 Knob      language exposure, and the figure rounds 0.825 to 0.83 and 0.913 to 0.91
 ```
-Appears at README line 46 alt, `pretrain-curve.svg`, approach.md lines 33 and 36, iterations.md line 36.
+Appears at README line 34 alt, `pretrain-curve.svg`, approach.md lines 34 and 36, iterations.md line 38.
 
-### Spanish, 0.960 against 0.958 and flat 0.75
+### Spanish, six probe scores averaging 0.770
 
 ```
-Claim     0.960 against 0.958, and a flat 0.75 on the Spanish probes
-Unit      0.960 is gold average precision for the first multilingual model, 0.958 the v5 English reading, and 0.75 is six probe scores between 0.731 and 0.814
-Match     0.960 from models/eot-mdistilbert-onnx-int8 at its own 0.33, and the probes from the shipped English int8 file at 0.42
-Set       the 53 gold cards for 0.960, 187 rows of data/eval_es.jsonl for the Spanish 1.000, six hand-written probes for the 0.75
-Command   evaluate.py per model, where eval_report_mdistil.json reads 0.959987 and mdistilreal2_es reads 1.0
-Sibling   that model's gold false-speak at its own threshold is 0.889, and neither model in the comparison ships
-Bound     the Spanish 1.000 is synthetic Spanish under the policy the model trained on, so it measures template fit
+Claim     six Spanish probe scores between 0.731 and 0.814, mean 0.770, three of them wrong
+Unit      P(speak) on six hand-written Spanish probes, scored one row at a time, wrong when the decision at 0.42 disagrees with the policy
+Match     the shipped English int8 file at 0.42, which is the point, since English DistilBERT was never trained for Spanish
+Set       six rows of probe_compare.py, the author's own, not held out
+Command   python probe_compare.py, which prints them into docs/probe-comparison.html at 0.814, 0.777, 0.731, 0.734, 0.798 and 0.768
+Sibling   the multilingual lane separates the 187-row Spanish eval perfectly at 1.000, and it ships as the variant
+Bound     six self-written probes, no interval worth quoting, and the "flat 0.75" this replaces was never computed at all
 Knob      the base model, since English DistilBERT is uncased English WordPiece
 ```
-Appears at approach.md lines 38 and 53 to 55, README line 53, iterations.md line 24.
+Appears at README line 41, docs/probe-comparison.html rows 30 to 35. The separate multilingual comparison at approach.md line 38 now names the two models that ship, 0.979 against 0.949, instead of two that never did.
 
-### 36 probes, 31 of 35, mean 16.6 ms
+### 36 probes, 31 of 35, mean 17.8 ms
 
 ```
 Claim     31 of 35 against 34 of 35, on a page that shows 36
-Unit      36 rows shown and 35 graded, the 36th unsure and excluded at probe_compare.py line 103, with 16.6 ms the mean of 36 single-row timings
+Unit      36 rows shown and 35 graded, the 36th unsure and excluded at probe_compare.py line 103, with 17.8 ms the mean of 36 single-row timings
 Match     both models scored one row at a time on their own int8 file at their own threshold, a cell wrong when it disagrees with the policy
 Set       36 probes hand-written in probe_compare.py lines 32 to 69, the author's own, not held out
 Command   python probe_compare.py, which writes docs/probe-comparison.html and prints the counts
 Sibling   the two tie at 28 each on English and share one miss, an unpunctuated yes-no question
 Bound     35 self-written probes are a demonstration, no interval worth quoting and no independent labeler
-Knob      the probe list, since one row moves the fraction three points with no model change
+Knob      the probe list, since one row moves the fraction three points with no model change, and the mean latency moves a millisecond every run
 ```
-Appears at README lines 40 and 51, docs/probe-comparison.html header and lead.
+Appears at README lines 28, 30 alt, 39 and 40, docs/probe-comparison.html header and lead. The "36 probes" label beside "31 of 35" now carries its reason in the same sentence, and the README says the latency row is one run on one laptop.
 
 ### The 1:5 cost ratio, threshold 0.42, ECE 0.160
 
@@ -244,32 +222,46 @@ Sibling   the closed-form answer for 1:5 is 0.833, and on synthetic validation t
 Bound     30 cards is a thin objective, and 0.42 is the lowest admissible value, so the pick sits on a wall
 Knob      the ratio, which is a one-line change
 ```
-Appears at `hero.svg`, README lines 33 and 272, iterations.md lines 13 to 15, EVALS.md lines 57 and 61, data/gold_set.json.
+Appears at `hero.svg`, README lines 21, 138, 195, 259 and 261, EVALS.md lines 36, 57 and 61, iterations.md lines 15 to 17, data/gold_set.json, approach.md line 52. The admissible count is 56 everywhere now, matching `threshold.json` and a live sweep, and the "58 of 99" in approach.md is gone.
 
-### The judgment classes, 0.20 hedges and 0.50 holds
+### The judgment classes, 1 of 5 hedges and 4 of 8 holds
 
 ```
 Claim     0.20 on hedges and 0.50 on holds, the two classes the README calls weak
 Unit      per-class accuracy at 0.42, where I is 1 of 5, K 4 of 8, J 6 of 7 and H 7 of 7
 Match     the same served int8 file, one row per call, per_class_accuracy at evaluate.py line 100
-Set       the frozen gold cards by assigned class, where H, I, J and K hold 8 each but 5 unsure ones drop out
+Set       the frozen gold cards by assigned class, where H, I, J and K hold 8 each but 5 unsure ones drop out, so class I scores 5
 Command   make eval, per_class_accuracy_at_threshold and slices in eval_report_frozen_gold.json, re-run live and matching
 Sibling   the same hedge shape passes on the probe page at 0.981, so page and gold disagree about the weakest class
 Bound     5 cards for the class the weakness paragraph leads with, where one card is 20 points
 Knob      the agent's last line, since recall goes 1.00 to 0.47 without it
 ```
-Appears at README lines 32, 91 and 297, EVALS.md lines 42 and 57, the Hedge and K columns of iterations.md lines 7 to 15.
+Appears at README lines 79 and 175, EVALS.md lines 42 and 57, the Hedge and K columns of iterations.md lines 9 to 17. The README's "two of ten" is now "1 of the 5 scored hedge cards", which is the same 0.20 read as the rate it is.
 
-### The quantization trio, 0.26 and 0.381 and 0.412
+### The quantization trio, 0.2629 and 0.3813 and 0.4117
 
 ```
-Claim     0.26, 0.381 and 0.412, one card under three execution paths
+Claim     0.26, 0.38 and 0.41, one card under three execution paths
 Unit      P(speak) for dev row dH4, "Actually, hold that thought." after "Agent: Anything else before I let you go?"
-Match     0.2629 is fp32 single-row, 0.381 is int8 with all 12 pinned rows batched, 0.4117 is int8 single-row as serve.py does
+Match     0.2629 is fp32 single-row, 0.3813 is int8 with all 12 pinned rows batched, 0.4117 is int8 single-row as serve.py does
 Set       one card, not a set, and it is the pinned row that fixes the operating point
 Command   reproduced live against both export dirs and through /predict, which returned 0.4117 and wait
-Sibling   the continuation card beside it reads 0.035 single-row and 0.036 batched, so the batch effect shows up only near the threshold
+Sibling   the continuation card beside it reads 0.035 single-row on the live page, so the batch effect shows up only near the threshold
 Bound     one card proves the failure mode exists, not how often, and nothing measures batch sensitivity across the set
 Knob      batch composition under dynamic int8 quantization, so score the way you serve
 ```
-Appears at README lines 35, 243 and 266, iterations.md lines 13 and 14.
+Appears at README lines 23, 103, 232 and 253, iterations.md lines 15 and 16.
+
+### The announced-continuation score, 0.035
+
+```
+Claim     0.035, the card the tier-1 continuation gate exists for
+Unit      P(speak) for "actually yeah, one more thing." after "Anything else?", scored one row at a time, which the live page renders as 3.5%
+Match     the served int8 file through serve.py, the same path the gif recorded
+Set       one card, and the probe page runs a longer sibling, the same words cased after "Anything else I can help with?", which reads 0.036
+Command   POST /predict with that context and text, or read row 16 of docs/probe-comparison.html for the sibling
+Sibling   the same class holds at 0.015 on the second announced-continuation probe, so the class is not carried by one card
+Bound     one card, and the whole class is 8 gold rows with one labeled unsure
+Knob      the agent's last line, since the same words with no context read 0.013
+```
+Appears at README line 20 and the line 65 gif alt, both now at 0.035, and docs/probe-comparison.html row 16 at 0.036 for its different input. The "near 0.04" phrasing is gone.
