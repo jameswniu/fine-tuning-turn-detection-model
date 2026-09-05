@@ -117,7 +117,7 @@ curl -s -X POST localhost:8000/predict -H "Content-Type: application/json" \
   <img src="assets/referees.svg" alt="Three referees, one question each: a frozen gold set of 60 human-labeled cards for generalization, 6 probe-found regressions for memory, and 96 held-out real-call turns for discovery" width="100%">
 </p>
 
-- Real-call files stay out of git, and so is every report file, so nothing on this page about real calls regenerates from a clone. The gold, regression, pinned-card and judge numbers all do.
+- Real-call files stay out of git, and so does every report file, so nothing on this page about real calls regenerates from a clone. The gold, regression, pinned-card and judge numbers all do.
 - The threshold is a dial the measured curve turns, a written cost ratio picked on the served artifact and shipped next to the weights.
 
 ## The judge panel, in software terms
