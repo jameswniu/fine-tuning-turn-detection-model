@@ -1,6 +1,6 @@
 # The datasets
 
-Everything in this directory was created for this project. Nothing downloaded, no external licenses, no real caller data in git. One generator, the labeled sets, all regenerable or human-labeled with named provenance.
+Everything in this directory was created for this project. Nothing downloaded, no external licenses, no real caller data in git. One generator and the labeled sets, each regenerable or human-labeled with named provenance, with the real-call slices as the stated exception: a rule assigned those labels and no person reviewed them.
 
 ## train.jsonl
 
@@ -16,11 +16,11 @@ Thirty fresh cards, disjoint from the gold set, labeled by a three-model judge p
 
 ## regressions.jsonl
 
-Probe-found failures, kept forever. Every miss discovered by live testing lands here and must pass at the operating threshold before any promotion. This slice tests memory of fixed failures rather than generalization, so overlap with training data is intended. First entry, "nah bye", found by a human poke at the live probe, scored 0.34 pre-fix and 0.978 post-fix.
+Probe-found failures, kept forever. Every miss discovered by live testing lands here and must pass at the operating threshold before any promotion. This slice tests memory of fixed failures rather than generalization, so overlap with training data is intended. First entry, "nah bye" after "Agent: Anything else to help you with?", found by a human poke at the live probe. It scored 0.34 pre-fix and reads 0.985 today on the shipped int8 file, scored one row at a time.
 
 ## ood_train.jsonl and ood_test.jsonl (real calls, gitignored)
 
-The real-call slices, and the one exception to "nothing external". 400 turns cut from production calls handled by the author's own deployed voice agent, pulled from the vendor's transcript API. Cuts land at prefix boundaries, the way a streaming ASR would surface them. Split BY CALL, never by row, into an augmentation half (ood_train.jsonl, 304 turns) and a held-out referee (ood_test.jsonl, 96 turns from 60 calls), so no call leaks across the boundary. Labeled by the author. Where the vendor turn-taker's live behavior contradicted the written policy, the label was corrected to the policy and the row carries a policy_corrected flag, so the referee grades the policy rather than the incumbent. The residual bias is stated in EVALS.md: cut points still come from the vendor stack, which makes the OOD bands pessimistic bounds. Real caller content, so both files are gitignored; the repo ships the loaders, the reports, and this description.
+The real-call slices, and the one exception to "nothing external". 400 turns cut from production calls handled by the author's own deployed voice agent, pulled from the vendor's transcript API. Cuts land at prefix boundaries, the way a streaming ASR would surface them. The parent holds 59 calls and splits BY CALL, never by row, into an augmentation half (ood_train.jsonl, 304 turns over 40 calls) and a held-out referee (ood_test.jsonl, 96 turns over 19 calls), so no call sits on both sides. Labels are assigned by rule in `../ood_from_elevenlabs.py`, not by a person: a full user turn becomes speak, and a prefix cut at a random non-sentence-final word becomes wait. Nobody read them afterward. A policy filter is in that script to relabel turns where the vendor turn-taker's live behavior contradicts the written policy, and it matched zero rows in the three ood files on disk, so no row here carries the flag and every label still inherits the vendor's cut points. That residual bias is stated in EVALS.md and makes the OOD bands pessimistic bounds. Real caller content, so both files are gitignored, and the reports are gitignored too. What this directory ships is the loaders and this description. Nothing about the real-call slices is independently checkable from a clone.
 
 ## Why created instead of found
 
