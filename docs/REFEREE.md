@@ -1,6 +1,6 @@
 # Referee cards
 
-One card per number a stranger sees, written from the code and the reports rather than the README. First audited on the `referee-card` branch off origin/master at 94fad40, then re-audited after the corrections at 4baeda5. Every score below comes from `models/eot-distilbert-onnx-int8/model.onnx`, sha256 `597de86f...814ed6`, at threshold 0.42. Each card is the eight spoken lines. The locations sit under it so the card stays sayable in a minute.
+One card per number a stranger sees, written from the code and the reports rather than the README. First audited on the `referee-card` branch off origin/master at 94fad40, then re-audited after the corrections at 3ac915b. Every score below comes from `models/eot-distilbert-onnx-int8/model.onnx`, sha256 `597de86f...814ed6`, at threshold 0.42. Each card is the eight spoken lines. The locations sit under it so the card stays sayable in a minute.
 
 ## Numbers on a surface that no script or report produces
 
@@ -13,7 +13,7 @@ Nowhere on any surface here do "30MB", "135MB", "3.4 ms" or "87 commits" appear.
 
 ## Mismatches
 
-None remain at 4baeda5. All 26 entries from the 94fad40 audit are resolved in the files, and what each fix was is in the cards below.
+None remain at 3ac915b. All 26 entries from the 94fad40 audit are resolved in the files, and what each fix was is in the cards below.
 
 Three greps still match and none is a claim. `WORKFLOW.md` line 30 uses "zero interruptions" to describe a hypothetical system that never speaks, not this model. `ood_from_elevenlabs.py` keeps the `policy_corrected` key because the filter is real code, and the correction was to the prose that claimed it had fired. `docs/probe-comparison.html` rows 25 and 26 read 0.978 and 0.968, which are measured probe scores for unrelated rows rather than the removed 0.968 gold claim.
 
@@ -22,7 +22,7 @@ Two claims sit outside the repository and no commit can reach them.
 - **The GitHub repository description**, set in the GitHub web UI rather than in any tracked file, still reads "zero false interruptions", "ONNX int8 on CPU at 58 ms p95" and "three eval referees on real calls". All three are wrong for the same reasons items 1, 3 and 24 named. This replacement fits the 350-character limit. `End-of-turn detection for voice agents. Fine-tuned DistilBERT, int8 on CPU at threshold 0.42, reads 0.949 PR-AUC on a frozen 53-card human gold set with no false speaks on its 27 wait cards, and 0.913 on 96 held-out real-call turns where it speaks over 11 of 47. Three referees, gold, regressions and real calls. 32.8 ms end-to-end p95 at concurrency 8.`
 - **The submitted PDF** is the render of `docs/approach.md` at commit ae1d2d0. That file has now changed, so the PDF is a frozen copy of the pre-audit text and still carries items 5, 6, 8, 9, 18 and 19 verbatim. Nothing in this repository can correct a PDF already sent. Anyone re-rendering it should render the current `docs/approach.md`.
 
-## Reproduced live at 4baeda5
+## Reproduced live at 3ac915b
 
 Gold PR-AUC 0.9487856622228145 on n 53, gold false-speak 0.0 and recall 0.6538, per-class A through H 1.000 with I 0.200, J 0.857 and K 0.500, ECE 0.15956, the seven boundary cards individually and their 0.3068 mean, real calls 0.9129 with 0.2340 false-speak and 0.9592 recall on n 96 split 49 speak and 47 wait, regressions 1.0 on n 6, all 12 pinned cards passing one row at a time, `admissible_count` 56 from a live `make threshold` that rewrote `threshold.json` byte-identically, the quantization trio at 0.2629 fp32 single-row, 0.3813 int8 batched and 0.4117 int8 single-row, the judge replay at 53/53 for all three vendors with 83/90 pair agreement and 31% saved, parameter counts by ONNX initializer sum, tokenizer vocabularies of 1,723 byte-level BPE for the random-init lane and 16,000 byte-level BPE for the pretrained one, `python draw_figures.py --check` green on all six figures, `python probe_compare.py` at 31/35 and 34/35, and `make serve` answering `/predict` with 0.4117 and wait.
 
