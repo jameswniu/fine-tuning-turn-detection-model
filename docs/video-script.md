@@ -10,7 +10,7 @@ That question, "is the caller done talking," is the whole problem. Hi, I'm James
 
 You said you wanted to see how I think, more than a polished benchmark. So this walkthrough is organized around the decisions, what each one cost, and the assumptions I wrote down as I went.
 
-The shape in one breath: three models trained through one recipe, three referees judging them including real production phone calls, and the winner serving at fifty-eight milliseconds p95, int8 on CPU. The most valuable thing here is not a green number; it's what the real calls exposed, and what I did about it. I'll move between the doc and the repo.
+The shape in one breath: three models trained through one recipe, three referees judging them including real production phone calls, and the winner serving at thirty-two point eight milliseconds p95 on a quiet box, int8 on CPU. The most valuable thing here is not a green number; it's what the real calls exposed, and what I did about it. I'll move between the doc and the repo.
 
 [1:10 Screen: DOC, the problem priced]
 
@@ -46,9 +46,9 @@ With the mechanics honest, the verdict came clean. Ninety-nine on its own distri
 
 [5:15 Screen: DOC, the real-call section, then REPO, iterations.md with the OOD row highlighted]
 
-Now the reality check, the best finding of the build. Everything so far lives near one distribution, synthetic data and hand-written gold cards alike. So I pulled sixty real production calls from my own voice agent. Calls label themselves: where the caller actually stopped is a true complete, a mid-turn prefix is a true wait. A third of them became a referee no training ever touches.
+Now the reality check, the best finding of the build. Everything so far lives near one distribution, synthetic data and hand-written gold cards alike. So I pulled fifty-nine real production calls from my own voice agent. A rule labels them, with no human pass. Where the caller actually stopped is a true complete, and a mid-turn prefix cut at a random word is a true wait. Nineteen of the calls, ninety-six turns, became a referee no training ever touches.
 
-The fine-tuned model, ninety-six on gold with zero wrong interruptions, scored zero point six one on real calls, false-speak around forty percent. The labels are noisy in stated ways and read as a pessimistic bound, but the gap is real. Every offline referee agreed with each other, and the real world disagreed with all of them. That sentence is the whole reason production monitoring exists.
+The fine-tuned model of that moment, point nine six on gold with no false speaks on its wait cards, scored point six one across all four hundred real turns at its then-threshold of point eight one. The labels are noisy in stated ways and read as a pessimistic bound, but the gap is real. Every offline referee agreed with each other, and the real world disagreed with all of them. That sentence is the whole reason production monitoring exists.
 
 Instead of writing it in a slide, I ran the fix inside the build. The other two thirds of the real calls went back into training as real-register augmentation, graded on the locked third. It took the shipping model from zero point six five to zero point nine one on the real referee.
 
@@ -58,13 +58,13 @@ And the scratch lane's full curve on unseen real calls: forty-eight from random 
 
 Both models, thirty-six probes, side by side on this page, scored one row at a time on the served int8 files exactly as the API does. They agree on thirty-two of thirty-six, and the row that fools both is an ASR-style question with no question mark, which is honest about where the ceiling is.
 
-The multilingual bonus, quickly: the multilingual fine-tune matches the English model on the English gold set, and takes the held-out Spanish slice from recall barely above half to clean separation. Spanish support is a model swap, not a rebuild.
+The multilingual bonus, quickly. The multilingual lane that ships as the variant reads point nine seven nine on the English gold set against this model's point nine four nine, and it takes the held-out Spanish slice from recall barely above half to clean separation. It pays for that with a gold false-speak rate of point four zero seven at its own threshold. Spanish support is a model swap, not a rebuild.
 
 [7:25 Screen: REPO, the live probe page, typing a case]
 
 Serving. FastAPI over ONNX Runtime, dynamic int8, CPU, Dockerfile included, threshold read from the model directory. This live page re-scores word by word, the same granularity streaming ASR gives you. Watch it work the hard cases. A question still forming... it holds at under one percent. Now give it context: the agent asked about an appointment, and the caller starts answering, yeah, I... it keeps listening, because the answer is not finished yet. A self-interrupt, the caller restarting mid-thought... still holding; the new thought is coming. And a casual nah bye... it commits to speak at ninety-seven percent.
 
-Every one of these started as a challenge case found by typing at this page, and several became training data. End to end this serves at fifty-eight milliseconds p95 at concurrency eight, real margin under your hundred-millisecond budget.
+Every one of these started as a challenge case found by typing at this page, and several became training data. End to end this serves at thirty-two point eight milliseconds p95 at concurrency eight on a quiet box, and fifty-seven point nine when a training run is holding the same machine. Both clear your hundred-millisecond budget.
 
 [8:30 Screen: DOC, the monitoring section]
 
