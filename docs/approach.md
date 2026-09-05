@@ -26,7 +26,7 @@ Volume comes from a seeded, pure-code generator, byte-identical on every run, no
 
 ## Models, three lanes
 
-Fine-tuned DistilBERT (66.96M) is the safe lane. The lane I built from nothing (my own tokenizer, same recipe so the comparison isolates pretraining) failed twice, and each failure bought a finding. It ran at three sizes as the recipe grew: 3.70M at random init, 3.99M once real-call rows joined, and 7.36M with the pretrain step. Every count here is the sum of the ONNX initializer elements of the export.
+Fine-tuned DistilBERT (66.96M) is the safe lane. The lane I built from nothing (my own tokenizer, the same encoder at every step so the comparison isolates pretraining) failed twice, and each failure bought a finding. It ran at three sizes because the vocabulary grows with the corpus, 1,723 pieces then 2,841 then 16,000, which is the whole parameter delta: 3.70M at random init, 3.99M once real-call rows joined, and 7.36M with the pretrain step. Every count here is the sum of the ONNX initializer elements of the export.
 
 - A 1532-piece tokenizer turned real text into walls of unknown tokens, and the model flatlined to a constant.
 - A leaked template split put fills of the same template on both sides, measuring memorization as generalization.
@@ -55,20 +55,22 @@ Then the referee that changed the build. I pulled 59 real production calls from 
 | From-scratch, real calls, no pretrain | 3.99M | 0.994 | 0.000 | 0.996 | 0.597 | collapse | not picked | 0.045 |
 | From-scratch, random init | 3.70M | 0.502 | 0.889 | 0.992 | 0.477 | collapse | not picked | 0.488 |
 
+Only two of these model directories are in git, the shipped 66.96M int8 lane and the 7.36M one, so a clone can re-derive those two rows and has to take the other three on the reports named in iterations.md.
+
 ## Serving and latency
 
 - FastAPI over ONNX Runtime, dynamic int8, CPU, one worker.
 - The threshold reads from the model directory, so a retrain updates the dial without touching serving code.
 - A Dockerfile ships only the int8 model; the same process serves a live probe page that re-scores as you type.
 
-The brief asked for under 100 ms. Measured on my laptop, end-to-end wall time from the client rather than model time. The first row is the shipped artifact on a quiet box and is the reading this repo quotes. The two loaded rows were taken minutes apart while a training run held the same machine, which is why the multilingual lane has no quiet reading yet.
+The brief asked for under 100 ms. Measured on my own box, end-to-end wall time from the client rather than model time. The first two rows are the same shipped artifact under two machine states, and the first is the reading this repo quotes. The multilingual row was taken minutes after the loaded one and has no lighter-load reading, and its weights are the earlier real lane rather than the real2 variant that ships.
 
 | Served artifact | Box state | c1 wall p50 | c8 wall p50 | c8 wall p95 | c8 req/s |
 |---|---|---|---|---|---|
-| Fine-tuned DistilBERT, 66.96M (ships) | quiet | 17.6 ms | 23.4 ms | 32.8 ms | 316 |
+| Fine-tuned DistilBERT, 66.96M (ships) | load average near 4 of 18 cores | 17.7 ms | 24.4 ms | 33.1 ms | 312 |
 | Fine-tuned DistilBERT, 66.96M | training load | 34.7 ms | 45.5 ms | 57.9 ms | 170 |
-| Multilingual DistilBERT, 135.33M | training load | 34.0 ms | 49.7 ms | 97.2 ms | 147 |
-| From-scratch, 7.36M | quiet | 7.4 ms | 12.1 ms | 20.7 ms | 588 |
+| Multilingual DistilBERT, 135.33M, real lane | training load | 34.0 ms | 49.7 ms | 97.2 ms | 147 |
+| From-scratch, 7.36M | clean re-bench | 7.4 ms | 12.1 ms | 20.7 ms | 588 |
 
 ## Monitoring at a million calls a month
 

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="fine-tuning-turn-detection-model: an end-of-turn detector for voice agents, read at threshold 0.42 on int8 CPU. On the frozen human gold set it scores 0.949 PR-AUC and speaks over none of the 27 wait cards. On 96 held-out real-call turns it scores 0.913 and speaks over 11 of the 47 wait turns, a rate of 0.234. End-to-end p95 is 32.8 ms at concurrency 8 on a quiet box" width="100%">
+  <img src="assets/hero.svg" alt="fine-tuning-turn-detection-model: an end-of-turn detector for voice agents, read at threshold 0.42 on int8 CPU. On the frozen human gold set it scores 0.949 PR-AUC and speaks over none of the 27 wait cards. On 96 held-out real-call turns it scores 0.913 and speaks over 11 of the 47 wait turns, a rate of 0.234. End-to-end p95 is 33.1 ms at concurrency 8, the worst of four passes benched against that same file" width="100%">
 </p>
 
 <p align="center">
@@ -7,7 +7,7 @@
   <img alt="gold set: 60 cards, frozen, asserted by CI" src="https://img.shields.io/badge/gold_set-60_cards_%C2%B7_frozen-f5b342?style=flat-square&labelColor=0b0d10">
 </p>
 
-**Given the agent's last line and the caller's words so far, decide whether the caller is done talking.** The fine-tuned DistilBERT ships as int8 at threshold 0.42. On the 53 hard-labeled cards of the 60-card frozen gold set, the other 7 being boundary cards nobody scores, it reads 0.949 PR-AUC, recall 0.654, and speaks over none of the 27 wait cards. On 96 held-out real-call turns it reads 0.913 and speaks over 11 of the 47 wait turns, a rate of 0.234. That gap between the two false-speak numbers is the finding here. End-to-end p95 is 32.8 ms at concurrency 8 on a quiet box, and a 7.36M encoder trained from scratch beat it on the policy probes and lost on unseen real calls, the referee that matters most.
+**Given the agent's last line and the caller's words so far, decide whether the caller is done talking.** The fine-tuned DistilBERT ships as int8 at threshold 0.42. On the 53 scored cards of the 60-card frozen gold set it reads 0.949 PR-AUC and recall 0.654, and speaks over none of the 27 wait cards. On 96 held-out real-call turns it reads 0.913 and speaks over 11 of 47, a rate of 0.234. That gap is the finding here. End-to-end p95 is 33.1 ms at concurrency 8.
 
 Read [docs/approach.md](docs/approach.md), run it with `make serve`. The depth sits next to the code: [POLICY.md](POLICY.md), [EVALS.md](EVALS.md), [iterations.md](iterations.md), [data/README.md](data/README.md).
 
@@ -25,7 +25,7 @@ Four are answered here; the fifth is honest about its ceiling.
 
 ## Two models, measured
 
-Every probe is scored on the served int8 file, one row at a time, the way the API scores it. The page behind the picture holds all 36, side by side. Thirty-five are graded. The 36th is a boundary card the policy calls unsure, so it is shown and not scored.
+Every probe is scored on the served int8 file, one row at a time, the way the API scores it. The page behind the picture holds all 36. Thirty-five are graded, and the 36th is a boundary card the policy calls unsure.
 
 <p align="center"><a href="https://jameswniu.github.io/fine-tuning-turn-detection-model/"><img src="assets/probe-comparison-v2.png" alt="The top of the 36-probe page, both models side by side: each row shows the caller's words, the policy's answer, and each model's probability, decision and latency" width="100%"></a></p>
 
@@ -40,7 +40,7 @@ Every probe is scored on the served int8 file, one row at a time, the way the AP
 | Model latency, mean of one run | 17.8 ms | 2.9 ms |
 | Spanish probes (6) | 0.814, 0.777, 0.731, 0.734, 0.798, 0.768, mean 0.770, three wrong | All six right |
 
-The latency row is a single-run mean on one laptop. It moves by about a millisecond every time the page is regenerated, and the page reprints whatever the last run measured. On English they tie at 28 each and share one miss, an unpunctuated yes-no question. The fine-tune ships because it leads on unseen real calls.
+The latency row is one run on one laptop and moves about a millisecond per regeneration. On English they tie at 28 each and share one miss, an unpunctuated yes-no question. The fine-tune ships because it leads on unseen real calls.
 
 The `/` page re-scores as you type, word by word, against the served model. Eight cases from the gold set; every one is typable yourself once `make serve` is up.
 
@@ -76,7 +76,7 @@ The `/` page re-scores as you type, word by word, against the served model. Eigh
 
 <p align="center"><img src="assets/probe-nahbye.gif" alt="Typing nah bye: the score climbs to 0.97 and the chip flips to speak" width="100%"></p>
 
-Where it is still weak: the judgment calls. A reported-speech hedge like "the broker said it was covered, supposedly..." should make the agent speak, and the model gets 1 of the 5 scored hedge cards right, a rate of 0.20. Class I holds 8 gold cards and 3 of them are labeled unsure, so 5 carry a decision. The explicit-hold class, "hold on, the receiver is waving at me...", sits at half. The bar for every judgment class is 0.60, and [EVALS.md](EVALS.md) tracks both until they clear it.
+Where it is still weak: the judgment calls. A reported-speech hedge like "the broker said it was covered, supposedly..." should make the agent speak, and the model gets 1 of the 5 scored hedge cards right, a rate of 0.20, since class I holds 8 gold cards of which 3 are unsure. The explicit-hold class, "hold on, the receiver is waving at me...", sits at half. The bar for every judgment class is 0.60, and [EVALS.md](EVALS.md) tracks both until they clear it.
 
 ## Run it
 
@@ -100,7 +100,7 @@ make scratch      # fine-tune that base into the 7.36M from-scratch model
 What a clean clone gives you:
 
 - The data rebuilds byte for byte, and the probe cases above come out wait, speak, and wait as described.
-- The digits will differ. One clean retrain reads 0.965 gold on its fp32 export and 0.966 on its int8 export, against the 0.949 quoted, and the threshold picker lands on 0.71 for the fp32 file and 0.63 for the int8 one, where the frozen artifact sits at 0.42. Those two picks are the same weights read through two execution paths, which is this repo's own headline finding, not run-to-run variance.
+- The digits will differ, since one clean retrain read 0.965 gold on its fp32 export and 0.966 on its int8, and picked 0.71 and 0.63 against the frozen 0.42, which is one set of weights through two execution paths rather than run-to-run variance.
 - The real-call files never leave the author's machine, so `make train` rebuilds the pre-augmentation fine-tune, 0.65 on real calls where the shipped artifact reads 0.91.
 - Every figure here describes the v9 freeze, whatever your box just trained.
 
@@ -117,7 +117,7 @@ curl -s -X POST localhost:8000/predict -H "Content-Type: application/json" \
   <img src="assets/referees.svg" alt="Three referees, one question each: a frozen gold set of 60 human-labeled cards for generalization, 6 probe-found regressions for memory, and 96 held-out real-call turns for discovery" width="100%">
 </p>
 
-- Real-call files stay out of git, and so does every report file, so nothing on this page about real calls regenerates from a clone. The gold, regression, pinned-card and judge numbers all do.
+- Real-call files, every report and every model directory but two stay out of git, so no real-call number regenerates from a clone. The gold, regression, pinned-card, threshold and judge numbers do, for the shipped int8 lane and the committed 7.36M lane, the two directories in git.
 - The threshold is a dial the measured curve turns, a written cost ratio picked on the served artifact and shipped next to the weights.
 
 ## The judge panel, in software terms
@@ -152,7 +152,7 @@ Nine runs, the threshold each picked, and what it taught. ECE is calibration err
 | v8 | 0.40 | 0.949 | 0.654 | 0.00 | 0.160 | Re-picked on int8, 11 of 12; the picker batched where serving scores one at a time |
 | v9 | 0.42 | 0.949 | 0.654 | 0.00 | 0.160 | Scored one card at a time, 12 of 12; real calls 0.913, recall 0.959 |
 
-Read v1 through v8 as a build log, not as measurements you can check. Each run wrote its report to the same filename and the next run overwrote it, so only the v9 row survives as a file, and only the v9 row regenerates from the committed artifact. The last three rows share one set of weights; only the measuring instrument changed. The eval gets debugged as hard as the model.
+Read v1 through v8 as a build log rather than checkable measurements, since each run overwrote the previous report and only v9 regenerates from the committed artifact, and note that the last three rows share one set of weights with only the measuring instrument changing.
 
 ## The policy, as rows
 
@@ -181,18 +181,18 @@ Four augmentations bake in deployment realism:
 - Contexted rows are also emitted bare, so the model works with and without the agent's last line.
 - From v6, real-call rows join at four-fold weight, grouped by call so none leak into the referee.
 
-The counts land at 1,586 training rows, 60 gold cards, 30 judged dev cards, 6 regressions, and 400 real turns from 59 calls, split by call into 304 turns over 40 calls for training and 96 turns over 19 calls for the referee.
+The counts land at 1,586 training rows, 60 gold cards, 30 judged dev cards, 6 regressions, and 400 real turns from 59 calls, split by call into 304 over 40 for training and 96 over 19 for the referee.
 
 ## Serving, measured
 
-`POST /predict` takes `{context, text}` and returns `{p_complete, decision, threshold, model_latency_ms}`. ONNX Runtime, dynamic int8, CPU; the Docker image serves only the int8 artifact. Both numbers below are end-to-end wall time from `bench.py`, the client's own clock, not model time. Two runs are quoted because they disagree, and the disagreement is a finding about the box, not the model.
+`POST /predict` takes `{context, text}` and returns `{p_complete, decision, threshold, model_latency_ms}`. ONNX Runtime, dynamic int8, CPU; the Docker image serves only the int8 artifact. Both rows bench the shipped int8 file in wall time from `bench.py`, the client's clock. Two box states are quoted because they disagree, and the disagreement is about the machine, not the model.
 
 | Box state | C1 req/s, wall p95 | C8 req/s, wall p95 | Model p50 at c8 | Model p95 at c8 |
 |---|---|---|---|---|
-| Quiet machine | 55, 21.2 ms | 316, 32.8 ms | 21.7 ms | 31.0 ms |
+| Load average near 4 of 18 cores | 55, 20.7 ms | 312, 33.1 ms | 22.4 ms | 30.4 ms |
 | Mid training load | 28, 42.5 ms | 170, 57.9 ms | 39.5 ms | 48.2 ms |
 
-The hero quotes the quiet-box wall p95, 32.8 ms, because three files in this repo say a bench only counts on an idle machine. The 57.9 ms reading was taken while a training run held the same box. It also clears the brief's 100 ms budget, and nothing about the model changed between the two, so read it as the conservative figure rather than the headline.
+The hero quotes 33.1 ms, the worst of four passes on the top row, and the 57.9 ms below it is the same file benched while a training run held the box, which also clears the brief's 100 ms budget.
 
 ## Map
 
@@ -228,9 +228,9 @@ Short answers, expandable. Every number has a source in the docs linked above.
 At five places, and the rule at every one is to check the artifact that ships.
 
 - CI checks the data first. The gold set must be exactly 60 frozen cards, and no gold text may appear in `data/train.jsonl`.
-- CI also runs `python draw_figures.py --check`, which fails the build when a figure drifts from its constants or a label falls under the 75% type floor. Those two checks plus a parse of every module are the whole of CI. It runs no eval, no threshold pick and no pinned-card check, so a green badge here is a data and figure claim, not a score claim.
+- CI also runs `python draw_figures.py --check`, which fails on figure drift or a label under the 75% type floor. Those two checks and a module parse are all of CI, so the green badge is a data and figure claim, not a score claim.
 - The threshold is picked against the served int8 file, one row per call, the shape `serve.py` actually sends. The fp32 checkpoint held a card at 0.26 and the real one-row path returned 0.412, which spoke over the caller.
-- Three referees score a model that trained on none of them. `make eval` runs the gold set, and the same script points `--data` at `data/regressions.jsonl` and `data/ood_test.jsonl` for the other two.
+- Three referees score a model that trained on none of them. `make eval` runs the gold set, and the same script takes `--data` for the other two.
 - Then by hand at `make serve`. Typing at the live page found the casual-register gap, "nah bye" at 0.34, which became a regression card, then training data, then a fix.
 
 </details>
@@ -271,7 +271,7 @@ The model runs under-confident (ECE 0.16), so the 1:5 ratio is applied to the me
 No public end-of-turn dataset exists. The builders in this space, LiveKit and pipecat, each made their own.
 
 - Policy-driven synthesis buys auditability, byte-reproducibility, and zero personal data.
-- Its known cost, a creator's blind spots, is what the three referees exist to catch, and they caught one. The model learned the vendor's barge-in habit from real-call rows. A policy filter was written for it, and on the shipped files it matched nothing, so the habit is still in the training half and the real-call referee is what shows it.
+- Its known cost, a creator's blind spots, is what the three referees exist to catch, and they caught one. The model learned the vendor's barge-in habit from real-call rows, and the policy filter written for it matched nothing, so the habit is still in the training half and the real-call referee is what shows it.
 
 </details>
 
@@ -290,7 +290,7 @@ Prosody. The question-ness of an unpunctuated yes-no question lives in the calle
 
 Not head-to-head yet, on purpose. The shipped model rides the vendor's transcripts and overrules its decisions where they contradict the policy.
 
-- A policy filter exists to relabel rows where the vendor's live behavior contradicts the written policy, and it caught zero rows in the shipped files, so every real-call label here still carries the vendor's cut points. That residual bias is stated in [EVALS.md](EVALS.md).
+- The policy filter that would relabel rows where the vendor contradicts the written policy caught zero, so every real-call label still carries the vendor's cut points, a residual bias stated in [EVALS.md](EVALS.md).
 - The bake-off is the roadmap chapter, online shadow on a real phone number with disagreements published.
 
 </details>
@@ -308,12 +308,13 @@ Shadow the incumbent, mine the disagreements, and spend human review only where 
 <details>
 <summary><b>What was measured, and what was not?</b></summary>
 
-Every number on this page is measured on the served int8 artifact, with one stated exception, the v1 to v8 rows of the run table, whose reports were overwritten. Four more things are explicitly not measured, so silence never reads as a claim.
+Every number here is measured on the served int8 artifact, except the v1 to v8 run-table rows, whose reports were overwritten. Three more things are explicitly not measured, so silence never reads as a claim.
 
 - fp32 against int8 latency on one box, so the quoted latency is the int8 path only.
 - Judge retry variance. Each judge voted once per card.
 - Base-model alternatives to DistilBERT.
-- Both bench runs are reported rather than one discarded. The quiet-box reading is the one the headline quotes.
+
+Both bench runs are reported rather than one discarded, and the headline quotes the worse of the two box states it was measured in.
 
 </details>
 

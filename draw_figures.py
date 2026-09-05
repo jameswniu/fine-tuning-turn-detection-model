@@ -36,7 +36,8 @@ FROZEN_NUMBERS = {
     "real_wait_n": 47,  # ood_test turns labeled wait
     "real_false_speak_count": 11,  # of those 47, at 0.42
     "real_false_speak": "0.234",  # the same sweep on ood_test, the sibling of the gold zero
-    "p95_ms": "32.8",  # bench_report.json, quiet box, end-to-end wall p95 at concurrency 8
+    "p95_ms": "33.1",  # bench_report.json, end-to-end wall p95 at concurrency 8 on the shipped int8 file,
+    # the worst of four passes with the dev box at a load average near 4 of its 18 cores
     "threshold": "0.42",  # models/eot-distilbert-onnx-int8/threshold.json
     "ood_n": 96,  # data/ood_test.jsonl (gitignored, real calls)
     "tier1_gates": 12,  # pick_threshold.py constraint probes
@@ -125,7 +126,8 @@ def hero(c: dict) -> str:
         f"fine-tuning-turn-detection-model: an end-of-turn detector for voice agents, read at threshold {f['threshold']} on int8 CPU. "
         f"On the frozen human gold set it scores {f['gold_pr_auc']} PR-AUC and speaks over none of the {f['gold_wait_n']} wait cards. "
         f"On {f['ood_n']} held-out real-call turns it scores {f['real_pr_auc']} and speaks over {f['real_false_speak_count']} of the "
-        f"{f['real_wait_n']} wait turns, a rate of {f['real_false_speak']}. End-to-end p95 is {f['p95_ms']} ms at concurrency 8 on a quiet box"
+        f"{f['real_wait_n']} wait turns, a rate of {f['real_false_speak']}. End-to-end p95 is {f['p95_ms']} ms at concurrency 8, "
+        f"the worst of four passes benched against that same file"
     )
     out = [head(w, h, label), rect(0, 0, w, 3, AMBER)]
     out.append(text(600, 52, "VOICE AI · END-OF-TURN DETECTION · FINE-TUNED AND FROM SCRATCH", 22, AMBER, weight=700, anchor="middle", spacing=3))
@@ -138,7 +140,7 @@ def hero(c: dict) -> str:
     out.append(text(600, 108, "Is the caller done talking?", 48, "url(#ttl)", font=SANS, weight=700, anchor="middle"))
     out.append(
         f'<text x="600" y="152" font-family="{MONO}" font-size="27" fill="{MUTED}" text-anchor="middle">'
-        f'One written policy, <tspan fill="{AMBER}">three referees</tspan>, {f["p95_ms"]} ms p95 on a quiet box</text>'
+        f'One written policy, <tspan fill="{AMBER}">three referees</tspan>, {f["p95_ms"]} ms p95 at concurrency 8</text>'
     )
     out.append(rect(300, 176, 600, 2, "url(#rule)"))
     stats = [
@@ -299,7 +301,7 @@ def pretrain_curve() -> str:
     label = "What pretraining is worth, measured as PR-AUC on unseen real calls: " + ", ".join(f"{v} {n}" for v, n, _ in f["curve"])
     out = [head(w, h, label, rx=9), rect(0, 0, w, h, "none", rx=9, stroke=BORDER)]
     out.append(text(450, 44, "What pretraining is worth, on unseen real calls", 26, INK, font=SANS, weight=700, anchor="middle"))
-    out.append(text(450, 72, "PR-AUC on the held-out real-call referee, everything else held fixed", 17, MUTED, font=SANS, anchor="middle"))
+    out.append(text(450, 72, "PR-AUC on the held-out real-call referee, same encoder, vocabulary grows with the corpus", 17, MUTED, font=SANS, anchor="middle"))
     base_y, scale, bw, gapx = 340, 240, 130, 40
     x0 = (w - (4 * bw + 3 * gapx)) // 2
     band_y = base_y - f["ood_band"] * scale

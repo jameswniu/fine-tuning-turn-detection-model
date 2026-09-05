@@ -10,7 +10,7 @@ That question, "is the caller done talking," is the whole problem. Hi, I'm James
 
 You said you wanted to see how I think, more than a polished benchmark. So this walkthrough is organized around the decisions, what each one cost, and the assumptions I wrote down as I went.
 
-The shape in one breath: three models trained through one recipe, three referees judging them including real production phone calls, and the winner serving at thirty-two point eight milliseconds p95 on a quiet box, int8 on CPU. The most valuable thing here is not a green number; it's what the real calls exposed, and what I did about it. I'll move between the doc and the repo.
+The shape in one breath: three models trained through one recipe, three referees judging them including real production phone calls, and the winner serving at thirty-three point one milliseconds p95, int8 on CPU. The most valuable thing here is not a green number; it's what the real calls exposed, and what I did about it. I'll move between the doc and the repo.
 
 [1:10 Screen: DOC, the problem priced]
 
@@ -64,7 +64,7 @@ The multilingual bonus, quickly. The multilingual lane that ships as the variant
 
 Serving. FastAPI over ONNX Runtime, dynamic int8, CPU, Dockerfile included, threshold read from the model directory. This live page re-scores word by word, the same granularity streaming ASR gives you. Watch it work the hard cases. A question still forming... it holds at under one percent. Now give it context: the agent asked about an appointment, and the caller starts answering, yeah, I... it keeps listening, because the answer is not finished yet. A self-interrupt, the caller restarting mid-thought... still holding; the new thought is coming. And a casual nah bye... it commits to speak at ninety-seven percent.
 
-Every one of these started as a challenge case found by typing at this page, and several became training data. End to end this serves at thirty-two point eight milliseconds p95 at concurrency eight on a quiet box, and fifty-seven point nine when a training run is holding the same machine. Both clear your hundred-millisecond budget.
+Every one of these started as a challenge case found by typing at this page, and several became training data. End to end this serves at thirty-three point one milliseconds p95 at concurrency eight, and fifty-seven point nine when a training run is holding the same machine. Both clear your hundred-millisecond budget.
 
 [8:30 Screen: DOC, the monitoring section]
 
