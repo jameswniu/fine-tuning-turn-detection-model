@@ -26,16 +26,16 @@ Volume comes from a seeded, pure-code generator, byte-identical on every run, no
 
 ## Models, three lanes
 
-Fine-tuned DistilBERT (66M) is the safe lane. The lane I built from nothing (3.7M, my own tokenizer, same recipe so the comparison isolates pretraining) failed twice, and each failure bought a finding.
+Fine-tuned DistilBERT (66.96M) is the safe lane. The lane I built from nothing (my own tokenizer, same recipe so the comparison isolates pretraining) failed twice, and each failure bought a finding. It ran at three sizes as the recipe grew: 3.70M at random init, 3.99M once real-call rows joined, and 7.36M with the pretrain step. Every count here is the sum of the ONNX initializer elements of the export.
 
 - A 1532-piece tokenizer turned real text into walls of unknown tokens, and the model flatlined to a constant.
 - A leaked template split put fills of the same template on both sides, measuring memorization as generalization.
 
-With the mechanics fixed, the verdict came clean. The model scored 0.99 on its own synthetic data and 0.50 on the human gold cards. Speak-or-wait is a two-way call, so 0.50 is what plain guessing scores. The gap was general language knowledge, which is exactly what pretraining is. The curve on unseen real calls adds one named ingredient per step. 0.48 at random init, 0.60 with real data, 0.825 with a fifteen-minute pretrain of our own, 0.913 where the internet-pretrained fine-tune sits.
+With the mechanics fixed, the verdict came clean. The model scored 0.99 on its own synthetic data and 0.50 on the human gold cards. Speak-or-wait is a two-way call, so 0.50 is what plain guessing scores. The gap was general language knowledge, which is exactly what pretraining is. The curve on unseen real calls adds one named ingredient per step. 0.48 at random init (3.70M), 0.60 with real data (3.99M), 0.825 with a fifteen-minute pretrain of our own (7.36M), 0.913 where the internet-pretrained fine-tune sits (66.96M).
 
 <p align="center"><img src="../assets/pretrain-curve.svg" alt="What pretraining is worth, measured as PR-AUC on unseen real calls: 0.48 random init, 0.60 adding real calls, 0.83 adding a fifteen-minute pretrain, 0.91 web-pretrained" width="100%"></p>
 
-A written rule picks the default. Scratch ships only at parity on every referee. Its 0.825 on real calls is not the fine-tune's 0.913, so the fine-tune ships, 0.949 gold with zero false-speak. The multilingual lane matches English gold (0.960 vs 0.958) and separates the Spanish slice perfectly, so Spanish support is a model swap.
+A written rule picks the default. Scratch ships only at parity on every referee. Its 0.825 on real calls is not the fine-tune's 0.913, so the fine-tune ships: 0.949 gold PR-AUC, no false speaks on the 27 gold wait cards, and 11 false speaks on the 47 wait turns of the held-out real calls, a rate of 0.234. The multilingual lane that ships as the variant reads 0.979 gold against this model's 0.949, and separates the Spanish slice perfectly, so Spanish support is a model swap. It pays for that with gold false-speak 0.407 at its own 0.97 threshold and ECE 0.349.
 
 ## Evaluation
 
@@ -45,14 +45,15 @@ A written rule picks the default. Scratch ships only at parity on every referee.
 - A separate dev set picks thresholds, labeled by three vendor judges, each certified against the gold cards before its votes count.
 - A regression slice holds every failure found by live probing.
 
-Then the referee that changed the build. I pulled sixty real production calls from my own agent and let them label themselves. Where the caller stopped is a true complete, a mid-turn prefix is a true wait, one third locked away. The model that read 0.96 with zero false-speak on gold scored 0.61 on real calls. Every offline referee agreed with each other, and the real world disagreed with all of them. The fix ran inside the build. The other two thirds became training augmentation, graded on the locked third, and the shipping model went from 0.65 to 0.913 with recall 0.959. Raw call content never enters the repo.
+Then the referee that changed the build. I pulled 59 real production calls from my own agent and let a rule label them. Where the caller stopped is a true complete, a mid-turn prefix cut at a random non-sentence-final word is a true wait, and no person reviewed either. Nineteen of the calls, 96 turns, were locked away. The model of that moment read 0.96 with zero false-speak on gold and scored 0.61 across all 400 real turns at its then-threshold of 0.81, a different set and a different dial from the 96-turn held-out referee everything else on this page uses. Every offline referee agreed with each other, and the real world disagreed with all of them. The fix ran inside the build. The other two thirds became training augmentation, graded on the locked third, and the shipping model went from 0.65 to 0.913 with recall 0.959. Raw call content never enters the repo.
 
 | Model | Params | Gold PR-AUC | Gold false-speak at op | Spanish PR-AUC | Real calls PR-AUC | Real calls at op (false-speak / recall) | Tier-1 window | ECE |
 |---|---|---|---|---|---|---|---|---|
-| Fine-tuned DistilBERT (ships) | 66M | 0.949 | 0.000 | not trained for | 0.913 | 0.234 / 0.959 | 58 of 99 at 0.42 | in band |
-| Multilingual DistilBERT + real | 134M | 0.979 | 0.407 | 1.000 | 0.875 | 0.191 / 0.878 | 4 of 99 at 0.97 | 0.349 |
-| From-scratch, own pretrain (7.4M) | 7.4M | 0.973 | 0.037 | 1.000 | 0.825 | 0.277 / 0.755 | 60 of 99 at 0.79 | 0.062 |
-| From-scratch, no pretrain | 3.7M | 0.994 | 0.000 | 0.996 | 0.597 | collapse | not picked | 0.045 |
+| Fine-tuned DistilBERT (ships) | 66.96M | 0.949 | 0.000 | not trained for | 0.913 | 0.234 / 0.959 | 56 of 99 at 0.42 | 0.160 |
+| Multilingual DistilBERT + real | 135.33M | 0.979 | 0.407 | 1.000 | 0.875 | 0.191 / 0.878 | 4 of 99 at 0.97 | 0.349 |
+| From-scratch, own pretrain | 7.36M | 0.973 | 0.037 | 1.000 | 0.825 | 0.277 / 0.755 | 60 of 99 at 0.79 | 0.062 |
+| From-scratch, real calls, no pretrain | 3.99M | 0.994 | 0.000 | 0.996 | 0.597 | collapse | not picked | 0.045 |
+| From-scratch, random init | 3.70M | 0.502 | 0.889 | 0.992 | 0.477 | collapse | not picked | 0.488 |
 
 ## Serving and latency
 
@@ -60,13 +61,14 @@ Then the referee that changed the build. I pulled sixty real production calls fr
 - The threshold reads from the model directory, so a retrain updates the dial without touching serving code.
 - A Dockerfile ships only the int8 model; the same process serves a live probe page that re-scores as you type.
 
-The brief asked for under 100 ms. Measured on my laptop.
+The brief asked for under 100 ms. Measured on my laptop, end-to-end wall time from the client rather than model time. The first row is the shipped artifact on a quiet box and is the reading this repo quotes. The two loaded rows were taken minutes apart while a training run held the same machine, which is why the multilingual lane has no quiet reading yet.
 
-| Served artifact | c1 wall p50 | c8 wall p50 | c8 wall p95 | c8 req/s |
-|---|---|---|---|---|
-| Fine-tuned DistilBERT, 66M | 34.7 ms | 45.5 ms | 57.9 ms | 170 |
-| Multilingual DistilBERT, 134M | 34.0 ms | 49.7 ms | 97.2 ms | 147 |
-| From-scratch, 7.4M | 7.4 ms | 12.1 ms | 20.7 ms | 588 |
+| Served artifact | Box state | c1 wall p50 | c8 wall p50 | c8 wall p95 | c8 req/s |
+|---|---|---|---|---|---|
+| Fine-tuned DistilBERT, 66.96M (ships) | quiet | 17.6 ms | 23.4 ms | 32.8 ms | 316 |
+| Fine-tuned DistilBERT, 66.96M | training load | 34.7 ms | 45.5 ms | 57.9 ms | 170 |
+| Multilingual DistilBERT, 135.33M | training load | 34.0 ms | 49.7 ms | 97.2 ms | 147 |
+| From-scratch, 7.36M | quiet | 7.4 ms | 12.1 ms | 20.7 ms | 588 |
 
 ## Monitoring at a million calls a month
 
