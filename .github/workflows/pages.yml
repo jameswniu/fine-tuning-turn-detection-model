@@ -13,9 +13,11 @@ permissions:
   pages: write
   id-token: write
 
+# Let a running deploy finish, and have the newer run wait its turn. Cancelling it instead
+# shows a failed check on a commit whose page went out fine.
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
